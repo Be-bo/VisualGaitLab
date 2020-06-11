@@ -1,0 +1,73 @@
+﻿<Window x:Class="VisualGaitLab.OtherWindows.CreateProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VisualGaitLab.OtherWindows"
+        mc:Ignorable="d"
+        Title="Create New Project" Height="400" Width="355"
+        WindowStartupLocation="CenterScreen"
+        Icon="logo.png"
+        Style="{StaticResource WindowStyle}">
+
+    <StackPanel Orientation="Vertical">
+
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="Project Name: " Width="120" Style="{StaticResource DialogTextBlockStyle}"/>
+            <TextBox Name="projectNameTextBox" Foreground="{StaticResource ControlGreyBrush}" Width="200" Text="Project Name" Style="{StaticResource DialogTextBoxStyle}" TextChanged="ContentChanged" PreviewMouseDown="ProjectNameTextBox_PreviewMouseDown"/>
+        </StackPanel>
+
+
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="Author: " Width="120" Style="{StaticResource DialogTextBlockStyle}"/>
+            <TextBox Name="authorTextBox" Width="200" Text="Project Author" Foreground="{StaticResource ControlGreyBrush}" Style="{StaticResource DialogTextBoxStyle}" TextChanged="ContentChanged"  PreviewMouseDown="ProjectNameTextBox_PreviewMouseDown"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Bodyparts: " VerticalAlignment="Top" Width="120" Style="{StaticResource DialogTextBlockStyle}"/>
+            <ListBox Height="200" Width="200" Margin="10,5,5,5" Name="bodyPartListBox" HorizontalContentAlignment="Stretch">
+                <ListBox.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="3"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource ControlGreyBrush}"/>
+                    </Style>
+                    <ContextMenu x:Key="CreateListBoxCM">
+                        <MenuItem Header="Delete" Click="MenuItem_Click"/>
+                    </ContextMenu>
+                </ListBox.Resources>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="ContextMenu" Value="{StaticResource CreateListBoxCM}">
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center"></TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+
+        <DockPanel Name="CreateAddDock" Visibility="Hidden" Margin="130,0,5,5" Cursor="Hand">
+            <Image Name="CreateAddImage" Source="add.png" Height="20" Width="20" HorizontalAlignment="Left" />
+            <Button  Click="AddButton_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Label Name="CreateAddLabel" Content="Add Bodypart" Height="26" Foreground="#0d89ff" FontSize="15"/>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DockPanel>
+
+
+
+        <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Right">
+            <Button Name="CancelButton" Content="Cancel" Margin="5" Click="CancelButton_Click" Style="{StaticResource NegativeButton}"/>
+            <Button Name="CreateProjectButton" IsEnabled="False" Content="Create" Margin="5" Click="OkButtonClicked" Style="{StaticResource PositiveButton}"/>
+        </StackPanel>
+
+    </StackPanel>
+</Window>

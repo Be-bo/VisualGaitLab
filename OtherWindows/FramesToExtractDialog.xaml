@@ -1,0 +1,24 @@
+﻿<Window x:Class="VisualGaitLab.OtherWindows.FramesToExtractDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VisualGaitLab.OtherWindows"
+        mc:Ignorable="d"
+        Title="Frame Extraction" Height="130" Width="355"
+        Icon="logo.png"
+        Style="{StaticResource WindowStyle}"
+        WindowStartupLocation="CenterScreen">
+
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="Frames to extract: " Width="120" Style="{StaticResource DialogTextBlockStyle}"/>
+            <TextBox Name="FramesToExtractTextBox" Foreground="{StaticResource ControlGreyBrush}" Width="200" Text="50" Style="{StaticResource DialogTextBoxStyle}" TextChanged="FramesToExtractTextBox_TextChanged" PreviewMouseDown="FramesToExtractTextBox_PreviewMouseDown"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Right">
+            <Button Name="CancelButton" Content="Cancel" Margin="5" Click="CancelButton_Click" Style="{StaticResource NegativeButton}"/>
+            <Button Name="StartExtractionButton" IsEnabled="False" Content="Start" Margin="5" Click="StartExtractionButton_Click" Style="{StaticResource PositiveButton}"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

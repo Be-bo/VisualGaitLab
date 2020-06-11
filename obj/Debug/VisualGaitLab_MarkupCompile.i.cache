@@ -1,0 +1,20 @@
+﻿VisualGaitLab
+
+
+winexe
+C#
+.cs
+D:\HBI\Visual Studio Projects\VisualGaitLab\VisualGaitLab\obj\Debug\
+VisualGaitLab
+none
+false
+DEBUG;TRACE
+D:\HBI\Visual Studio Projects\VisualGaitLab\VisualGaitLab\App.xaml
+12-590018125
+
+35111650369
+27457847977
+GaitAnalysis\GaitWindow.xaml;MainWindow.xaml;OtherWindows\AddBodyPartWindow.xaml;OtherWindows\AnalysisSettings.xaml;OtherWindows\CreateProjectDialog.xaml;OtherWindows\DependencyLoadingWindow.xaml;OtherWindows\EditVideo.xaml;OtherWindows\EvalWindow.xaml;OtherWindows\FramesToExtractDialog.xaml;OtherWindows\LoadingWindow.xaml;OtherWindows\MeasureWindow.xaml;OtherWindows\TrainingSettings.xaml;
+
+False
+

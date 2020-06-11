@@ -1,0 +1,15 @@
+﻿<Window x:Class="VisualGaitLab.OtherWindows.DependencyLoadingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VisualGaitLab.OtherWindows" xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Icon="logo.png"
+        Title="Dependency Installation" Height="100" Width="350"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <ProgressBar Name="ProgressBar"  Foreground="{StaticResource DefaultBlueBrush}" BorderThickness="1" BorderBrush="{StaticResource ControlGreyBrush}" Margin="5" UseLayoutRounding="True" IsIndeterminate="True"/>
+        <Label Name="ProgressLabel" Content="Installing additional dependencies (this will take a while)..." VerticalAlignment="Center" HorizontalAlignment="Center"/>
+    </Grid>
+</Window>
