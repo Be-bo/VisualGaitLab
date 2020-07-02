@@ -59,14 +59,14 @@ namespace VisualGaitLab.OtherWindows {
                         ContinueButton.IsEnabled = false;
                     }
                 }
-                /* --an experimental feature for now
+                
                 if((bool)AnalysisTypeRadioFreeWalking.IsChecked) {
                     if(NumberRegex.IsMatch(DistanceTextBox.Text) && !ZeroRegex.IsMatch(DistanceTextBox.Text)) {
                         ContinueButton.IsEnabled = true;
                     } else {
                         ContinueButton.IsEnabled = false;
                     }
-                }*/
+                }
             }
         }
 

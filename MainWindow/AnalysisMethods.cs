@@ -271,27 +271,31 @@ namespace VisualGaitLab {
             BarInteraction();
             var selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
             if (selectedVideo != null) {
-                StreamReader sr = new StreamReader(selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt"); //set this video's setting for labeled video dot size to default = 5
-                String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
-                string dotsize = "5";
-                foreach (string row in rows) {
-                    if (row.Contains("dotsize:")) {
-                        dotsize = row.Substring(row.IndexOf(":") + 2);
-                        dotsize = dotsize.Replace(" ", String.Empty);
-                        break;
+                if(selectedVideo.IsAnalyzed) {
+                    MessageBox.Show("Please delete the old video and add it again, or add its copy under a different name.", "Re-analysis Not Supported", MessageBoxButton.OK);
+                    EnableInteraction();
+                } else {
+                    StreamReader sr = new StreamReader(selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt"); //set this video's setting for labeled video dot size to default = 5
+                    String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
+                    string dotsize = "5";
+                    foreach(string row in rows) {
+                        if(row.Contains("dotsize:")) {
+                            dotsize = row.Substring(row.IndexOf(":") + 2);
+                            dotsize = dotsize.Replace(" ", String.Empty);
+                            break;
+                        }
                     }
+                    sr.Close();
+                    AnalysisSettings settingsDialog = new AnalysisSettings(selectedVideo.ThumbnailPath, selectedVideo.Name, dotsize); //display a window with a thumbnail where the user can choose the label size they find appropriate
+                    if(settingsDialog.ShowDialog() == true) {
+                        string settingsPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt";
+                        StreamWriter sw = new StreamWriter(settingsPath);
+                        sw.WriteLine("dotsize: " + settingsDialog.CurrentLabelSize.Text);
+                        sw.Close();
+                        EditDotSizeInConfig(AnalyzedListBox.SelectedIndex); //update the dotsize in DLC's config file
+                        AnalyzeVideo(AnalyzedListBox.SelectedIndex);
+                    } else EnableInteraction();
                 }
-                sr.Close();
-                AnalysisSettings settingsDialog = new AnalysisSettings(selectedVideo.ThumbnailPath, selectedVideo.Name, dotsize); //display a window with a thumbnail where the user can choose the label size they find appropriate
-                if (settingsDialog.ShowDialog() == true) {
-                    string settingsPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt";
-                    StreamWriter sw = new StreamWriter(settingsPath);
-                    sw.WriteLine("dotsize: " + settingsDialog.CurrentLabelSize.Text);
-                    sw.Close();
-                    EditDotSizeInConfig(AnalyzedListBox.SelectedIndex); //update the dotsize in DLC's config file
-                    AnalyzeVideo(AnalyzedListBox.SelectedIndex);
-                }
-                else EnableInteraction();
             }
             else {
                 EnableInteraction();
@@ -354,7 +358,7 @@ namespace VisualGaitLab {
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
                 this.Dispatcher.Invoke(() => {
-                    LoadingWindow.ProgressLabel.Content = "Finalizing (might take a while)...";
+                    LoadingWindow.ProgressLabel.Content = "Creating labeled video (will take a while)...";
                 });
                 CreateLabeledVideo(video);
             };

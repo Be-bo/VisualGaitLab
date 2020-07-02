@@ -30,8 +30,8 @@
 
             <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
                 <TextBlock Text="Type of Analysis: " Width="180" Style="{StaticResource DialogTextBlockStyle}"/>
-                <RadioButton Margin="5,0,0,0" Name="AnalysisTypeRadioTreadmill" GroupName="AnalysisType" Content="Treadmill" IsChecked="True"/>
-                <!--<RadioButton Margin="5,0,0,0" Name="AnalysisTypeRadioFreeWalking" GroupName="AnalysisType" Content="Free Walking (catwalk or open space/cage)" Checked="AnalysisTypeRadioFreeWalking_Checked" Unchecked="AnalysisTypeRadioFreeWalking_Unchecked"/> -->
+                <RadioButton Margin="5,0,0,0" Name="AnalysisTypeRadioTreadmill" GroupName="AnalysisType" Content="Treadmill Facing Right" IsChecked="True"/>
+                <RadioButton Margin="5,0,0,0" Name="AnalysisTypeRadioFreeWalking" GroupName="AnalysisType" Content="Catwalk Facing Right (experimental feature)" Checked="AnalysisTypeRadioFreeWalking_Checked" Unchecked="AnalysisTypeRadioFreeWalking_Unchecked"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
                 <TextBlock Text="Real World Distance (mm): " Width="180" Style="{StaticResource DialogTextBlockStyle}"/>

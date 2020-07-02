@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualGaitLab", "VisualGaitLab.csproj", "{0CB69231-19A1-4DB8-B411-52C099A569EF}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "VGL Setup", "..\VGL Setup\VGL Setup.vdproj", "{8C25D2F9-114C-4106-BDE0-E740F97C33C3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CB69231-19A1-4DB8-B411-52C099A569EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CB69231-19A1-4DB8-B411-52C099A569EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CB69231-19A1-4DB8-B411-52C099A569EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CB69231-19A1-4DB8-B411-52C099A569EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C25D2F9-114C-4106-BDE0-E740F97C33C3}.Debug|Any CPU.ActiveCfg = Debug
+		{8C25D2F9-114C-4106-BDE0-E740F97C33C3}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE533B5C-6419-4BAF-89CA-7FCB5241A5C0}
+	EndGlobalSection
+EndGlobal
