@@ -12,7 +12,7 @@ Setup Steps:
 
 3. Navigate to the directory from step 2 and open "VisualGaitLab.sln" in Visual Studio.
 
-(4.) VisualGaitLab is installed into C: by default, hence it requires elevated permissions. If you want to see the debug output from the Visual Studio code in the console, you need to run Visual Studio as administrator.
+(4.) VisualGaitLab is installed into C: by default. As a result some operations require elevated permissions. VGL is set up such that it automatically asks for elevation if it hasn't been run as administrator, this kills Visual Studio's debugging mode. If you want to see debug output from the Visual Studio project in the console, you need to run Visual Studio as administrator.
 
 <b>Important Note</b>: VisualGaitLab uses Miniconda 3 (installed automatically during VisualGaitLab installation in step 1). This is because it's using DeepLabCut (https://github.com/DeepLabCut/DeepLabCut), and DLC's functions are called through a Miniconda environment. When you are making any changes to your version of this repository, remember that it interfaces with the folders of the actual software that were installed in step 1. I.e. RUNNING THIS CODE WITHOUT INSTALLING VGL WILL NOT WORK. See the visual below for a clearer understanding.
 
