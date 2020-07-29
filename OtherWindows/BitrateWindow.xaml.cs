@@ -21,12 +21,6 @@ namespace VisualGaitLab.OtherWindows {
             InitializeComponent();
         }
 
-        private void BitrateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            if(BitrateNumberText != null && BitrateSlider != null) {
-                BitrateNumberText.Text = BitrateSlider.Value.ToString();
-            }
-        }
-
         private void BitrateSaveButton_Click(object sender, RoutedEventArgs e) {
             DialogResult = true;
         }

@@ -55,6 +55,7 @@ namespace VisualGaitLab.OtherWindows {
         int TimerType = 0;
         int VideoBitrate = 50000; //in kbps
         bool VideoNotMp4OrAvi = false;
+        int VideoResolution = (int)VideoSize.Default;
         
         bool SliderInsideSegment = false;
         bool IsAnalysisVideo = false;
@@ -163,7 +164,12 @@ namespace VisualGaitLab.OtherWindows {
             BitrateWindow bitrateWindow = new BitrateWindow();
             if (bitrateWindow.ShowDialog() == true) {
                 if(inputFile.Metadata != null && inputFile.Metadata.VideoData != null && inputFile.Metadata.VideoData.BitRateKbs != null) VideoBitrate = (int)inputFile.Metadata.VideoData.BitRateKbs;
-                VideoBitrate = (int)((double)VideoBitrate * (1.0 - (double)bitrateWindow.BitrateSlider.Value));
+                if ((bool)bitrateWindow.Import1080RadioButton.IsChecked) VideoResolution = (int)VideoSize.Hd1080; //get the correct
+                else if ((bool)bitrateWindow.Import720RadioButton.IsChecked) VideoResolution = (int)VideoSize.Hd720;
+                else if ((bool)bitrateWindow.Import480RadioButton.IsChecked) VideoResolution = (int)VideoSize.Hd480;
+                else if ((bool)bitrateWindow.Import360RadioButton.IsChecked) VideoResolution = (int)VideoSize.Nhd;
+                else if ((bool)bitrateWindow.ImportNothingRadioButton.IsChecked) VideoResolution = (int)VideoSize.Default;
+
                 if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
                 string outputPath = FileSystemUtils.ExtendPath(CachePath, FileSystemUtils.GetFileName(InitialFilePath) + FileSystemUtils.GetFileExtension(InitialFilePath).ToLower());
                 CopyVideo(InitialFilePath, outputPath);
@@ -292,7 +298,7 @@ namespace VisualGaitLab.OtherWindows {
                     engine.ConvertProgressEvent += ProgressEvent;
                     var conversionOptions = new ConversionOptions {
                         VideoBitRate = VideoBitrate,
-                        //TODO: if still struggling with OOM potentially give the user more options to reduce the quality
+                        VideoSize = (VideoSize)VideoResolution
                     };
 
                     if (VideoNotMp4OrAvi) { // if original vid not mp4 or avi, gotta convert it from its format to .avi (else clause of StartConversion)
