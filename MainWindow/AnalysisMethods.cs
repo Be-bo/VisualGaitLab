@@ -194,36 +194,40 @@ namespace VisualGaitLab {
             BarInteraction();
             var selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
             if (selectedVideo != null) {
-                StreamReader sr = new StreamReader(selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt"); //set this video's setting for labeled video dot size to default = 5
-                String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
-                string dotsize = "5";
-                foreach (string row in rows) {
-                    if (row.Contains("dotsize:")) {
-                        dotsize = row.Substring(row.IndexOf(":") + 2);
-                        dotsize = dotsize.Replace(" ", String.Empty);
-                        break;
+                if (selectedVideo.IsAnalyzed) {
+                    MessageBox.Show("Please delete the old video and add it again, or add its copy under a different name.", "Re-analysis Not Supported", MessageBoxButton.OK);
+                    EnableInteraction();
+                }
+                else {
+                    StreamReader sr = new StreamReader(selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt"); //set this video's setting for labeled video dot size to default = 5
+                    String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
+                    string dotsize = "5";
+                    foreach (string row in rows) {
+                        if (row.Contains("dotsize:")) {
+                            dotsize = row.Substring(row.IndexOf(":") + 2);
+                            dotsize = dotsize.Replace(" ", String.Empty);
+                            break;
+                        }
                     }
+                    sr.Close();
+                    AnalysisSettings settingsDialog = new AnalysisSettings(selectedVideo.ThumbnailPath, selectedVideo.Name, dotsize); //display a window with a thumbnail where the user can choose the label size they find appropriate
+                    if (settingsDialog.ShowDialog() == true) {
+                        string settingsPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt";
+                        StreamWriter sw = new StreamWriter(settingsPath);
+                        sw.WriteLine("dotsize: " + settingsDialog.CurrentLabelSize.Text);
+                        sw.Close();
+                        EditDotSizeInConfig(AnalyzedListBox.SelectedIndex); //update the dotsize in DLC's config file
+                        AnalyzeVideo(AnalyzedListBox.SelectedIndex);
+                    }
+                    else EnableInteraction();
                 }
-                sr.Close();
-                AnalysisSettings settingsDialog = new AnalysisSettings(selectedVideo.ThumbnailPath, selectedVideo.Name, dotsize); //display a window with a thumbnail where the user can choose the label size they find appropriate
-                if (settingsDialog.ShowDialog() == true) {
-                    string settingsPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt";
-                    StreamWriter sw = new StreamWriter(settingsPath);
-                    sw.WriteLine("dotsize: " + settingsDialog.CurrentLabelSize.Text);
-                    sw.Close();
-                    EditDotSizeInConfig(AnalyzedListBox.SelectedIndex); //update the dotsize in DLC's config file
-                    AnalyzeVideo(AnalyzedListBox.SelectedIndex);
-                }
-                else EnableInteraction();
-            }
-            else {
-                EnableInteraction();
-                MessageBox.Show("Analysis settings are applied to individual analysis videos. Select a video and then click the button again.", "No video selected", MessageBoxButton.OK);
             }
         }
 
         private void AnalyzeVideo(int pos) //analyze the video at the position in the list box (passed in as param)
         {
+            bool errorDuringAnalysis = false;
+            string errorMessage = "No Error";
             AnalysisVideo video = CurrentProject.AnalysisVideos[pos];
             string filePath = EnvDirectory + "\\vdlc_analyze_video.py";
             FileSystemUtils.MurderPython();
@@ -257,7 +261,11 @@ namespace VisualGaitLab {
                     string line = e.Data;
                     Console.WriteLine(line);
 
-                    //TODO: OOM again
+                    if (line.Contains("OOM")) {
+                        errorMessage = "Analysis failed due to insufficient GPU memory. Try importing the video again and reducing its resolution, and/or cropping it.";
+                        errorDuringAnalysis = true;
+                        FileSystemUtils.MurderPython();
+                    }
 
                     if (line.Contains("progress_maximum")) {
                         progressMax = line.Substring(line.IndexOf(":") + 1, line.IndexOf("#") - line.IndexOf(":") - 1);
@@ -280,8 +288,17 @@ namespace VisualGaitLab {
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
+                if (errorDuringAnalysis) {
+                    this.Dispatcher.Invoke(() => {
+                        LoadingWindow.Close();
+                        EnableInteraction();
+                    });
+                    UpdateVdlcConfig(); //update VDLC's config file
+                    MessageBox.Show(errorMessage, "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
                 this.Dispatcher.Invoke(() => {
-                    LoadingWindow.ProgressLabel.Content = "Finalizing (might take a while)...";
+                    LoadingWindow.ProgressLabel.Content = "Creating labeled video (will take a while)...";
                 });
                 CreateLabeledVideo(video);
             };

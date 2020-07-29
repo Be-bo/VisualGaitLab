@@ -69,6 +69,7 @@ namespace VisualGaitLab
 
             InitializeComponent();
             CheckInstallation();
+            ShowDisclaimer();
         }
 
         private static bool IsAdministrator() { //check if the Windows user is running the program as administrator
@@ -79,9 +80,7 @@ namespace VisualGaitLab
 
         private void ShowDisclaimer() { //show some info about the current state of the program
             MessageBox.Show(
-                "1. All Gait Analysis videos involving a treadmill must have the rodent facing the right side of the video (VDLC lets you mirror the video)\n" +
-                "2. Mirroring an already cropped video may produce a grey thumbnail\n" +
-                "3. Each separate Gait Analysis video needs to contain at least two strides for the analysis to work", "Known Limitations & Issues", MessageBoxButton.OK, MessageBoxImage.Information);
+                "We STRONGLY recommend that you first quickly run through the entire process before committing to a project (to make sure VGL runs well on your machine).", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
 
@@ -253,7 +252,9 @@ namespace VisualGaitLab
                 if (Directory.Exists(stateFolder) && File.Exists(stateFolder + "\\inputParams.txt")) {
                     List<float> inputParams = File.ReadAllLines(stateFolder + "\\inputParams.txt").ToList().ConvertAll(item => float.Parse(item));
                     bool isFreeRun = false;
-                    //if((bool)window.AnalysisTypeRadioFreeWalking.IsChecked) isFreeRun = true;
+                    if (inputParams.Count >= 3) {
+                        isFreeRun = inputParams[2] == 1;
+                    }
 
                     GaitWindow gaitWindow = new GaitWindow(inputParams[0], inputParams[1], gaitVideoPath, gaitVideoName, gaitTempPath, isFreeRun);
                     if (gaitWindow.ShowDialog() == true) {
@@ -268,7 +269,7 @@ namespace VisualGaitLab
                         double realWorldMultiplier = window.getSinglePixelSize();
                         float treadmillSpeed = float.Parse(window.TreadmillSpeedTextBox.Text);
                         bool isFreeRun = false;
-                        //if((bool)window.AnalysisTypeRadioFreeWalking.IsChecked) isFreeRun = true;
+                        if ((bool)window.AnalysisTypeRadioFreeWalking.IsChecked) isFreeRun = true;
 
                         GaitWindow gaitWindow = new GaitWindow(realWorldMultiplier, treadmillSpeed, gaitVideoPath, gaitVideoName, gaitTempPath, isFreeRun);
                         if (gaitWindow.ShowDialog() == true) {

@@ -15,27 +15,23 @@ namespace VisualGaitLab.GaitAnalysis {
 
 
         // MARK: Static Data (averages and ratios based on all frames)
-        private List<int> GetInStanceArray(List<float> allX, List<float> allY, List<float> allXotherFoot, List<float> allYotherFoot) {
+        private List<int> GetInStanceArray(List<float> allX, List<float> allY, List<float> allXotherMarker, List<float> allYotherMarker, ref List<double> footMidPointXs, ref List<double> footMidpointYs) {
 
-            // MARK: FREE RUN EXPERIMENTAL FEATURE -------------------------------------------------------------------------------------------------
             if (IsFreeRun) { //free running bottom view of the cage (no treadmill) or just a cat walk
-                List<double> footMidPointXs = new List<double>();
-                List<double> footMidpointYs = new List<double>();
                 List<double> posDifferences = new List<double>(); //difs in paw positions will be used to calculate switches instead of vectors
                 List<int> isInStanceArray = new List<int>();
 
                 for (int i = 0; i < allX.Count; i++) { //get array of midpoints for both X and Y positions for all frames of the video
-                    footMidPointXs.Add((allX[i] + allXotherFoot[i]) / 2);
+                    footMidPointXs.Add((allX[i] + allXotherMarker[i]) / 2);
                 }
                 for (int i = 0; i < allY.Count; i++) {
-                    footMidpointYs.Add((allY[i] + allYotherFoot[i]) / 2);
+                    footMidpointYs.Add((allY[i] + allYotherMarker[i]) / 2);
                 }
 
                 for (int i = 1; i < footMidpointYs.Count; i++) { //calculate the array of differences between paw positions (midpoints)
                     posDifferences.Add(CalculateDistanceBetweenPoints(footMidPointXs[i - 1], footMidpointYs[i - 1], footMidPointXs[i], footMidpointYs[i]));
                 }
 
-                // TODO: POTENTIAL PROBLEMS
                 double quarterAvg = posDifferences.Average() / 4; //get avg/4
                 for (int i = 0; i < posDifferences.Count; i++) { //use avg/4 to determine what is stance and what is swing
                     if (posDifferences[i] < quarterAvg) {
@@ -46,11 +42,7 @@ namespace VisualGaitLab.GaitAnalysis {
                     }
                 }
 
-                // TODO: c means clustering
-
                 return isInStanceArray;
-                // MARK: FREE RUN EXPERIMENTAL FEATURE END -----------------------------------------------------------------------------------------
-
             }
             else {
                 List<int> switches = new List<int>();
@@ -167,8 +159,8 @@ namespace VisualGaitLab.GaitAnalysis {
             swingDuration = (int)(avgFramesPerSwing * 1000) / FPS;
         }
 
-        private void CalculateStrideData(int totalCount, ref List<double> strideLengths, ref List<double> strides, ref List<int> switchPositions, ref List<float> pawXs, ref List<float> pawYs,
-            ref List<float> pawHeelXs, ref List<float> pawHeelYs) { //calculating stride lengths, this method doesn't have to be called every frame (-> it's in static data section) but it's the basis for stride dynamic data
+        private void CalculateStrideData(int totalCount, ref List<double> strideLengths, ref List<double> strides, ref List<int> switchPositions, ref List<double> midPointXs, ref List<double> midPointYs) {
+            //calculating stride lengths, this method doesn't have to be called every frame (-> it's in static data section) but it's the basis for stride dynamic data
 
             if (switchPositions.Count < 3) {
                 MessageBox.Show("Video cannot be added because it's too short. Program will close.", "Video Too Short");
@@ -187,11 +179,22 @@ namespace VisualGaitLab.GaitAnalysis {
                     int frameDistance = switchPositions[j + 2] - switchPositions[j]; //we grab the distance between the first frame of the current stance and the last frame of the current swing
                                                                                      //for example let's say the current stride looks like this: first frame (stance) ->1111111111000000<- last frame (swing), the frame distance is 16
                                                                                      //             and just as all the other strides this one has 3 switch positions:  ^=j       ^=j+1 ^j+2 (!!!j+2 corresponds to the beginning of the next step so it's always 1, it's the last frame of the current stride + 1)
-                    double timeDistance = (double)frameDistance / FPS; //then we simply calculate the duration of the stride in seconds
-                    double distance = TreadmillSpeed * timeDistance; //and use treadmill speed to get the distance that the paw has traveled through this stride
-                    strides.Add(distance); //and add it to the corresponding list
+                    double distance;
+                    if (IsFreeRun) { //don't have treadmill speed for the freewalk type analysis, have to grab actual position difference
+                        int startPos = switchPositions[j];
+                        int endPos = switchPositions[j + 2];
+                        Console.WriteLine("start: " + startPos + " end: " + endPos + " len: " + midPointXs.Count + " len: " + midPointYs.Count);
+                        distance = CalculateDistanceBetweenPoints(midPointXs[startPos], midPointYs[startPos], midPointXs[endPos], midPointYs[endPos]);
+                        distance = distance * RealWorldMultiplier;
+                    }
+                    else { //for the treadmill scenario we have to use the treadmill's speed
+                        double timeDistance = (double)frameDistance / FPS; //then we simply calculate the duration of the stride in seconds
+                        distance = TreadmillSpeed * timeDistance; //and use treadmill speed to get the distance that the paw has traveled through this stride
+                    }
 
-                    for (int k = switchPositions[j]; k < switchPositions[j + 2]; k++) { //so far we've only filled the stance part, i.e. this: 1111111111, now we're filling in the same value for the rest of the stride 000000
+                    strides.Add(distance);
+
+                    for (int k = switchPositions[j]; k < switchPositions[j + 2]; k++) { //fill in the distance for all of the stride's frames
                         strideLengths.Add(distance);
                     }
                     //the reason I decided to add the stride length so many times was to make the values easily accessible (i.e. we don't have to worry about stride frame ranges when showing the current value to the user, we simply go strideLengths[currentFrame])
