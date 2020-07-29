@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\
+D:\Visual Studio\Projects\VisualGaitLab\obj\Debug\
 VisualGaitLab
 none
 false
 DEBUG;TRACE
-D:\HBI\Visual Studio Projects\VisualGaitLab\App.xaml
-141843229648
+D:\Visual Studio\Projects\VisualGaitLab\App.xaml
+12-590018125
 
-371862551797
-27-398710209
-GaitAnalysis\GaitWindow.xaml;MainWindow.xaml;OtherWindows\AddBodyPartWindow.xaml;OtherWindows\AnalysisSettings.xaml;OtherWindows\BitrateWindow.xaml;OtherWindows\CreateProjectDialog.xaml;OtherWindows\DependencyLoadingWindow.xaml;OtherWindows\EditVideo.xaml;OtherWindows\EvalWindow.xaml;OtherWindows\FramesToExtractDialog.xaml;OtherWindows\ImportWindow.xaml;OtherWindows\LoadingWindow.xaml;OtherWindows\MeasureWindow.xaml;OtherWindows\TrainingSettings.xaml;
+34219669647
+27-1712526613
+GaitAnalysis\GaitWindow.xaml;MainWindow.xaml;OtherWindows\AddBodyPartWindow.xaml;OtherWindows\AnalysisSettings.xaml;OtherWindows\CreateProjectDialog.xaml;OtherWindows\DependencyLoadingWindow.xaml;OtherWindows\EditVideo.xaml;OtherWindows\EvalWindow.xaml;OtherWindows\FramesToExtractDialog.xaml;OtherWindows\LoadingWindow.xaml;OtherWindows\MeasureWindow.xaml;OtherWindows\TrainingSettings.xaml;
 
 False
 
