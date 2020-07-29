@@ -459,10 +459,10 @@ namespace VisualGaitLab.OtherWindows {
 
         private void AdjustWindowSize() {
             this.Width = ImportVideoElement.ActualWidth;
-            this.ResizeMode = ResizeMode.NoResize;
         }
 
         private void ImportWindow_SizeChanged(object sender, SizeChangedEventArgs e) {
+            ResetSelectionBox();
             AdjustSlider();
         }
 
