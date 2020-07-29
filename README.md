@@ -2,19 +2,17 @@
   <img src="https://github.com/Be-bo/VisualGaitLab/blob/master/logo.png" width="100" height="100">
 </p>
 
-This repository is a Visual Studio Project containing the code base for VisualGaitLab software.
+This repository is a Visual Studio Project & Solution containing the code base for VisualGaitLab software.
 
 Setup Steps:
 
 1. Install Visual Studio 2019 & VisualGaitLab (https://osf.io/2ydzn/).
 
-2. Create a new project with a new Visual Studio solution OR open an existing solution.
+2. Clone this repository into your directory of choice (we recommend using GitHub Desktop).
 
-3. Clone this repository into your folder of choice (we recommend using GitHub Desktop).
+3. Navigate to the directory from step 2 and open "VisualGaitLab.sln" in Visual Studio.
 
-4. Open the solution from step 2.
-
-5. Right-click the solution in the Solution Explorer and choose Add -> Existing Project -> Choose "VisualGaitLab.csproj" located within the folder containing this repository.
+(4.) VisualGaitLab is installed into C: by default. As a result some operations require elevated permissions. VGL is set up such that it automatically asks for elevation if it hasn't been run as administrator, this kills Visual Studio's debugging mode. If you want to see debug output from the Visual Studio project in the console, you need to run Visual Studio as administrator.
 
 <b>Important Note</b>: VisualGaitLab uses Miniconda 3 (installed automatically during VisualGaitLab installation in step 1). This is because it's using DeepLabCut (https://github.com/DeepLabCut/DeepLabCut), and DLC's functions are called through a Miniconda environment. When you are making any changes to your version of this repository, remember that it interfaces with the folders of the actual software that were installed in step 1. I.e. RUNNING THIS CODE WITHOUT INSTALLING VGL WILL NOT WORK. See the visual below for a clearer understanding.
 
