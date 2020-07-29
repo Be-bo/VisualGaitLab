@@ -661,13 +661,13 @@ namespace VisualGaitLab.OtherWindows {
             }
             else {
                 string cropOutputPath = FileSystemUtils.ExtendPath(CachePath, FileSystemUtils.GetFileName(VideoCachePath) + "_cr" + FileSystemUtils.GetFileExtension(VideoCachePath));
-                string ffmpegCommand = "-i \"" + VideoCachePath + "\" -filter:v \"crop = " + selectionWidth + ":" + selectionHeight + ":" + actualX + ":" + actualY + "\" " + "\"" + cropOutputPath + "\"";
+                string ffmpegCommand = "-i \"" + VideoCachePath + "\" -vf \"crop = " + selectionWidth + ":" + selectionHeight + ":" + actualX + ":" + actualY + "\" " + " -c:v libx264 -crf 0 -c:a copy " + "\"" + cropOutputPath + "\"";
                 VideoCachePath = cropOutputPath; //from now on we're dealing with the cropped video
-
                 using (var engine = new Engine()) {
                     engine.ConversionCompleteEvent += CroppingCompleteEvent;
                     engine.CustomCommand(ffmpegCommand);
                 }
+                
             }
         }
 
