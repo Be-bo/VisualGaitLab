@@ -192,10 +192,10 @@ namespace VisualGaitLab.GaitAnalysis {
 
 
             //Stride Lengths, Stride Length Variability
-            CalculateStrideData(HindLeftInStance.Count, ref HindLeftStrideLengths, ref HindLeftStrides, ref HindLeftSwitchPositions, ref HindLeftMidPointXs, ref HindLeftMidPointYs);
-            CalculateStrideData(HindRightInStance.Count, ref HindRightStrideLengths, ref HindRightStrides, ref HindRightSwitchPositions, ref HindRightMidPointXs, ref HindRightMidPointYs);
-            CalculateStrideData(FrontLeftInStance.Count, ref FrontLeftStrideLengths, ref FrontLeftStrides, ref FrontLeftSwitchPositions, ref FrontLeftMidPointXs, ref FrontLeftMidPointYs);
-            CalculateStrideData(FrontRightInStance.Count, ref FrontRightStrideLengths, ref FrontRightStrides, ref FrontRightSwitchPositions, ref FrontRightMidPointXs, ref FrontRightMidPointYs);
+            CalculateStrideData(HindLeftInStance.Count, ref HindLeftStrideLengths, ref HindLeftStrides, ref HindLeftSwitchPositions, ref HindLeftXs, ref HindLeftYs, ref HindLeftHeelXs, ref HindLeftHeelYs);
+            CalculateStrideData(HindRightInStance.Count, ref HindRightStrideLengths, ref HindRightStrides, ref HindRightSwitchPositions, ref HindRightXs, ref HindRightYs, ref HindRightHeelXs, ref HindRightHeelYs);
+            CalculateStrideData(FrontLeftInStance.Count, ref FrontLeftStrideLengths, ref FrontLeftStrides, ref FrontLeftSwitchPositions, ref FrontLeftXs, ref FrontLeftYs, ref FrontLeftHeelXs, ref FrontLeftHeelYs);
+            CalculateStrideData(FrontRightInStance.Count, ref FrontRightStrideLengths, ref FrontRightStrides, ref FrontRightSwitchPositions, ref FrontRightXs, ref FrontRightYs, ref FrontRightHeelXs, ref FrontRightHeelYs);
 
             CalculateStrideLengthVariability(ref HindLeftStrides, ref HindLeftStrideLengthVariablity);
             CalculateStrideLengthVariability(ref HindRightStrides, ref HindRightStrideLengthVariability);

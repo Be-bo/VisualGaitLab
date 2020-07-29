@@ -200,14 +200,9 @@ namespace VisualGaitLab.GaitAnalysis {
 
         // MARK: Free Run Specific Variables
 
-        List<double> HindLeftMidPointXs = new List<double>();
-        List<double> HindLeftMidPointYs = new List<double>();
-        List<double> HindRightMidPointXs = new List<double>();
-        List<double> HindRightMidPointYs = new List<double>();
-        List<double> FrontLeftMidPointXs = new List<double>();
-        List<double> FrontLeftMidPointYs = new List<double>();
-        List<double> FrontRightMidPointXs = new List<double>();
-        List<double> FrontRightMidPointYs = new List<double>();
+        private List<double> PositionDifferences = new List<double>();
+
+
 
 
 
