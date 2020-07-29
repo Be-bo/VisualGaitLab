@@ -5,22 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VisualGaitLab.OtherWindows"
         mc:Ignorable="d"
-        Title="Training Settings" Height="240" Width="320"
+        Title="Training Settings" Height="250" Width="320"
         Icon="logo.png"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}">
 
     <StackPanel>
 
-        <TextBlock Margin="5,5,5,10" HorizontalAlignment="Left" Text="You have to set your training settings before training. Ideally train for at least 200 000 iterations and save every 50 000." TextWrapping="Wrap"/>
+        <TextBlock Margin="5,5,5,10" HorizontalAlignment="Left" Text="Ideally train for at least 200,000 iterations. Global Scale scales down your frames, leave on default 0.8 unless you're experiencing training issues." TextWrapping="Wrap"/>
 
         <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
-            <TextBlock Text="Save Iterations: " Width="120" Style="{StaticResource DialogTextBlockStyle}"/>
-            <TextBox Name="saveItersTextBox" Text="0" Style="{StaticResource DialogTextBoxStyle}" TextChanged="ContentChanged" HorizontalAlignment="Center" Width="100" MaxLength="6"/>
+            <TextBlock Text="Global Scale: " Width="85" TextAlignment="Left" Style="{StaticResource DialogTextBlockStyle}"/>
+            <TextBlock x:Name="GlobalScaleNumberText" Width="35" Text="0.8" TextAlignment="Center" Style="{StaticResource DialogTextBlockStyle}"/>
+            <Slider Name="GlobalScaleSlider" Width="100" VerticalAlignment="Center" ValueChanged="globalScalePos_ValueChanged" Value="0.8" Minimum="0.01" Maximum="1.0" IsSnapToTickEnabled="True" TickFrequency="0.01"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
-            <TextBlock Text="Target Iterations: " Width="120" Style="{StaticResource DialogTextBlockStyle}"/>
+            <TextBlock Text="Target Iterations: " Width="110" Style="{StaticResource DialogTextBlockStyle}"/>
             <TextBox Name="endItersTextBox" Text="0" Style="{StaticResource DialogTextBoxStyle}" TextChanged="ContentChanged" HorizontalAlignment="Center" Width="100" MaxLength="6"/>
         </StackPanel>
 

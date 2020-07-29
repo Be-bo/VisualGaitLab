@@ -115,6 +115,9 @@
     <Compile Include="OtherWindows\AnalysisSettings.xaml.cs">
       <DependentUpon>AnalysisSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OtherWindows\BitrateWindow.xaml.cs">
+      <DependentUpon>BitrateWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OtherWindows\CreateProjectDialog.xaml.cs">
       <DependentUpon>CreateProjectDialog.xaml</DependentUpon>
     </Compile>
@@ -130,6 +133,9 @@
     <Compile Include="OtherWindows\FramesToExtractDialog.xaml.cs">
       <DependentUpon>FramesToExtractDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OtherWindows\ImportWindow.xaml.cs">
+      <DependentUpon>ImportWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OtherWindows\LoadingWindow.xaml.cs">
       <DependentUpon>LoadingWindow.xaml</DependentUpon>
     </Compile>
@@ -140,6 +146,7 @@
       <DependentUpon>TrainingSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\AnalysisVideo.cs" />
+    <Compile Include="SupportingClasses\FileSystemUtils.cs" />
     <Compile Include="SupportingClasses\Project.cs" />
     <Compile Include="SupportingClasses\PythonScripts.cs" />
     <Compile Include="SupportingClasses\TrainingVideo.cs" />
@@ -168,6 +175,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="OtherWindows\BitrateWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OtherWindows\CreateProjectDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -185,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="OtherWindows\FramesToExtractDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OtherWindows\ImportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -259,6 +274,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="OtherWindows\dot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="OtherWindows\selectwindow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

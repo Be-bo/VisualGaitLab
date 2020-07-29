@@ -75,11 +75,28 @@ namespace VisualGaitLab.OtherWindows {
 
         private void SetUpVideo() { //get the incoming video object, load it into MediaElement for playback and pause it
             VideoElement.Source = new Uri(VideoPath, UriKind.Absolute);
+            VideoElement.MediaFailed += MediaFailed;
+            VideoElement.Loaded += MediaLoaded;
             VideoElement.Pause();
             GetVideoDuration(); //get videos duration
             TimeSpan time = TimeSpan.FromSeconds(0); //go to the beginning of of the video
             VideoElement.Position = time;
         }
+
+
+        private void MediaFailed(object sender, ExceptionRoutedEventArgs errArgs) {
+            Console.WriteLine(errArgs.ErrorException.ToString()+" msg");
+            MessageBox.Show("Failed to load the video. Try converting the video to either avi or mp4 (H.264) before importing it into VGL.", "Video Load Unsuccessful", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void MediaLoaded(object sender, RoutedEventArgs args) {
+            if(!VideoElement.IsInitialized || VideoElement.RenderSize.Height == 0 || VideoElement.RenderSize.Width == 0) {
+                MessageBox.Show("Failed to load the video. Try converting the video to either avi or mp4 (H.264) before importing it into VGL.", "Video Load Unsuccessful", MessageBoxButton.OK, MessageBoxImage.Error);
+                //TODO: converting actually might not fix shit
+            }
+        }
+
+
 
         private void GetVideoDuration() {
             TimeSpan ts; //use Windows API Codepack to determine the length of the video
@@ -423,11 +440,11 @@ namespace VisualGaitLab.OtherWindows {
                 PythonScripts allScripts = new PythonScripts();
 
                 string filePath = EnvDirectory + "\\vdlc_add_video.py";
-                MainWindow.MurderPython();
-                MainWindow.RenewScript(filePath, allScripts.AddVideo);
-                MainWindow.ReplaceStringInFile(filePath, "copy_videos_identifier", "True");
-                MainWindow.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
-                MainWindow.ReplaceStringInFile(filePath, "video_path_identifier", vidPath);
+                FileSystemUtils.MurderPython();
+                FileSystemUtils.RenewScript(filePath, allScripts.AddVideo);
+                FileSystemUtils.ReplaceStringInFile(filePath, "copy_videos_identifier", "True");
+                FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
+                FileSystemUtils.ReplaceStringInFile(filePath, "video_path_identifier", vidPath);
                 Process p = new Process();
                 ProcessStartInfo info = new ProcessStartInfo();
                 info.FileName = "cmd.exe";

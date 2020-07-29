@@ -23,7 +23,7 @@
                 <TextBlock Name="CurrentLabelSize" Width="20" TextAlignment="Center" Text="5" DockPanel.Dock="Right"/>
                 <Slider Name="LabelSlider" Minimum="1" Maximum="20" Value="5" ValueChanged="LabelSlider_ValueChanged"/>
             </DockPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,30,0,0" HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal" Margin="0,30,0,30" HorizontalAlignment="Right">
                 <Button Name="CancelButton" Content="Cancel" Margin="5" Click="CancelButton_Click" Style="{StaticResource NegativeButton}"/>
                 <Button Name="SaveSettingsButton" Content="Start" Margin="5" Click="SaveSettingsButton_Click" Style="{StaticResource PositiveButton}"/>
             </StackPanel>

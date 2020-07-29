@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using VisualGaitLab.GaitAnalysis;
 using VisualGaitLab.OtherWindows;
 using VisualGaitLab.SupportingClasses;
@@ -40,10 +41,6 @@ namespace VisualGaitLab
         ListBox DragSource = null;
         ListBox DragTarget = null;
         Stopwatch globalStopWatch = new Stopwatch();
-
-
-
-
 
 
 
@@ -156,8 +153,6 @@ namespace VisualGaitLab
                     else AnalyzedListBox.ItemsSource = null;
 
                     if (CurrentProject.IsGaitOnly) GaitTab.Visibility = Visibility.Visible; else GaitTab.Visibility = Visibility.Hidden; //if it's a gait focused project show the Gait tab
-
-                    Console.WriteLine("SIZE: " + CurrentProject.TrainingVideos.Count);
                     PrepareGaitTab();
                 }
             });

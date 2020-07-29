@@ -28,6 +28,7 @@ namespace VisualGaitLab.SupportingClasses {
             PCutoff = "";
             TrainTime = "";
             TrainingSplit = "0.80";
+            GlobalScale = 0.8;
         }
 
         public List<TrainingVideo> TrainingVideos { get; set; }
@@ -50,5 +51,6 @@ namespace VisualGaitLab.SupportingClasses {
         public string PCutoff { get; set; }
         public string TrainTime { get; set; }
         public string TrainingSplit { get; set; }
+        public double GlobalScale { get; set; }
     }
 }

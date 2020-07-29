@@ -2,8 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="VisualGaitLab" Height="530" Width="700"
         Icon="logo.png"
@@ -54,12 +53,8 @@
                                 </Style>
                                 <ContextMenu Name="TrainingVideoContextMenu" x:Key="TrainingListBoxItemCM" ContextMenuOpening="TrainingVideoContextMenu_ContextMenuOpening" Opened="TrainingVideoContextMenu_Opened">
                                     <MenuItem Header="Play" Click="TrainingVideoClicked"/>
-                                    <!--<MenuItem Header="Crop" Click="CropTrainingVideoClicked"/>-->
                                     <MenuItem Header="Edit Labels" Click="EditLabelsClicked"/>
                                     <MenuItem Header="Edit Frames" Click="EditFramesClicked"/>
-                                    <!--<MenuItem Header="Extract Frames" Click="ExtractFramesClicked"/>-->
-                                    <MenuItem Header="Mirror" Click="MirrorTrainingVideo_Click"/>
-                                    <MenuItem Header="Crop" Click="TrainingVideoEdit_Click"/>
                                     <MenuItem Header="Delete" Click="DeleteClicked"/>
                                 </ContextMenu>
                             </ListBox.Resources>
@@ -139,10 +134,8 @@
                                     <Setter Property="Background" Value="White"/>
                                 </Style>
                                 <ContextMenu x:Key="TrainingListBoxItemCM">
-                                    <MenuItem Header="Play" Click="AnalyzedVideoClicked"/>
+                                    <MenuItem Header="Play" Click="PlayAnalyzedVideoClicked"/>
                                     <MenuItem Header="Open Results Folder" Click="ResultsClicked"/>
-                                    <MenuItem Header="Crop" Click="AnalyzeEditClicked"/>
-                                    <MenuItem Header="Mirror" Click="MirrorAnalyzeVideo_Click"/>
                                     <MenuItem Header="Delete" Click="AnalyzeDeleteClicked"/>
                                 </ContextMenu>
                             </ListBox.Resources>

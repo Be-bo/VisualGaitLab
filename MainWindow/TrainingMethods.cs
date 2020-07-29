@@ -31,8 +31,6 @@ namespace VisualGaitLab {
             if (selectedVideo != null) {
                 MenuItem labelItem = (MenuItem)contextMenu.Items[1];
                 MenuItem framesItem = (MenuItem)contextMenu.Items[2];
-                MenuItem mirrorItem = (MenuItem)contextMenu.Items[3];
-                MenuItem editItem = (MenuItem)contextMenu.Items[4];
 
                 if (!selectedVideo.FramesExtracted) {
                     framesItem.Header = "Extract & Label Frames";
@@ -48,15 +46,6 @@ namespace VisualGaitLab {
                 }
                 else {
                     labelItem.Header = "Edit Labels";
-                }
-
-                if (!selectedVideo.FramesExtracted && !selectedVideo.FramesLabeled) {
-                    mirrorItem.Visibility = Visibility.Visible;
-                    editItem.Visibility = Visibility.Visible;
-                }
-                else {
-                    mirrorItem.Visibility = Visibility.Collapsed;
-                    editItem.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -98,7 +87,7 @@ namespace VisualGaitLab {
                 if (dialog.ShowDialog() == true) {
                     CurrentProject.FramesToExtract = dialog.FramesToExtractTextBox.Text;
                     UpdateFramesToExtract();
-                    WaitForFile(CurrentProject.ConfigPath);
+                    FileSystemUtils.WaitForFile(CurrentProject.ConfigPath);
                     ExtractFrames(selectedVid);
                 }
                 else {
@@ -132,11 +121,28 @@ namespace VisualGaitLab {
             openFileDialog.Title = "Select a video";
             if (openFileDialog.ShowDialog() == true) {
                 string fullPath = openFileDialog.FileName;
-                if (fullPath.Contains(".mp4") || fullPath.Contains(".avi")) {
-                    SetUpVideo(fullPath);
-                }
-                else {
-                    MessageBox.Show("Video cannot be added. Only .mp4 and .avi file types are supported. Note: If you have .MP4 videos, convert them to H.264 codec (and potentially rename to .mp4).", "Unsupported Action");
+                if (fullPath.ToLower().EndsWith(".avi") || fullPath.ToLower().EndsWith(".mp4") || fullPath.ToLower().EndsWith(".wmv") || fullPath.ToLower().EndsWith(".mov")) {
+                    if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), "videos"), FileSystemUtils.GetFileNameWithExtension(fullPath))) {
+
+                        if (FileSystemUtils.FileNameOk(fullPath)) {
+                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, false, EnvDirectory, EnvName, Drive);
+                            if (window.ShowDialog() == true) {
+                                SyncUI();
+                                EnableInteraction();
+                            }else{
+                            EnableInteraction();
+                            }
+                        }
+                        else {
+                            MessageBox.Show("File names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
+                            EnableInteraction();
+                        }
+                    } else {
+                        MessageBox.Show("Video with a similar or an identical name has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
+                        EnableInteraction();
+                    }
+                } else {
+                    MessageBox.Show("Video cannot be added. Your video format is not supported.", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
                     EnableInteraction();
                 }
             }
@@ -145,69 +151,9 @@ namespace VisualGaitLab {
             }
         }
 
-        private void SetUpVideo(String fullPath) { //prepare a video by adding its info to the current project, create a thumbnail for it and call DLC's script to add it to the underlying project structure
-            TrainingVideo newVideo = new TrainingVideo();
-            newVideo.Name = fullPath.Substring(fullPath.LastIndexOf("\\") + 1, fullPath.LastIndexOf(".") - fullPath.LastIndexOf("\\") - 1);
-            string hypotheticalPath = CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\")) + "\\labeled-data\\" + newVideo.Name;
-            if ((!Directory.Exists(hypotheticalPath)) || (Directory.Exists(hypotheticalPath) && Directory.EnumerateFileSystemEntries(hypotheticalPath).Count() < 2)) {
-                if (Directory.Exists(hypotheticalPath) && Directory.EnumerateFileSystemEntries(hypotheticalPath).Count() == 1) File.Delete(Directory.EnumerateFiles(hypotheticalPath).First());
-                newVideo.Path = CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\")) + "\\videos\\" + fullPath.Substring(fullPath.LastIndexOf("\\") + 1);
-                newVideo.ThumbnailPath = "thumbnail.png";
-                newVideo.FramesExtracted = false;
-                newVideo.ExtractedImageName = "cross.png";
-                newVideo.FramesLabeled = false;
-                newVideo.LabeledImageName = "cross.png";
-
-                string filePath = EnvDirectory + "\\vdlc_add_video.py";
-                string copyVideosBool = "True";
-                MurderPython();
-                RenewScript(filePath, AllScripts.AddVideo); //create and run DeepLabCut's add_video function
-                ReplaceStringInFile(filePath, "copy_videos_identifier", copyVideosBool); //make sure the function parameters are correct
-                ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
-                ReplaceStringInFile(filePath, "video_path_identifier", fullPath);
-
-                Process p = new Process(); //prepare command line process
-                ProcessStartInfo info = new ProcessStartInfo();
-                info.FileName = "cmd.exe";
-                info.RedirectStandardInput = true;
-                info.UseShellExecute = false;
-                info.Verb = "runas";
-                info.CreateNoWindow = true;
-
-                p.EnableRaisingEvents = true;
-                p.Exited += (sender1, e1) =>  //once cmd is finished running the script
-                {
-                    this.Dispatcher.Invoke(() => {
-                        newVideo.ThumbnailPath = MakeTrainingVideoThumbnail(newVideo.Path); //create an actual thumbnail for the video
-                        CurrentProject.TrainingVideos.Add(newVideo); //add it to the project
-                        SyncUI();
-                        EnableInteraction();
-                    });
-                };
-
-                p.StartInfo = info;
-                p.Start();
-
-                using (StreamWriter sw = p.StandardInput) { //run the script using a hidden command line instance
-                    if (sw.BaseStream.CanWrite) {
-                        sw.WriteLine(Drive);
-                        sw.WriteLine("cd " + EnvDirectory);
-                        sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
-                        sw.WriteLine("conda activate " + EnvName);
-                        sw.WriteLine("ipython vdlc_add_video.py");
-                    }
-                }
-            }
-            else {
-                EnableInteraction();
-                MessageBox.Show("Your video cannot be added because it has already been added to this project.", "Video Cannot Be Added", MessageBoxButton.OK);
-            }
-
-        }
-
         private void DeleteClicked(object sender, RoutedEventArgs e) //delete training video clicked
         {
-            MurderPython();
+            FileSystemUtils.MurderPython();
             BarInteraction();
             if (CurrentProject.TrainingVideos.Count < 2) {
                 MessageBox.Show("There needs to be at least one video.", "Invalid Action", MessageBoxButton.OK, MessageBoxImage.Warning); //there's a bug if the user adds videos and then decides to delete all of them, this prevents it from happening
@@ -243,12 +189,6 @@ namespace VisualGaitLab {
                     EnableInteraction();
                 }
             }
-        }
-
-        private String MakeTrainingVideoThumbnail(String videoPath) { //create thumbnail for the training video inside the training video folder under the name: "<vid_name>.png"
-            String tgtPath = videoPath.Substring(0, videoPath.LastIndexOf(".")) + ".png";
-            CreateThumbnailForVideo(videoPath, tgtPath);
-            return tgtPath;
         }
 
 
@@ -287,12 +227,12 @@ namespace VisualGaitLab {
             if (dialog.ShowDialog() == true) {
                 CurrentProject.FramesToExtract = dialog.FramesToExtractTextBox.Text;
                 UpdateFramesToExtract();
-                WaitForFile(CurrentProject.ConfigPath);
+                FileSystemUtils.WaitForFile(CurrentProject.ConfigPath);
                 string filePath = EnvDirectory + "\\vdlc_extract_frames.py";
-                MurderPython();
-                RenewScript(filePath, AllScripts.ExtractFrames); //run DLC's extract_frames function using a script
-                ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath); //set function parameters
-                ReplaceStringInFile(filePath, "video_path_identifier", video.Path);
+                FileSystemUtils.MurderPython();
+                FileSystemUtils.RenewScript(filePath, AllScripts.ExtractFrames); //run DLC's extract_frames function using a script
+                FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath); //set function parameters
+                FileSystemUtils.ReplaceStringInFile(filePath, "video_path_identifier", video.Path);
 
                 Process p = new Process(); //prepare a cmd process to run the script
                 ProcessStartInfo info = new ProcessStartInfo();
@@ -338,94 +278,6 @@ namespace VisualGaitLab {
 
 
 
-
-
-
-        // MARK: Edit and Mirror Methods
-
-        private void MirrorTrainingVideo_Click(object sender, RoutedEventArgs e) {
-            var selectedVideo = (TrainingVideo)TrainingListBox.SelectedItem;
-            if (selectedVideo != null && !selectedVideo.FramesExtracted && !selectedVideo.FramesLabeled) {
-                BarInteraction();
-
-                //mirrored vid name is the original name + "_mirrored" just before the video extension
-                String outMirroredVidName = selectedVideo.Path.Substring(selectedVideo.Path.LastIndexOf("\\") + 1, selectedVideo.Path.LastIndexOf(".") - (selectedVideo.Path.LastIndexOf("\\") + 1)) + "_mirrored";
-                outMirroredVidName = outMirroredVidName + selectedVideo.Path.Substring(selectedVideo.Path.LastIndexOf("."));
-
-                Process p = new Process();
-                ProcessStartInfo info = new ProcessStartInfo();
-                info.FileName = "cmd.exe";
-                info.RedirectStandardInput = true;
-                info.UseShellExecute = false;
-                info.Verb = "runas";
-                info.CreateNoWindow = true;
-
-                p.EnableRaisingEvents = true;
-                p.Exited += (sender1, e1) => { //once mirroring done, create a new thumbnail and sync ui
-                    MakeTrainingVideoThumbnail(selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\") + 1) + outMirroredVidName);
-                    SetUpVideo(outMirroredVidName);
-                    SyncUI();
-                    EnableInteraction();
-                };
-
-                p.StartInfo = info;
-                p.Start();
-
-                using (StreamWriter sw = p.StandardInput) {
-                    if (sw.BaseStream.CanWrite) { //mirror the video using ffmpeg
-                        sw.WriteLine(Drive);
-                        sw.WriteLine("cd " + selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")));
-                        sw.WriteLine("ffmpeg -y -i \"" + selectedVideo.Path.Substring(selectedVideo.Path.LastIndexOf("\\") + 1) + "\" -qscale 0 -map_metadata 0 -crf 0 -vf \"hflip\" \"" + outMirroredVidName + "\"");
-                        //sw.WriteLine("wait to finish line"); //the next line sometimes gets cut off, this is just to make sure it doesn't happen to the actual command below
-                        //sw.WriteLine("ffmpeg -y -i out" + selectedVideo.Path.Substring(selectedVideo.Path.LastIndexOf(".")) + " -c copy -copyts -muxdelay 0 -max_delay 0 -map_metadata 0 \"" + selectedVideo.Path.Substring(selectedVideo.Path.LastIndexOf("\\") + 1) + "\"");
-                    }
-                }
-            }
-            else {
-                MessageBox.Show("The video cannot be mirrored because its frames have already been extracted and/or labeled.", "Invalid Action");
-            }
-        }
-
-        private void TrainingVideoEdit_Click(object sender, RoutedEventArgs e) {
-            TrainingVideo selectedVideo = (TrainingVideo)TrainingListBox.SelectedItem;
-            if (selectedVideo != null) {
-                BarInteraction();
-                EditVideo window = new EditVideo(selectedVideo.Path, selectedVideo.Name, false, CurrentProject, EnvDirectory, Drive, EnvName);
-                if (window.ShowDialog() == true) {
-                    SyncUI();
-                    EnableInteraction();
-                }
-                else {
-                    EnableInteraction();
-                }
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // MARK: Labeling Methods
 
         private void EditLabelsClicked(object sender, RoutedEventArgs e) {
@@ -447,10 +299,10 @@ namespace VisualGaitLab {
         private void LabelFrames(TrainingVideo video) //start DLC's labeling toolbox for a particular video
         {
             string filePath = EnvDirectory + "\\vdlc_label_frames.py";
-            MurderPython();
-            RenewScript(filePath, AllScripts.LabelFrames); //prepare to call DeepLabCut's labeling function
-            ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath); //set params
-            ReplaceStringInFile(filePath, "video_path_identifier", CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\")) + "\\labeled-data\\" + video.Name);
+            FileSystemUtils.MurderPython();
+            FileSystemUtils.RenewScript(filePath, AllScripts.LabelFrames); //prepare to call DeepLabCut's labeling function
+            FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath); //set params
+            FileSystemUtils.ReplaceStringInFile(filePath, "video_path_identifier", CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\")) + "\\labeled-data\\" + video.Name);
 
             Process p = new Process(); //prepare the cmd backgroung process
             ProcessStartInfo info = new ProcessStartInfo();
@@ -507,8 +359,9 @@ namespace VisualGaitLab {
                 MessageBox.Show("The network has already been trained. If you choose to train again the previous network will be overwritten.", "Overwrite?");
             }
             TrainingSettings settingsDialog = new TrainingSettings();
-            settingsDialog.saveItersTextBox.Text = CurrentProject.SaveIters;
             settingsDialog.endItersTextBox.Text = CurrentProject.EndIters;
+            settingsDialog.GlobalScaleSlider.Value = CurrentProject.GlobalScale;
+            settingsDialog.GlobalScaleNumberText.Text = CurrentProject.GlobalScale.ToString();
             if (settingsDialog.ShowDialog() == true) {
                 EditTrainingSettings(settingsDialog);
                 CreateTrainingDataset();
@@ -521,9 +374,9 @@ namespace VisualGaitLab {
         private void CreateTrainingDataset() //before training create a training dataset
         {
             string filePath = EnvDirectory + "\\vdlc_create_dataset.py";
-            MurderPython();
-            RenewScript(filePath, AllScripts.CreateDataset);
-            ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
+            FileSystemUtils.MurderPython();
+            FileSystemUtils.RenewScript(filePath, AllScripts.CreateDataset);
+            FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
             Process p = new Process();
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
@@ -558,10 +411,12 @@ namespace VisualGaitLab {
 
         private void TrainNetwork() //when training dataset created we start the training by, again, calling DeepLabCut's function
         {
+            bool errorDuringTraining = false;
+            string errorMessage = "No Error";
             string filePath = EnvDirectory + "\\vdlc_train_network.py";
-            MurderPython();
-            RenewScript(filePath, AllScripts.TrainNetwork);
-            ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
+            FileSystemUtils.MurderPython();
+            FileSystemUtils.RenewScript(filePath, AllScripts.TrainNetwork);
+            FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
             Process p = new Process();
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
@@ -584,6 +439,13 @@ namespace VisualGaitLab {
             p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => {
                 if (!String.IsNullOrEmpty(e.Data)) {
                     string line = e.Data;
+                    //Console.WriteLine(line);
+                    if (line.Contains("OOM")) {
+                        errorMessage = "Training failed due to insufficient GPU memory. Try setting \"Global Scale\" to a lower value.";
+                        errorDuringTraining = true;
+                        FileSystemUtils.MurderPython();
+                    }
+
                     if (line.Contains("iteration:") && line.Contains("loss:")) //extracting the current iterations information from cmd's output
                     {
                         currentIter = currentIter + int.Parse(CurrentProject.DisplayIters);
@@ -599,17 +461,28 @@ namespace VisualGaitLab {
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
-                globalStopWatch.Stop();
-                TimeSpan ts = globalStopWatch.Elapsed;
-                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                this.Dispatcher.Invoke(() => {
-                    LoadingWindow.Close();
-                });
-                CurrentProject.TrainedWith = new List<string>();
-                foreach (TrainingVideo current in TrainingListBox.ItemsSource) CurrentProject.TrainedWith.Add(current.Path);
-                UpdateVdlcConfig(); //update VDLC's config file
-                DeleteEvalFiles(); //overwrite eval files
-                EvalNetwork(elapsedTime);
+
+                if (errorDuringTraining) {
+                    this.Dispatcher.Invoke(() => {
+                        LoadingWindow.Close();
+                        EnableInteraction();
+                    });
+                    UpdateVdlcConfig(); //update VDLC's config file
+                    MessageBox.Show(errorMessage, "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else{
+                    globalStopWatch.Stop();
+                    TimeSpan ts = globalStopWatch.Elapsed;
+                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                    this.Dispatcher.Invoke(() => {
+                        LoadingWindow.Close();
+                    });
+                    CurrentProject.TrainedWith = new List<string>();
+                    foreach (TrainingVideo current in TrainingListBox.ItemsSource) CurrentProject.TrainedWith.Add(current.Path);
+                    UpdateVdlcConfig(); //update VDLC's config file
+                    DeleteEvalFiles(); //overwrite eval files
+                    EvalNetwork(elapsedTime);
+                }
             };
 
             p.StartInfo = info;
@@ -640,13 +513,15 @@ namespace VisualGaitLab {
 
 
 
+
+
         //MARK: Evaluation Methods
         private void EvalNetwork(string elapsedTime) { //evaluate the newly trained network using DeepLabCut's evaluate_network function
             BarInteraction();
             string filePath = EnvDirectory + "\\vdlc_eval_network.py";
-            MurderPython();
-            RenewScript(filePath, AllScripts.EvalNetwork);
-            ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
+            FileSystemUtils.MurderPython();
+            FileSystemUtils.RenewScript(filePath, AllScripts.EvalNetwork);
+            FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
             Process p = new Process();
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
@@ -735,8 +610,10 @@ namespace VisualGaitLab {
         // MARK: Training Settings Methods
 
         private void EditTrainingSettings(TrainingSettings dialog) {
-            CurrentProject.SaveIters = dialog.saveItersTextBox.Text;
+            int saveIters = int.Parse(dialog.endItersTextBox.Text);
+            CurrentProject.SaveIters = (saveIters / 5).ToString(); //save every 20%
             CurrentProject.EndIters = dialog.endItersTextBox.Text;
+            CurrentProject.GlobalScale = dialog.GlobalScaleSlider.Value;
             UpdateVdlcConfig();
             UpdateFramesToExtract();
         }

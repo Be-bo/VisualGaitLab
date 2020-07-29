@@ -37,7 +37,7 @@ namespace VisualGaitLab {
             }
         }
 
-        private void UpdatePoseCfg(string path) { //update pose_cfg.yaml file with display iterations, save iterations and end iters
+        private void UpdatePoseCfg(string path) { //update pose_cfg.yaml file
             StreamReader sr = new StreamReader(path);
             String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
             sr.Close();
@@ -47,6 +47,7 @@ namespace VisualGaitLab {
             for (int i = 0; i < rows.Length; i++) {
                 if (rows[i].Contains("display_iters:")) rows[i] = "display_iters: " + CurrentProject.DisplayIters;
                 if (rows[i].Contains("save_iters:")) rows[i] = "save_iters: " + CurrentProject.SaveIters;
+                if (rows[i].Contains("global_scale:")) rows[i] = "global_scale: " + CurrentProject.GlobalScale.ToString();
                 if (rows[i].Contains("multi_step:")) multiStepStart = i + 1;
                 if (rows[i].Contains("net_type:")) multiStepEnd = i;
             }
@@ -65,7 +66,7 @@ namespace VisualGaitLab {
             sw.Close();
         }
 
-        private void GetPoseCfgSettings(string trainPath) { //get current pose_cfg.yaml settings (display, save and end iters)
+        private void GetPoseCfgSettings(string trainPath) { //get current pose_cfg.yaml settings
             if (File.Exists(trainPath + "\\pose_cfg.yaml")) {
                 StreamReader sr = new StreamReader(trainPath + "\\pose_cfg.yaml");
                 String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
@@ -90,6 +91,10 @@ namespace VisualGaitLab {
                         }
                         CurrentProject.EndIters = line.Substring(line.IndexOf("- ") + 2);
                         CurrentProject.EndIters.Replace(" ", string.Empty);
+                    }
+
+                    if (rows[i].Contains("global_scale:")) {
+                        CurrentProject.GlobalScale = double.Parse(rows[i].Substring(rows[i].IndexOf(": ") + 2));
                     }
                 }
             }
@@ -250,23 +255,21 @@ namespace VisualGaitLab {
                 List<string> listRows = new List<string>(rows);
                 sr.Close();
 
-                string currentLine = listRows[0];
-                if (currentLine.Contains("gaitonly:")) {
-                    if (currentLine.Contains("False")) CurrentProject.IsGaitOnly = false;
-                    else CurrentProject.IsGaitOnly = true;
-                }
 
-                currentLine = listRows[1];
-                if ((currentLine.Length) > (currentLine.IndexOf(":") + 2) && currentLine.Contains("saveiters:")) CurrentProject.SaveIters = currentLine.Substring(currentLine.IndexOf(":") + 2, (currentLine.Length) - (currentLine.IndexOf(":") + 2));
+                for(int i = 0; i<listRows.Count; i++) {
+                    string currentLine = listRows[i];
 
-                currentLine = listRows[2];
-                if ((currentLine.Length) > (currentLine.IndexOf(":") + 2) && currentLine.Contains("enditers:")) CurrentProject.EndIters = currentLine.Substring(currentLine.IndexOf(":") + 2, (currentLine.Length) - (currentLine.IndexOf(":") + 2));
-
-                int vidStart = 0;
-                vidStart = listRows.IndexOf("trainedwith:");
-                if (vidStart != 0) {
-                    CurrentProject.TrainedWith = new List<string>();
-                    for (int i = vidStart + 1; i < listRows.Count; i++) if (listRows[i].Length > 3) CurrentProject.TrainedWith.Add(listRows[i]);
+                    if (currentLine.Contains("gaitonly:")) {
+                        if (currentLine.Contains("False")) CurrentProject.IsGaitOnly = false;
+                        else CurrentProject.IsGaitOnly = true;
+                    } else if ((currentLine.Length) > (currentLine.IndexOf(":") + 2) && currentLine.Contains("saveiters:")) CurrentProject.SaveIters = currentLine.Substring(currentLine.IndexOf(":") + 2, (currentLine.Length) - (currentLine.IndexOf(":") + 2));
+                    else if ((currentLine.Length) > (currentLine.IndexOf(":") + 2) && currentLine.Contains("enditers:")) CurrentProject.EndIters = currentLine.Substring(currentLine.IndexOf(":") + 2, (currentLine.Length) - (currentLine.IndexOf(":") + 2));
+                    else if ((currentLine.Length) > (currentLine.IndexOf(":") + 2) && currentLine.Contains("globalscale:")) CurrentProject.GlobalScale = double.Parse(currentLine.Substring(currentLine.IndexOf(":") + 2, (currentLine.Length) - (currentLine.IndexOf(":") + 2)));
+                    else if (currentLine.Contains("trainedwith:")) {
+                        int vidStart = i;
+                        CurrentProject.TrainedWith = new List<string>();
+                        for (int j = vidStart + 1; j < listRows.Count; j++) if (listRows[j].Length > 3) CurrentProject.TrainedWith.Add(listRows[j]);
+                    }
                 }
             }
         }
@@ -279,6 +282,7 @@ namespace VisualGaitLab {
             sw.WriteLine("gaitonly: " + CurrentProject.IsGaitOnly);
             sw.WriteLine("saveiters: " + CurrentProject.SaveIters);
             sw.WriteLine("enditers: " + CurrentProject.EndIters);
+            sw.WriteLine("globalscale: " + CurrentProject.GlobalScale);
             sw.WriteLine("trainedwith:");
 
             for (int i = 0; i < CurrentProject.TrainedWith.Count; i++) {

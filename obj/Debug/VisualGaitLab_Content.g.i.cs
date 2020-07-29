@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("otherwindows/dot.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("otherwindows/selectwindow.png")]
 
 

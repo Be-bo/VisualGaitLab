@@ -29,12 +29,10 @@ namespace VisualGaitLab.OtherWindows {
         }
 
         private void ContentChanged(object sender, TextChangedEventArgs e) {
-            if (saveItersTextBox != null && endItersTextBox != null && SaveButton != null) {
-
-                string saveIters = saveItersTextBox.Text;
+            if (endItersTextBox != null && SaveButton != null) {
                 string endIters = endItersTextBox.Text;
 
-                if (NumberRegex.IsMatch(saveIters) && NumberRegex.IsMatch(endIters) && !ZeroRegex.IsMatch(saveIters) && !ZeroRegex.IsMatch(endIters)) {
+                if (NumberRegex.IsMatch(endIters) && !ZeroRegex.IsMatch(endIters)) {
                     SaveButton.IsEnabled = true;
                 }
 
@@ -54,6 +52,10 @@ namespace VisualGaitLab.OtherWindows {
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
             DialogResult = false;
+        }
+
+        private void globalScalePos_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if(GlobalScaleNumberText != null) GlobalScaleNumberText.Text = GlobalScaleSlider.Value.ToString();
         }
     }
 }

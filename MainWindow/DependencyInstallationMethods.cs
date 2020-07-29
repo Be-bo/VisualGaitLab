@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using VisualGaitLab.OtherWindows;
+using VisualGaitLab.SupportingClasses;
 
 namespace VisualGaitLab {
     public partial class MainWindow : Window {
@@ -22,7 +23,7 @@ namespace VisualGaitLab {
             if (File.Exists(testGPUPath)) {
                 EnableInteraction();
                 this.Visibility = Visibility.Visible;
-                ShowDisclaimer();
+                //ShowDisclaimer();
             }
             else FinishInstallation();
         }
@@ -227,7 +228,7 @@ namespace VisualGaitLab {
             //erase all of the DeepLabCut files and replace it with a modified version that comes with this installation (modified for VDLC's purposes)
             string dlcTargetDir = Path.Combine(PFPath, @"Miniconda3\envs\" + EnvName + @"\Lib\site-packages\deeplabcut");
             string dlcInstallationDir = Path.Combine(PFPath, @"deeplabcut");
-            RecursiveDelete(new DirectoryInfo(dlcTargetDir));
+            FileSystemUtils.RecursiveDelete(new DirectoryInfo(dlcTargetDir));
             CopyFolder(dlcInstallationDir, dlcTargetDir);
         }
 

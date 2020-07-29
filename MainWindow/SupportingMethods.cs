@@ -16,76 +16,13 @@ namespace VisualGaitLab {
     public partial class MainWindow : Window {
 
         public void LoadingClosed(object sender, System.EventArgs e) {
-            MurderPython();
+            FileSystemUtils.MurderPython();
             EnableInteraction();
         }
 
-        public static void MurderPython() // brutally!
-        {
-            var procs = Process.GetProcesses().Where(pr => pr.ProcessName.Contains("python"));
-            foreach (var process in procs) {
-                try {
-                    process.Kill();
-                }
-                catch (Exception e) {
-                    Console.WriteLine("Error killing Python: " + e);
-                }
-
-            }
-        }
+        
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-            MurderPython();
-        }
-
-        public static void RenewScript(string fullFileName, List<string> originalScript) { //renew (i.e. create a py file containing specific lines from "PythonScripts" object) the script passed in as param
-
-            if (File.Exists(fullFileName)) {
-                String[] rows;
-                using (StreamReader sr = new StreamReader(fullFileName)) {
-                    rows = Regex.Split(sr.ReadToEnd(), "\r\n");
-                }
-
-                using (StreamWriter sw = new StreamWriter(fullFileName)) {
-                    for (int i = 0; i < rows.Length; i++) {
-                        sw.WriteLine("");
-                    }
-                }
-            }
-
-            using (StreamWriter sw1 = new StreamWriter(fullFileName)) {
-                for (int i = 0; i < originalScript.Count; i++) {
-                    sw1.WriteLine(originalScript[i]);
-                }
-            }
-        }
-
-        public static void ReplaceStringInFile(String filename, String search, String replace) { //replace string in a text file
-            StreamReader sr = new StreamReader(filename);
-            String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
-            sr.Close();
-
-            StreamWriter sw = new StreamWriter(filename);
-            for (int i = 0; i < rows.Length; i++) {
-                if (rows[i].Contains(search)) {
-                    rows[i] = rows[i].Replace(search, replace);
-                }
-                sw.WriteLine(rows[i]);
-            }
-            sw.Close();
-        }
-
-        public static bool IsFileReady(string filename) { //if the file can be opened for exclusive access it means that the file is no longer locked by another process
-            try {
-                using (FileStream inputStream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.None))
-                    return inputStream.Length > 0;
-            }
-            catch (Exception) {
-                return false;
-            }
-        }
-
-        public static void WaitForFile(string filename) { //this will lock the execution until the file is ready
-            while (!IsFileReady(filename)) { }
+            FileSystemUtils.MurderPython();
         }
 
         public static void CreateThumbnailForVideo(String vidPath, String targetPath) {
@@ -170,15 +107,6 @@ namespace VisualGaitLab {
             }
         }
 
-        public static void RecursiveDelete(DirectoryInfo baseDir) {
-            if (!baseDir.Exists)
-                return;
-
-            foreach (var dir in baseDir.EnumerateDirectories()) {
-                RecursiveDelete(dir);
-            }
-            File.SetAttributes(baseDir.FullName, FileAttributes.Normal);
-            baseDir.Delete(true);
-        }
+        
     }
 }

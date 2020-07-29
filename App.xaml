@@ -15,6 +15,7 @@
         <SolidColorBrush x:Key="ControlGreyBrush" Color="{StaticResource ControlGrey}"/>
 
 
+
         <!-- DEFAULT -->
         <Style x:Key="ThumbStyle" TargetType="{x:Type Thumb}">
             <Setter Property="Template">

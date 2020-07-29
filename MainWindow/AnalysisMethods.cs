@@ -31,9 +31,9 @@ namespace VisualGaitLab {
             }
         }
 
-        private void AnalyzedVideoClicked(object sender, RoutedEventArgs e) { //show the video in its folder in Windows Explorer
+        private void PlayAnalyzedVideoClicked(object sender, RoutedEventArgs e) { //show the video in its folder in Windows Explorer
             var selectedVideo = AnalyzedListBox.SelectedItem as AnalysisVideo;
-            if (selectedVideo != null && selectedVideo.IsAnalyzed) {
+            if (selectedVideo != null) {
                 string folderPath = selectedVideo.Path;
                 Process process = Process.Start("explorer.exe", folderPath);
             }
@@ -66,67 +66,12 @@ namespace VisualGaitLab {
 
 
 
-
-
-        // MARK: Mirroring Operation Methods
-
-        private void MirrorAnalyzeVideo_Click(object sender, RoutedEventArgs e) { //mirror the selected analysis video using cmd and FFmpeg
-            var selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
-            if (selectedVideo != null && !selectedVideo.IsAnalyzed) {
-                BarInteraction();
-
-                string mirroredVidNameWithExtension = selectedVideo.Name + "_mirrored" + selectedVideo.Path.Substring(selectedVideo.Path.LastIndexOf("."));
-                string mirroredVidFullPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\") + 1) + mirroredVidNameWithExtension;
-
-                Process p = new Process();
-                ProcessStartInfo info = new ProcessStartInfo();
-                info.FileName = "cmd.exe";
-                info.RedirectStandardInput = true;
-                info.UseShellExecute = false;
-                info.Verb = "runas";
-                info.CreateNoWindow = true;
-
-                p.EnableRaisingEvents = true;
-                p.Exited += (sender1, e1) => { //once mirroring done, create a new thumbnail and sync ui
-                    //CreateThumbnailForVideo(selectedVideo.Path, selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\thumbnail.png");
-                    SetUpAnalysisVideo(mirroredVidFullPath);
-                    SyncUI();
-                    EnableInteraction();
-                };
-
-                p.StartInfo = info;
-                p.Start();
-
-                using (StreamWriter sw = p.StandardInput) {
-                    if (sw.BaseStream.CanWrite) { //mirror the video using ffmpeg
-                        sw.WriteLine(Drive);
-                        sw.WriteLine("cd " + selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")));
-                        sw.WriteLine("ffmpeg -y -i \"" + selectedVideo.Path.Substring(selectedVideo.Path.LastIndexOf("\\") + 1) + "\" -qscale 0 -map_metadata 0 -crf 0 -vf \"hflip\" \"" + mirroredVidNameWithExtension + "\"");
-                    }
-                }
-            }
-            else {
-                MessageBox.Show("The video cannot be mirrored because it's already been analyzed.", "Invalid Action");
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
         // MARK: Results Viewing Functions
 
         private void ResultsClicked(object sender, RoutedEventArgs e) //see the analyzed video folder containing the results of its analysis
         {
             var selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
-            if (selectedVideo != null && selectedVideo.IsAnalyzed) {
+            if (selectedVideo != null) {
                 string folderPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\"));
                 Process process = Process.Start("explorer.exe", folderPath);
             }
@@ -156,65 +101,43 @@ namespace VisualGaitLab {
 
         private void AddVideoForAnalysis() //add a new video to analyze
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new OpenFileDialog(); //open a file dialog to let the user choose which video to add
             openFileDialog.Title = "Select a video";
             if (openFileDialog.ShowDialog() == true) {
-                SetUpAnalysisVideo(openFileDialog.FileName);
-            }
-            else {
-                EnableInteraction();
-            }
-        }
+                string fullPath = openFileDialog.FileName;
+                if (fullPath.ToLower().EndsWith(".avi") || fullPath.ToLower().EndsWith(".mp4") || fullPath.ToLower().EndsWith(".wmv") || fullPath.ToLower().EndsWith(".mov")) {
+                    if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), "analyzed-videos", FileSystemUtils.GetFileName(fullPath)), FileSystemUtils.GetFileNameWithExtension(fullPath))) {
 
-        private void SetUpAnalysisVideo(String fullPath) { //add the new analysis video to the project
-            if (fullPath.Contains(".mp4") || fullPath.Contains(".avi")) {
-                AnalysisVideo newVideo = new AnalysisVideo();
-                newVideo.Name = fullPath.Substring(fullPath.LastIndexOf("\\") + 1, fullPath.LastIndexOf(".") - fullPath.LastIndexOf("\\") - 1);
-                if (newVideo.Name.Length < 36) {
-                    string hypotheticalPath = CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\")) + "\\analyzed-videos\\" + newVideo.Name;
-                    if ((!File.Exists(hypotheticalPath + "\\" + newVideo.Name + ".mp4")) && !File.Exists(hypotheticalPath + "\\" + newVideo.Name + ".avi")) {
-                        newVideo.Path = CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\")) + "\\analyzed-videos\\" + newVideo.Name + "\\" + fullPath.Substring(fullPath.LastIndexOf("\\") + 1);
-                        string targetPath = /*Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)*/ newVideo.Path;
-                        System.IO.Directory.CreateDirectory(targetPath.Substring(0, targetPath.LastIndexOf("\\")));
-                        string fileName = targetPath;
-
-#pragma warning disable CA2008 // Do not create tasks without passing a TaskScheduler MY NOTE: VS Studio was shouting at me, this stopped the shouting...
-                        _ = Task.Run(() => File.Copy(fullPath, fileName, true)).ContinueWith((task) => { //copy the video to the analyzed-videos folder and only once it's done do the rest of the setup
-                            string settingsPath = targetPath.Substring(0, targetPath.LastIndexOf("\\")) + "\\settings.txt";
-                            StreamWriter sw1 = new StreamWriter(settingsPath);
-                            sw1.WriteLine("dotsize: " + "5");
-                            sw1.Close();
-
-                            newVideo.ThumbnailPath = "thumbnail.png";
-                            newVideo.IsAnalyzed = false;
-                            newVideo.AnalyzedImageName = "cross.png";
-                            if (CurrentProject.AnalysisVideos == null) CurrentProject.AnalysisVideos = new List<AnalysisVideo>();
-
-                            newVideo.ThumbnailPath = newVideo.Path.Substring(0, newVideo.Path.LastIndexOf("\\")) + "\\thumbnail.png";
-                            CreateThumbnailForVideo(newVideo.Path, newVideo.ThumbnailPath);
-                            CurrentProject.AnalysisVideos.Add(newVideo);
-                            SyncUI();
+                        if (FileSystemUtils.FileNameOk(fullPath)) {
+                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, true, EnvDirectory, EnvName, Drive);
+                            if (window.ShowDialog() == true) {
+                                SyncUI();
+                                EnableInteraction();
+                            }
+                            else {
+                                EnableInteraction();
+                            }
+                        }
+                        else {
+                            MessageBox.Show("File names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
                             EnableInteraction();
-                        });
-#pragma warning restore CA2008 // Do not create tasks without passing a TaskScheduler
+                        }
                     }
                     else {
+                        MessageBox.Show("Video with a similar or an identical name has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
                         EnableInteraction();
-                        MessageBox.Show("Your video cannot be added because it has already been added to this project.", "Video Cannot Be Added", MessageBoxButton.OK);
                     }
                 }
                 else {
+                    MessageBox.Show("Video cannot be added. Your video format is not supported.", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
                     EnableInteraction();
-                    MessageBox.Show("Video name length cannot exceed 35 characters.", "Video Cannot Be Added", MessageBoxButton.OK);
                 }
-
-
             }
             else {
-                MessageBox.Show("Video cannot be added. Only .mp4 and .avi file types are supported. Note: If you have .MP4 videos, convert them to H.264 codec (and potentially rename to .mp4).", "Unsupported Action");
                 EnableInteraction();
             }
         }
+
 
 
 
@@ -303,10 +226,10 @@ namespace VisualGaitLab {
         {
             AnalysisVideo video = CurrentProject.AnalysisVideos[pos];
             string filePath = EnvDirectory + "\\vdlc_analyze_video.py";
-            MurderPython();
-            RenewScript(filePath, AllScripts.AnalyzeVideo); //prepare script
-            ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
-            ReplaceStringInFile(filePath, "video_path_identifier", video.Path);
+            FileSystemUtils.MurderPython();
+            FileSystemUtils.RenewScript(filePath, AllScripts.AnalyzeVideo); //prepare script
+            FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
+            FileSystemUtils.ReplaceStringInFile(filePath, "video_path_identifier", video.Path);
 
             Process p = new Process(); //prepare cmd process
             ProcessStartInfo info = new ProcessStartInfo();
@@ -327,10 +250,14 @@ namespace VisualGaitLab {
                 LoadingWindow.Closed += LoadingClosed;
             });
 
+            Console.WriteLine("STARTING");
             p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => //feed cmd output to the loading window so the user knows the progress of the analysis
             {
                 if (!String.IsNullOrEmpty(e.Data)) {
                     string line = e.Data;
+                    Console.WriteLine(line);
+
+                    //TODO: OOM again
 
                     if (line.Contains("progress_maximum")) {
                         progressMax = line.Substring(line.IndexOf(":") + 1, line.IndexOf("#") - line.IndexOf(":") - 1);
@@ -395,10 +322,10 @@ namespace VisualGaitLab {
         private void CreateLabeledVideo(AnalysisVideo video) //create a labeled video for the corresponding analysis video using DLC's built in create_labeled_video function
         {
             string filePath = EnvDirectory + "\\vdlc_create_labeled_video.py";
-            MurderPython();
-            RenewScript(filePath, AllScripts.CreateLabeledVideo);
-            ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
-            ReplaceStringInFile(filePath, "video_path_identifier", video.Path);
+            FileSystemUtils.MurderPython();
+            FileSystemUtils.RenewScript(filePath, AllScripts.CreateLabeledVideo);
+            FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
+            FileSystemUtils.ReplaceStringInFile(filePath, "video_path_identifier", video.Path);
             Process p = new Process();
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";

@@ -61,12 +61,12 @@ namespace VisualGaitLab {
             string copyVideosBool = "True";
             newProject.ConfigPath = WorkingDirectory + "\\" + newProject.Name + "-" + newProject.Scorer + "-" + newProject.DateIdentifier + "\\" + "config.yaml";
             if (!ProjectExists(newProject)) {
-                MurderPython();
-                RenewScript(filePath, AllScripts.CreateProject); //prepare the script for creating a new project
-                ReplaceStringInFile(filePath, "project_name_identifier", newProject.Name);
-                ReplaceStringInFile(filePath, "scorer_identifier", newProject.Scorer);
-                ReplaceStringInFile(filePath, "working_directory_identifier", WorkingDirectory);
-                ReplaceStringInFile(filePath, "copy_videos_identifier", copyVideosBool);
+                FileSystemUtils.MurderPython();
+                FileSystemUtils.RenewScript(filePath, AllScripts.CreateProject); //prepare the script for creating a new project
+                FileSystemUtils.ReplaceStringInFile(filePath, "project_name_identifier", newProject.Name);
+                FileSystemUtils.ReplaceStringInFile(filePath, "scorer_identifier", newProject.Scorer);
+                FileSystemUtils.ReplaceStringInFile(filePath, "working_directory_identifier", WorkingDirectory);
+                FileSystemUtils.ReplaceStringInFile(filePath, "copy_videos_identifier", copyVideosBool);
 
                 Process p = new Process(); //prepare the process to run the script
                 ProcessStartInfo info = new ProcessStartInfo();
