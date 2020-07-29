@@ -2,7 +2,7 @@
   <img src="https://github.com/Be-bo/VisualGaitLab/blob/master/logo.png" width="100" height="100">
 </p>
 
-This repository is a Visual Studio Project containing the code base for VisualGaitLab software.
+This repository is a Visual Studio Project & Solution containing the code base for VisualGaitLab software.
 
 Setup Steps:
 
