@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VisualGaitLab.OtherWindows" xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Video Prep" Height="400" Width="800"
+        Title="Video Prep" Height="380" Width="800"
         Icon="logo.png"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"

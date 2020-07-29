@@ -441,7 +441,7 @@ namespace VisualGaitLab {
                     string line = e.Data;
                     //Console.WriteLine(line);
                     if (line.Contains("OOM")) {
-                        errorMessage = "Training failed due to insufficient GPU memory. Try setting \"Global Scale\" to a lower value.";
+                        errorMessage = "Training failed due to insufficient GPU memory. Try setting \"Global Scale\" to a lower value, and/or reducing training videos' resolution during import.";
                         errorDuringTraining = true;
                         FileSystemUtils.MurderPython();
                     }
