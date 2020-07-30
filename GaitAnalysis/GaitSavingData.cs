@@ -22,6 +22,7 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void SaveCurrentState() {
+            PrintSizesOfAllTypesOfVars();
             string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
             Directory.CreateDirectory(stateFolder);
 
@@ -82,7 +83,6 @@ namespace VisualGaitLab.GaitAnalysis {
                 HindRightInStance = File.ReadAllLines(stateFolder + "\\HindRightInStance.txt").ToList().ConvertAll(item => int.Parse(item));
                 FrontLeftInStance = File.ReadAllLines(stateFolder + "\\FrontLeftInStance.txt").ToList().ConvertAll(item => int.Parse(item));
                 FrontRightInStance = File.ReadAllLines(stateFolder + "\\FrontRightInStance.txt").ToList().ConvertAll(item => int.Parse(item));
-
 
                 HindLeftMidPointXs = File.ReadAllLines(stateFolder + "\\HindLeftMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
                 HindLeftMidPointYs = File.ReadAllLines(stateFolder + "\\HindLeftMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));

@@ -50,7 +50,6 @@ namespace VisualGaitLab.GaitAnalysis {
         // MARK: Auto Correct
 
         private void GaitAutoCorrectButton_Click(object sender, RoutedEventArgs e) {
-            //TODO: bar and allow interaction
 
             List<int> oldHindLeftInStance = new List<int>(HindLeftInStance);
             List<int> oldHindRightInStance = new List<int>(HindRightInStance);

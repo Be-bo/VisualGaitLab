@@ -256,6 +256,7 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void LeftFrontChart_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+
             if (FrontLeftInStance[GaitCurrentFrame] == 1) FrontLeftInStance[GaitCurrentFrame] = 0;
             else FrontLeftInStance[GaitCurrentFrame] = 1;
 
@@ -266,6 +267,7 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void RightHindChart_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+ 
             if (HindRightInStance[GaitCurrentFrame] == 1) HindRightInStance[GaitCurrentFrame] = 0;
             else HindRightInStance[GaitCurrentFrame] = 1;
 
@@ -276,6 +278,7 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void RightFrontChart_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+
             if (FrontRightInStance[GaitCurrentFrame] == 1) FrontRightInStance[GaitCurrentFrame] = 0;
             else FrontRightInStance[GaitCurrentFrame] = 1;
 
@@ -284,6 +287,10 @@ namespace VisualGaitLab.GaitAnalysis {
             ((ObservablePoint)FrontRightObservables[GaitCurrentFrame]).Y = FrontRightInStance[GaitCurrentFrame];
             SetStaticData();
         }
+
+
+
+
 
 
 

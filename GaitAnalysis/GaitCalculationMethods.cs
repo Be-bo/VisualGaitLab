@@ -183,7 +183,6 @@ namespace VisualGaitLab.GaitAnalysis {
                     if (IsFreeRun) { //don't have treadmill speed for the freewalk type analysis, have to grab actual position difference
                         int startPos = switchPositions[j];
                         int endPos = switchPositions[j + 2];
-                        Console.WriteLine("start: " + startPos + " end: " + endPos + " len: " + midPointXs.Count + " len: " + midPointYs.Count);
                         distance = CalculateDistanceBetweenPoints(midPointXs[startPos], midPointYs[startPos], midPointXs[endPos], midPointYs[endPos]);
                         distance = distance * RealWorldMultiplier;
                     }
@@ -252,6 +251,14 @@ namespace VisualGaitLab.GaitAnalysis {
         // MARK: Dynamic Data (everything that changes from frame to frame)
 
         private void CalculatePawAnglesAndStanceWidths() {
+            HindStanceWidths = new List<double>();
+            ForeStanceWidths = new List<double>();
+
+            HindLeftPawAngles = new List<double>();
+            HindRightPawAngles = new List<double>();
+            FrontLeftPawAngles = new List<double>();
+            FrontRightPawAngles = new List<double>();
+
             for (int i = 0; i < GaitNumberOfFrames; i++) {
                 //Paw Angles
                 CalculateCenterOfMass(i); //center of mass is necessary for paw angles
@@ -365,6 +372,11 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void GetAdjustedPawAngles() {
+            HindLeftPawAnglesAdjusted = new List<double>();
+            HindRightPawAnglesAdjusted = new List<double>();
+            FrontLeftPawAnglesAdjusted = new List<double>();
+            FrontRightPawAnglesAdjusted = new List<double>();
+
             for (int i = 0; i < HindLeftInStance.Count; i++) {
                 if (HindLeftInStance[i] == 1) //if the given paw is in stance, add the paw angle value, if it's in swing (i.e. else) don't add it
                 {
@@ -501,13 +513,17 @@ namespace VisualGaitLab.GaitAnalysis {
             FrontLeftStrideDurationSEM = CalculateStrideDurationSEM(FrontLeftStancesByStride, FrontLeftSwingsByStride);
             FrontRightStrideDurationSEM = CalculateStrideDurationSEM(FrontRightStancesByStride, FrontRightSwingsByStride);
 
+            //TODO
+            Console.WriteLine("HL ANGLE SIZE: " + HindLeftPawAnglesAdjusted.Count);
             HindLeftPawAngleSEM = CalculateSEM(HindLeftPawAnglesAdjusted, HindLeftPawAngleAvg); //have to use the adjusted values to get the correct SEM (to makes sure swing frame paw angle values are disregarded)
             HindRightPawAngleSEM = CalculateSEM(HindRightPawAnglesAdjusted, HindRightPawAngleAvg);
             FrontLeftPawAngleSEM = CalculateSEM(FrontLeftPawAnglesAdjusted, FrontLeftPawAngleAvg);
             FrontRightPawAngleSEM = CalculateSEM(FrontRightPawAnglesAdjusted, FrontRightPawAngleAvg);
 
+            Console.WriteLine("HL WIDTH SIZE: " + HindStanceWidths.Count);
             HindStanceWidthSEM = CalculateSEM(HindStanceWidths, HindStanceWidthAvg);
             ForeStanceWidthSEM = CalculateSEM(ForeStanceWidths, ForeStanceWidthAvg);
+            //TODOEND
 
             HindLeftStrideLenSEM = CalculateSEM(HindLeftStrides, HindLeftStrideLenAvg);
             HindRightStrideLenSEM = CalculateSEM(HindRightStrides, HindRightStrideLenAvg);
