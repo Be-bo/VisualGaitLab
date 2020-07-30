@@ -22,7 +22,6 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void SaveCurrentState() {
-            PrintSizesOfAllTypesOfVars();
             string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
             Directory.CreateDirectory(stateFolder);
 

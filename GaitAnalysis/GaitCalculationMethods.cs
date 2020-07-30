@@ -513,17 +513,13 @@ namespace VisualGaitLab.GaitAnalysis {
             FrontLeftStrideDurationSEM = CalculateStrideDurationSEM(FrontLeftStancesByStride, FrontLeftSwingsByStride);
             FrontRightStrideDurationSEM = CalculateStrideDurationSEM(FrontRightStancesByStride, FrontRightSwingsByStride);
 
-            //TODO
-            Console.WriteLine("HL ANGLE SIZE: " + HindLeftPawAnglesAdjusted.Count);
             HindLeftPawAngleSEM = CalculateSEM(HindLeftPawAnglesAdjusted, HindLeftPawAngleAvg); //have to use the adjusted values to get the correct SEM (to makes sure swing frame paw angle values are disregarded)
             HindRightPawAngleSEM = CalculateSEM(HindRightPawAnglesAdjusted, HindRightPawAngleAvg);
             FrontLeftPawAngleSEM = CalculateSEM(FrontLeftPawAnglesAdjusted, FrontLeftPawAngleAvg);
             FrontRightPawAngleSEM = CalculateSEM(FrontRightPawAnglesAdjusted, FrontRightPawAngleAvg);
 
-            Console.WriteLine("HL WIDTH SIZE: " + HindStanceWidths.Count);
             HindStanceWidthSEM = CalculateSEM(HindStanceWidths, HindStanceWidthAvg);
             ForeStanceWidthSEM = CalculateSEM(ForeStanceWidths, ForeStanceWidthAvg);
-            //TODOEND
 
             HindLeftStrideLenSEM = CalculateSEM(HindLeftStrides, HindLeftStrideLenAvg);
             HindRightStrideLenSEM = CalculateSEM(HindRightStrides, HindRightStrideLenAvg);
