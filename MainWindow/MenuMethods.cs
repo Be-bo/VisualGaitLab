@@ -74,7 +74,7 @@ namespace VisualGaitLab {
                 info.RedirectStandardInput = true;
                 info.UseShellExecute = false;
                 info.Verb = "runas";
-                info.CreateNoWindow = true;
+                info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
                 p.EnableRaisingEvents = true;
                 p.Exited += (sender1, e1) => //once finished, update bodyparts, update training split, vdlc config and sync ui
@@ -86,7 +86,7 @@ namespace VisualGaitLab {
                     });
                     SetBodyParts(CurrentProject);
                     UpdateTrainingSplitInConfig();
-                    UpdateVdlcConfig();
+                    UpdateVGLConfig();
                     SyncUI();
                     EnableInteraction();
                 };
@@ -101,6 +101,12 @@ namespace VisualGaitLab {
                         sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                         sw.WriteLine("conda activate " + EnvName);
                         sw.WriteLine("ipython vdlc_create_new_project.py");
+                        
+                        if (info.CreateNoWindow == false) { //for debug purposes
+                            sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                            p.WaitForExit();
+                            sw.WriteLine("Done, exiting.");
+                        }
                     }
                 }
             }
@@ -229,7 +235,7 @@ namespace VisualGaitLab {
                     LoadAnalysisVideos();
                     if (CurrentProject.AnalysisVideos.Count > 0) EnableAnalysisPart();
                     //Load VDLC Config
-                    ReadVdlcConfig();
+                    ReadVGLConfig();
                 }
                 else {
 

@@ -27,6 +27,9 @@
                         <!--<Separator />-->
                         <!--<MenuItem Header="_Exit" Foreground="Black"/>-->
                     </MenuItem>
+                    <MenuItem Header="View" Foreground="{StaticResource DefaultBlueBrush}">
+                        <MenuItem Header="_Debug Console" Click="DebugConsoleClicked" Foreground="Black"/>
+                    </MenuItem>
                 </Menu>
             </DockPanel>
 

@@ -312,5 +312,21 @@ namespace VisualGaitLab
         private void EmptyButton_Click(object sender, RoutedEventArgs e) {
             ClearCombinedGait();
         }
+
+
+
+
+
+
+
+        private void DebugConsoleClicked(object sender, RoutedEventArgs e) {
+            if(MessageBox.Show("Debug Console displays the command line each time VGL is interfacing with DeepLabCut. Enable this if you're experiencing problems with creating a project, labelling, training, or analysis. If you encounter a bug, enable this, and email rfiker@ucalgary.ca with a screenshot of the console. Do you want to show the console?"
+                ,"Enable Debug Console?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes){
+                UpdateSettings(true);
+            }
+            else {
+                UpdateSettings(false);
+            }
+        }
     }
 }

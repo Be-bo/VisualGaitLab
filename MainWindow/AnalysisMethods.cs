@@ -109,7 +109,7 @@ namespace VisualGaitLab {
                     if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), "analyzed-videos", FileSystemUtils.GetFileName(fullPath)), FileSystemUtils.GetFileNameWithExtension(fullPath))) {
 
                         if (FileSystemUtils.FileNameOk(fullPath)) {
-                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, true, EnvDirectory, EnvName, Drive);
+                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, true, EnvDirectory, EnvName, Drive, ProgramFolder);
                             if (window.ShowDialog() == true) {
                                 SyncUI();
                                 EnableInteraction();
@@ -239,10 +239,10 @@ namespace VisualGaitLab {
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
             info.RedirectStandardInput = true;
-            info.RedirectStandardOutput = true;
+            info.RedirectStandardOutput = !ReadShowDebugConsole();
             info.UseShellExecute = false;
             info.Verb = "runas";
-            info.CreateNoWindow = true;
+            info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
             string progressMax = "0";
             string progressValue = "0";
@@ -254,36 +254,40 @@ namespace VisualGaitLab {
                 LoadingWindow.Closed += LoadingClosed;
             });
 
-            Console.WriteLine("STARTING");
-            p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => //feed cmd output to the loading window so the user knows the progress of the analysis
-            {
-                if (!String.IsNullOrEmpty(e.Data)) {
-                    string line = e.Data;
-                    Console.WriteLine(line);
 
-                    if (line.Contains("OOM")) {
-                        errorMessage = "Analysis failed due to insufficient GPU memory. Try importing the video again and reducing its resolution, and/or cropping it.";
-                        errorDuringAnalysis = true;
-                        FileSystemUtils.MurderPython();
-                    }
+            //NONDEBUG -----------------------------------------------------------------------------------------------
+            if (info.CreateNoWindow) { //redirect output if debug mode disabled
+                p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => //feed cmd output to the loading window so the user knows the progress of the analysis
+                {
+                    if (!String.IsNullOrEmpty(e.Data)) {
+                        string line = e.Data;
+                        Console.WriteLine(line);
 
-                    if (line.Contains("progress_maximum")) {
-                        progressMax = line.Substring(line.IndexOf(":") + 1, line.IndexOf("#") - line.IndexOf(":") - 1);
-                        this.Dispatcher.Invoke(() => {
-                            LoadingWindow.ProgressBar.Maximum = int.Parse(progressMax);
-                        });
-                    }
+                        if (line.Contains("OOM")) {
+                            errorMessage = "Analysis failed due to insufficient GPU memory. Try importing the video again and reducing its resolution, and/or cropping it.";
+                            errorDuringAnalysis = true;
+                            FileSystemUtils.MurderPython();
+                        }
 
-                    if (line.Contains("progress_value")) {
-                        progressValue = line.Substring(line.IndexOf(":") + 1, line.IndexOf("#") - line.IndexOf(":") - 1);
-                        this.Dispatcher.Invoke(() => {
-                            string progressInfo = progressValue + " / " + progressMax + " frames";
-                            LoadingWindow.ProgressLabel.Content = progressInfo;
-                            LoadingWindow.ProgressBar.Value = int.Parse(progressValue);
-                        });
+                        if (line.Contains("progress_maximum")) {
+                            progressMax = line.Substring(line.IndexOf(":") + 1, line.IndexOf("#") - line.IndexOf(":") - 1);
+                            this.Dispatcher.Invoke(() => {
+                                LoadingWindow.ProgressBar.Maximum = int.Parse(progressMax);
+                            });
+                        }
+
+                        if (line.Contains("progress_value")) {
+                            progressValue = line.Substring(line.IndexOf(":") + 1, line.IndexOf("#") - line.IndexOf(":") - 1);
+                            this.Dispatcher.Invoke(() => {
+                                string progressInfo = progressValue + " / " + progressMax + " frames";
+                                LoadingWindow.ProgressLabel.Content = progressInfo;
+                                LoadingWindow.ProgressBar.Value = int.Parse(progressValue);
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
+            //NONDEBUG -----------------------------------------------------------------------------------------------
 
 
             p.EnableRaisingEvents = true;
@@ -293,7 +297,7 @@ namespace VisualGaitLab {
                         LoadingWindow.Close();
                         EnableInteraction();
                     });
-                    UpdateVdlcConfig(); //update VDLC's config file
+                    UpdateVGLConfig(); //update VGLS's config file
                     MessageBox.Show(errorMessage, "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
@@ -313,10 +317,19 @@ namespace VisualGaitLab {
                     sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_analyze_video.py");
+
+                    if (info.CreateNoWindow == false) { //for debug purposes
+                        sw.WriteLine("");
+                        sw.WriteLine("");
+                        sw.WriteLine("");
+                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        p.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
+                    }
                 }
             }
 
-            p.BeginOutputReadLine();
+            if(info.CreateNoWindow) p.BeginOutputReadLine();//only redirect output if debug enabled
         }
 
 
@@ -349,7 +362,7 @@ namespace VisualGaitLab {
             info.RedirectStandardInput = true;
             info.UseShellExecute = false;
             info.Verb = "runas";
-            info.CreateNoWindow = true;
+            info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
@@ -370,6 +383,12 @@ namespace VisualGaitLab {
                     sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_create_labeled_video.py");
+
+                    if (info.CreateNoWindow == false) { //for debug purposes
+                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        p.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
+                    }
                 }
             }
         }

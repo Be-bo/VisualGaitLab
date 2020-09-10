@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,6 +50,7 @@ namespace VisualGaitLab.OtherWindows {
         string Drive = "";
         string ProjectPath = "";
         string InitialFilePath = "";
+        string ProgramFolder = "";
 
         double VideoDuration = 0; //in seconds
         int ConversionCounter = 1;
@@ -79,7 +81,7 @@ namespace VisualGaitLab.OtherWindows {
 
         // MARK: Setup Functions
 
-        public ImportWindow(string inputFileName, string configPath, bool isAnalysisVid, string envDir, string envNam, string driv) {
+        public ImportWindow(string inputFileName, string configPath, bool isAnalysisVid, string envDir, string envNam, string driv, string progFolder) {
             InitializeComponent();
             ProjectPath = FileSystemUtils.GetParentFolder(configPath);
             CachePath = FileSystemUtils.ExtendPath(ProjectPath, "cache");
@@ -89,6 +91,7 @@ namespace VisualGaitLab.OtherWindows {
             EnvDirectory = envDir;
             EnvName = envNam;
             Drive = driv;
+            ProgramFolder = progFolder;
             StartCheckingForCompletion(1); //have to wait for InitializeComponent to finish (to show the loading wheel right away)
         }
 
@@ -791,7 +794,7 @@ namespace VisualGaitLab.OtherWindows {
             info.RedirectStandardInput = true;
             info.UseShellExecute = false;
             info.Verb = "runas";
-            info.CreateNoWindow = true;
+            info.CreateNoWindow = !ReadShowDebugConsole();
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
@@ -814,6 +817,12 @@ namespace VisualGaitLab.OtherWindows {
                     sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_add_video.py");
+
+                    if (info.CreateNoWindow == false) { //for debug purposes
+                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        p.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
+                    }
                 }
             }
         }
@@ -853,6 +862,23 @@ namespace VisualGaitLab.OtherWindows {
                 ImportPrimaryPanel.Opacity = 1;
                 ImportPRing.IsActive = false;
             });
+        }
+
+        private bool ReadShowDebugConsole() {
+            string settingsPath = FileSystemUtils.ExtendPath(ProgramFolder, "settings.txt");
+            bool retVal = false;
+            if (File.Exists(settingsPath)) {
+                StreamReader sr = new StreamReader(settingsPath);
+                String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
+                List<string> listRows = new List<string>(rows);
+                sr.Close();
+
+                for (int i = 0; i < listRows.Count; i++) {
+                    string currentLine = listRows[i];
+                    if (currentLine.Contains("showdebugconsole: ") && currentLine.Contains("True")) retVal = true;
+                }
+            }
+            return retVal;
         }
     }
 }

@@ -245,9 +245,9 @@ namespace VisualGaitLab {
 
 
 
-        // MARK: VDLC Project Settings Methods
+        // MARK: VGL Project Settings Methods
 
-        private void ReadVdlcConfig() { //read VDLC's config for this project, this file keeps track of which vids (if any) the network was trained with, if it's gait only and save and end iters
+        private void ReadVGLConfig() { //read VGL's config for this project, this file keeps track of which vids (if any) the network was trained with, if it's gait only and save and end iters
             string vdlcConfigPath = CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\")) + "\\vdlc_config.txt";
             if (File.Exists(vdlcConfigPath)) {
                 StreamReader sr = new StreamReader(vdlcConfigPath);
@@ -274,7 +274,7 @@ namespace VisualGaitLab {
             }
         }
 
-        private void UpdateVdlcConfig() { //update vdlc config based on the current state of the project data
+        private void UpdateVGLConfig() { //update vdlc config based on the current state of the project data
             string vdlcConfigPath = CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\")) + "\\vdlc_config.txt";
             StreamWriter sw = new StreamWriter(vdlcConfigPath);
             List<string> listRows = new List<string>();
@@ -288,6 +288,39 @@ namespace VisualGaitLab {
             for (int i = 0; i < CurrentProject.TrainedWith.Count; i++) {
                 sw.WriteLine(CurrentProject.TrainedWith[i]);
             }
+            sw.Close();
+        }
+
+
+
+
+
+
+
+        //MARK: Other Methods
+
+        private bool ReadShowDebugConsole() {
+            string settingsPath = FileSystemUtils.ExtendPath(ProgramFolder, "settings.txt");
+            bool retVal = false;
+            if (File.Exists(settingsPath)) {
+                StreamReader sr = new StreamReader(settingsPath);
+                String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
+                List<string> listRows = new List<string>(rows);
+                sr.Close();
+
+                for (int i = 0; i < listRows.Count; i++) {
+                    string currentLine = listRows[i];
+                    if (currentLine.Contains("showdebugconsole: ") && currentLine.Contains("True"))  retVal = true;
+                }
+            }
+            return retVal;
+        }
+
+        private void UpdateSettings(bool showDebugConsole) {
+            string settingsPath = FileSystemUtils.ExtendPath(ProgramFolder, "settings.txt");
+            StreamWriter sw = new StreamWriter(settingsPath);
+            List<string> listRows = new List<string>(); //for later, now we only have one option
+            sw.WriteLine("showdebugconsole: " + showDebugConsole.ToString());
             sw.Close();
         }
     }

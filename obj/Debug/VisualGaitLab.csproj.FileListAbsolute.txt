@@ -95,7 +95,6 @@ D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\VisualGaitLab.csproj.CoreC
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\VisualGaitLab.csproj.CopyComplete
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\VisualGaitLab.exe
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\VisualGaitLab.pdb
-D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\VisualGaitLab.csprojAssemblyReference.cache
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\ImportWindow.g.cs
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\ImportWindow.baml
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\BitrateWindow.g.cs

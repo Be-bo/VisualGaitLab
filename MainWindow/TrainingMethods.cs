@@ -125,7 +125,7 @@ namespace VisualGaitLab {
                     if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), "videos"), FileSystemUtils.GetFileNameWithExtension(fullPath))) {
 
                         if (FileSystemUtils.FileNameOk(fullPath)) {
-                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, false, EnvDirectory, EnvName, Drive);
+                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, false, EnvDirectory, EnvName, Drive, ProgramFolder);
                             if (window.ShowDialog() == true) {
                                 SyncUI();
                                 EnableInteraction();
@@ -181,7 +181,7 @@ namespace VisualGaitLab {
                     DeleteVidFromConfig(CurrentProject.ConfigPath, selectedVideo.Path);
                     if (CurrentProject.TrainedWith.Contains(selectedVideo.Path)) {
                         CurrentProject.TrainedWith.Remove(selectedVideo.Path);
-                        UpdateVdlcConfig();
+                        UpdateVGLConfig();
                     }
 
                     if (Directory.Exists(dir)) Directory.Delete(dir);
@@ -240,7 +240,7 @@ namespace VisualGaitLab {
                 info.RedirectStandardInput = true;
                 info.UseShellExecute = false;
                 info.Verb = "runas";
-                info.CreateNoWindow = true;
+                info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
                 p.EnableRaisingEvents = true;
                 p.Exited += (sender1, e1) => //once done, continue to labeling the video automatically
@@ -258,6 +258,12 @@ namespace VisualGaitLab {
                         sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                         sw.WriteLine("conda activate " + EnvName);
                         sw.WriteLine("ipython vdlc_extract_frames.py");
+
+                        if (info.CreateNoWindow == false) { //for debug purposes
+                            sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                            p.WaitForExit();
+                            sw.WriteLine("Done, exiting.");
+                        }
                     }
                 }
             }
@@ -310,7 +316,7 @@ namespace VisualGaitLab {
             info.RedirectStandardInput = true;
             info.UseShellExecute = false;
             info.Verb = "runas";
-            info.CreateNoWindow = true;
+            info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
@@ -329,6 +335,12 @@ namespace VisualGaitLab {
                     sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_label_frames.py");
+
+                    if (info.CreateNoWindow == false) { //for debug purposes
+                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        p.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
+                    }
                 }
             }
         }
@@ -381,10 +393,9 @@ namespace VisualGaitLab {
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
             info.RedirectStandardInput = true;
-            info.RedirectStandardOutput = true;
             info.UseShellExecute = false;
             info.Verb = "runas";
-            info.CreateNoWindow = true;
+            info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
@@ -403,6 +414,12 @@ namespace VisualGaitLab {
                     sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_create_dataset.py");
+
+                    if (info.CreateNoWindow == false) { //for debug purposes
+                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        p.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
+                    }
                 }
             }
         }
@@ -421,10 +438,10 @@ namespace VisualGaitLab {
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
             info.RedirectStandardInput = true;
-            info.RedirectStandardOutput = true;
+            info.RedirectStandardOutput = !ReadShowDebugConsole(); //when we want to show debug console, we don't want to redirect output
             info.UseShellExecute = false;
             info.Verb = "runas";
-            info.CreateNoWindow = true;
+            info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
             this.Dispatcher.Invoke(() => {
                 LoadingWindow = new LoadingWindow(); //show a loading window during training that takes cmd's output (DeepLabCut's train_network function generated output) so the user knows how far along they are
@@ -434,30 +451,37 @@ namespace VisualGaitLab {
                 LoadingWindow.ProgressBar.Maximum = int.Parse(CurrentProject.EndIters);
             });
 
-            int currentIter = 0;
-            StringBuilder output = new StringBuilder();
-            p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => {
-                if (!String.IsNullOrEmpty(e.Data)) {
-                    string line = e.Data;
-                    //Console.WriteLine(line);
-                    if (line.Contains("OOM")) {
-                        errorMessage = "Training failed due to insufficient GPU memory. Try setting \"Global Scale\" to a lower value, and/or reducing training videos' resolution during import.";
-                        errorDuringTraining = true;
-                        FileSystemUtils.MurderPython();
-                    }
 
-                    if (line.Contains("iteration:") && line.Contains("loss:")) //extracting the current iterations information from cmd's output
-                    {
-                        currentIter = currentIter + int.Parse(CurrentProject.DisplayIters);
-                        this.Dispatcher.Invoke(() => {
-                            string currentIters = line.Substring(line.IndexOf("n:") + 3, line.IndexOf("lo") - line.IndexOf("n:") - 4);
-                            string progressInfo = currentIters + " / " + CurrentProject.EndIters + " iterations";
-                            LoadingWindow.ProgressLabel.Content = progressInfo;
-                            LoadingWindow.ProgressBar.Value = currentIter;
-                        });
+            //NONDEBUG -----------------------------------------------------------------------------------------------
+            if (info.CreateNoWindow) { //if not in debug mode
+                int currentIter = 0;
+                StringBuilder output = new StringBuilder();
+                p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => {
+                    if (!String.IsNullOrEmpty(e.Data)) {
+                        string line = e.Data;
+                        //Console.WriteLine(line);
+                        if (line.Contains("OOM")) {
+                            errorMessage = "Training failed due to insufficient GPU memory. Try setting \"Global Scale\" to a lower value, and/or reducing training videos' resolution during import.";
+                            errorDuringTraining = true;
+                            FileSystemUtils.MurderPython();
+                        }
+
+                        if (line.Contains("iteration:") && line.Contains("loss:")) //extracting the current iterations information from cmd's output
+                        {
+                            currentIter = currentIter + int.Parse(CurrentProject.DisplayIters);
+                            this.Dispatcher.Invoke(() => {
+                                string currentIters = line.Substring(line.IndexOf("n:") + 3, line.IndexOf("lo") - line.IndexOf("n:") - 4);
+                                string progressInfo = currentIters + " / " + CurrentProject.EndIters + " iterations";
+                                LoadingWindow.ProgressLabel.Content = progressInfo;
+                                LoadingWindow.ProgressBar.Value = currentIter;
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
+            //NONDEBUG -----------------------------------------------------------------------------------------------
+
+
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
@@ -467,10 +491,10 @@ namespace VisualGaitLab {
                         LoadingWindow.Close();
                         EnableInteraction();
                     });
-                    UpdateVdlcConfig(); //update VDLC's config file
+                    UpdateVGLConfig(); //update VDLC's config file
                     MessageBox.Show(errorMessage, "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                else{
+                else {
                     globalStopWatch.Stop();
                     TimeSpan ts = globalStopWatch.Elapsed;
                     string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
@@ -479,7 +503,7 @@ namespace VisualGaitLab {
                     });
                     CurrentProject.TrainedWith = new List<string>();
                     foreach (TrainingVideo current in TrainingListBox.ItemsSource) CurrentProject.TrainedWith.Add(current.Path);
-                    UpdateVdlcConfig(); //update VDLC's config file
+                    UpdateVGLConfig(); //update VDLC's config file
                     DeleteEvalFiles(); //overwrite eval files
                     EvalNetwork(elapsedTime);
                 }
@@ -498,11 +522,16 @@ namespace VisualGaitLab {
                     sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_train_network.py");
+
+                    if (info.CreateNoWindow == false) { //for debug purposes
+                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        p.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
+                    }
                 }
             }
 
-            p.BeginOutputReadLine();
-
+            if(info.CreateNoWindow) p.BeginOutputReadLine();
         }
 
 
@@ -526,10 +555,9 @@ namespace VisualGaitLab {
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
             info.RedirectStandardInput = true;
-            info.RedirectStandardOutput = true;
             info.UseShellExecute = false;
             info.Verb = "runas";
-            info.CreateNoWindow = true;
+            info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
             this.Dispatcher.Invoke(() => {
                 LoadingWindow = new LoadingWindow();
@@ -567,10 +595,14 @@ namespace VisualGaitLab {
                     sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_eval_network.py");
+
+                    if (info.CreateNoWindow == false) { //for debug purposes
+                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        p.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
+                    }
                 }
             }
-
-            p.BeginOutputReadLine();
         }
 
         private void TrainStatsButton_Click(object sender, RoutedEventArgs e) { //show the evaluation window upon button click
@@ -614,7 +646,7 @@ namespace VisualGaitLab {
             CurrentProject.SaveIters = (saveIters / 5).ToString(); //save every 20%
             CurrentProject.EndIters = dialog.endItersTextBox.Text;
             CurrentProject.GlobalScale = dialog.GlobalScaleSlider.Value;
-            UpdateVdlcConfig();
+            UpdateVGLConfig();
             UpdateFramesToExtract();
         }
     }
