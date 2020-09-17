@@ -42,26 +42,36 @@ namespace VisualGaitLab.SupportingClasses {
 
             CreateDataset = new List<string>();
             CreateDataset.Add("import deeplabcut");
+            CreateDataset.Add("import os");
+            CreateDataset.Add("os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'");
             CreateDataset.Add("config_path = r'config_path_identifier'");
             CreateDataset.Add("deeplabcut.create_training_dataset(config_path)");
 
             TrainNetwork = new List<string>();
             TrainNetwork.Add("import deeplabcut");
+            TrainNetwork.Add("import os");
+            TrainNetwork.Add("os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'");
             TrainNetwork.Add("config_path = r'config_path_identifier'");
             TrainNetwork.Add("deeplabcut.train_network(config_path)");
 
             EvalNetwork = new List<string>();
             EvalNetwork.Add("import deeplabcut");
+            EvalNetwork.Add("import os");
+            EvalNetwork.Add("os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'");
             EvalNetwork.Add("config_path = r'config_path_identifier'");
             EvalNetwork.Add("deeplabcut.evaluate_network(config_path, plotting=True)");
 
             CreateLabeledVideo = new List<string>();
             CreateLabeledVideo.Add("import deeplabcut");
+            CreateLabeledVideo.Add("import os");
+            CreateLabeledVideo.Add("os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'");
             CreateLabeledVideo.Add("config_path = r'config_path_identifier'");
             CreateLabeledVideo.Add("deeplabcut.create_labeled_video(config_path,[r'video_path_identifier'],save_frames=True)");
 
             AnalyzeVideo = new List<string>();
             AnalyzeVideo.Add("import deeplabcut");
+            AnalyzeVideo.Add("import os");
+            AnalyzeVideo.Add("os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'");
             AnalyzeVideo.Add("config_path = r'config_path_identifier'");
             AnalyzeVideo.Add("deeplabcut.analyze_videos(config_path,[r'video_path_identifier'],save_as_csv=True)");
 

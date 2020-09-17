@@ -385,6 +385,7 @@ namespace VisualGaitLab {
 
         private void CreateTrainingDataset() //before training create a training dataset
         {
+            Console.WriteLine("CREATE TRAINING DATASET");
             string filePath = EnvDirectory + "\\vdlc_create_dataset.py";
             FileSystemUtils.MurderPython();
             FileSystemUtils.RenewScript(filePath, AllScripts.CreateDataset);
@@ -399,6 +400,7 @@ namespace VisualGaitLab {
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
+                Console.WriteLine("CREATING DATASET DONE");
                 string posePath = GetPoseCfgPath();
                 if (posePath != null) UpdatePoseCfg(posePath);
                 TrainNetwork();
@@ -428,6 +430,7 @@ namespace VisualGaitLab {
 
         private void TrainNetwork() //when training dataset created we start the training by, again, calling DeepLabCut's function
         {
+            Console.WriteLine("TRAIN NETWROK");
             bool errorDuringTraining = false;
             string errorMessage = "No Error";
             string filePath = EnvDirectory + "\\vdlc_train_network.py";

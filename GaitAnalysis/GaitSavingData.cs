@@ -83,17 +83,21 @@ namespace VisualGaitLab.GaitAnalysis {
                 FrontLeftInStance = File.ReadAllLines(stateFolder + "\\FrontLeftInStance.txt").ToList().ConvertAll(item => int.Parse(item));
                 FrontRightInStance = File.ReadAllLines(stateFolder + "\\FrontRightInStance.txt").ToList().ConvertAll(item => int.Parse(item));
 
-                HindLeftMidPointXs = File.ReadAllLines(stateFolder + "\\HindLeftMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
-                HindLeftMidPointYs = File.ReadAllLines(stateFolder + "\\HindLeftMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
+                if(File.Exists(stateFolder + "\\HindLeftMidPointXs.txt") && File.Exists(stateFolder + "\\HindLeftMidPointYs.txt") && File.Exists(stateFolder + "\\HindRightMidPointXs.txt") && File.Exists(stateFolder + "\\HindRightMidPointYs.txt")
+                    && File.Exists(stateFolder + "\\FrontLeftMidPointXs.txt") && File.Exists(stateFolder + "\\FrontLeftMidPointYs.txt") && File.Exists(stateFolder + "\\FrontRightMidPointXs.txt") && File.Exists(stateFolder + "\\FrontRightMidPointYs.txt")) {
+                    HindLeftMidPointXs = File.ReadAllLines(stateFolder + "\\HindLeftMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
+                    HindLeftMidPointYs = File.ReadAllLines(stateFolder + "\\HindLeftMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
 
-                HindRightMidPointXs = File.ReadAllLines(stateFolder + "\\HindRightMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
-                HindRightMidPointYs = File.ReadAllLines(stateFolder + "\\HindRightMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
+                    HindRightMidPointXs = File.ReadAllLines(stateFolder + "\\HindRightMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
+                    HindRightMidPointYs = File.ReadAllLines(stateFolder + "\\HindRightMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
 
-                FrontLeftMidPointXs = File.ReadAllLines(stateFolder + "\\FrontLeftMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
-                FrontLeftMidPointYs = File.ReadAllLines(stateFolder + "\\FrontLeftMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
+                    FrontLeftMidPointXs = File.ReadAllLines(stateFolder + "\\FrontLeftMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
+                    FrontLeftMidPointYs = File.ReadAllLines(stateFolder + "\\FrontLeftMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
 
-                FrontRightMidPointXs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
-                FrontRightMidPointYs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
+                    FrontRightMidPointXs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
+                    FrontRightMidPointYs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
+                }
+                
                 MessageBox.Show("Loaded saved data from previous session.", "Data Loaded", MessageBoxButton.OK);
             }
             else {

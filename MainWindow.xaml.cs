@@ -80,7 +80,9 @@ namespace VisualGaitLab
 
         private void ShowDisclaimer() { //show some info about the current state of the program
             MessageBox.Show(
-                "We STRONGLY recommend that you first quickly run through the entire process before committing to a project (to make sure VGL runs well on your machine).", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+                "We STRONGLY recommend that you first quickly run through the entire process before committing to a project (to make sure VGL runs well on your machine)." +
+                "\n\n" +
+                "version 2.0.1", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
 
@@ -245,7 +247,14 @@ namespace VisualGaitLab
                 string gaitVideoPath = vid.Path; //extract necessary info from the video
                 string gaitVideoName = vid.Path.Substring(vid.Path.LastIndexOf("\\") + 1, vid.Path.LastIndexOf(".") - vid.Path.LastIndexOf("\\"));
                 string gaitTempPath = vid.Path.Substring(0, vid.Path.LastIndexOf("\\")) + "\\temp-" + gaitVideoName;
-                string file = Directory.EnumerateFiles(gaitTempPath).First();
+                var files = Directory.EnumerateFiles(gaitTempPath);
+                var file = ""; //might crash
+                foreach(var currentImg in files) {
+                    if (currentImg.Contains(".png")) {
+                        file = currentImg;
+                        break;
+                    }
+                }
                 BarInteraction();
 
                 string stateFolder = gaitVideoPath.Substring(0, gaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate"; //check if input params saved from before

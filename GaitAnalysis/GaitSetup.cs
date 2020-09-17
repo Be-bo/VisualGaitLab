@@ -26,6 +26,13 @@ namespace VisualGaitLab.GaitAnalysis {
 
         private void SetUpGaitForVid() {
             string file = Directory.EnumerateFiles(GaitTempPath).First(); //get the first individual frame of the analyzed video
+            var files = Directory.EnumerateFiles(GaitTempPath);
+            foreach(var currentFile in files) { //just in case there's random stuff in the folder
+                if (currentFile.Contains(".png")) {
+                    file = currentFile;
+                    break;
+                }
+            }
             BitmapImage bitmap = new BitmapImage(new Uri(file, UriKind.Absolute));
             file = file.Substring(file.LastIndexOf("\\") + 1, file.LastIndexOf("g") - file.LastIndexOf("\\"));
             NumberOfDigits = file.Length - 8; //determine the number of digits (i.e. 4 digits if the last frame is "file4567.png" - all frames < 1000 are padded with 0s) and subtract 8 characters (for "file" and ".png")
@@ -115,10 +122,12 @@ namespace VisualGaitLab.GaitAnalysis {
 
         private void SetUpPawCharts() { //set up the primary top 4 charts corresponding to mouse's paws
 
-            LeftHindChart.Zoom = ZoomingOptions.X; //set up zooming along the X axis for all paw charts
-            LeftFrontChart.Zoom = ZoomingOptions.X;
-            RightFrontChart.Zoom = ZoomingOptions.X;
-            RightHindChart.Zoom = ZoomingOptions.X;
+            ZoomingOptions moozinOptions = ZoomingOptions.X;
+
+            LeftHindChart.Zoom = moozinOptions; //set up zooming along the X axis for all paw charts
+            LeftFrontChart.Zoom = moozinOptions;
+            RightFrontChart.Zoom = moozinOptions;
+            RightHindChart.Zoom = moozinOptions;
 
             GaitNumberOfFrames = HindLeftInStance.Count; //a few more values we need to initialize but needed to parse the .csv for first
             XMAX = GaitNumberOfFrames;
@@ -158,6 +167,7 @@ namespace VisualGaitLab.GaitAnalysis {
                     MaxValue = XMAX,
                     MinValue = XMIN
                 });
+                ((Axis)(LeftHindChart.AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
 
                 LeftHindChart.AxisY.Add(new Axis {
                     MaxValue = YMAX,
@@ -182,6 +192,7 @@ namespace VisualGaitLab.GaitAnalysis {
                     MaxValue = XMAX,
                     MinValue = XMIN
                 });
+                ((Axis)(LeftFrontChart.AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
 
                 LeftFrontChart.AxisY.Add(new Axis {
                     MaxValue = YMAX,
@@ -206,6 +217,7 @@ namespace VisualGaitLab.GaitAnalysis {
                     MaxValue = XMAX,
                     MinValue = XMIN
                 });
+                ((Axis)(RightHindChart.AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
 
                 RightHindChart.AxisY.Add(new Axis {
                     MaxValue = YMAX,
@@ -230,6 +242,7 @@ namespace VisualGaitLab.GaitAnalysis {
                     MaxValue = XMAX,
                     MinValue = XMIN
                 });
+                ((Axis)(RightFrontChart.AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
 
                 RightFrontChart.AxisY.Add(new Axis {
                     MaxValue = YMAX,

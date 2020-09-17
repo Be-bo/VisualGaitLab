@@ -17,7 +17,7 @@ using System.Windows.Shapes;
 
 namespace VisualGaitLab.GaitAnalysis {
     /// <summary>
-    /// Interaction logic for GaitWindow.xaml
+    /// Interaction logic for GaitWindow.xaml.
     /// </summary>
     public partial class GaitWindow : Window {
         public GaitWindow(double realWorldMultiplier, float treadmillSpeed, string gaitVideoPath, string gaitVideoName, string gaitTempPath, bool isFreeRun) {

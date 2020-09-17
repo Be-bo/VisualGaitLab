@@ -1,4 +1,5 @@
 ﻿using LiveCharts.Defaults;
+using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -287,27 +288,26 @@ namespace VisualGaitLab.GaitAnalysis {
             ((ObservablePoint)FrontRightObservables[GaitCurrentFrame]).Y = FrontRightInStance[GaitCurrentFrame];
             SetStaticData();
         }
+        
 
 
 
+        // MARK: Zooming & Panning Sync
+        private void Axis_RangeChanged(LiveCharts.Events.RangeChangedEventArgs eventArgs) {
+            double min = ((Axis)eventArgs.Axis).MinValue;
+            double max = ((Axis)eventArgs.Axis).MaxValue;
 
+            LeftHindChart.AxisX[0].MinValue = min;
+            LeftHindChart.AxisX[0].MaxValue = max;
 
+            LeftFrontChart.AxisX[0].MinValue = min;
+            LeftFrontChart.AxisX[0].MaxValue = max;
 
+            RightHindChart.AxisX[0].MinValue = min;
+            RightHindChart.AxisX[0].MaxValue = max;
 
-
-
-
-
-
-        // MARK: Chart Zooming Functions
-        private void LeftHindChart_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
-            if (e.Delta > 0) {
-
-                Console.WriteLine("delta > 0");
-            }
-            else if (e.Delta < 0) {
-                Console.WriteLine("delta < 0");
-            }
+            RightFrontChart.AxisX[0].MinValue = min;
+            RightFrontChart.AxisX[0].MaxValue = max;
         }
     }
 }

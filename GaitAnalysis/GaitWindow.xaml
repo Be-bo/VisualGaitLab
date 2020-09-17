@@ -266,7 +266,7 @@
 
                     <StackPanel Width="Auto" Height="Auto" Grid.Row="4" Margin="5,5,-10,5">
                         <TextBlock Margin="0, 20, 0, 0" Text="Left Hind" TextAlignment="Center"/>
-                        <lvc:CartesianChart MinHeight="70" Name="LeftHindChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="LeftHindChart_MouseRightButtonUp" MouseWheel="LeftHindChart_MouseWheel"/>
+                        <lvc:CartesianChart MinHeight="70" Name="LeftHindChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="LeftHindChart_MouseRightButtonUp"/>
 
                         <TextBlock Margin="0, 20, 0, 0" Text="Left Fore" TextAlignment="Center"/>
                         <lvc:CartesianChart MinHeight="70" Name="LeftFrontChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="LeftFrontChart_MouseRightButtonUp"/>

@@ -27,6 +27,7 @@ namespace VisualGaitLab.OtherWindows {
         public MeasureWindow(string imagePath) { //set up canvas with a screenshot from the current video
             InitializeComponent();
             ImagePath = imagePath;
+            Console.WriteLine(imagePath);
             Bmap = new BitmapImage(new Uri(ImagePath, UriKind.Absolute));
             CanvasBackground.Source = Bmap;
         }

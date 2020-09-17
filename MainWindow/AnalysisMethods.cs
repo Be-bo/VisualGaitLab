@@ -210,16 +210,22 @@ namespace VisualGaitLab {
                         }
                     }
                     sr.Close();
-                    AnalysisSettings settingsDialog = new AnalysisSettings(selectedVideo.ThumbnailPath, selectedVideo.Name, dotsize); //display a window with a thumbnail where the user can choose the label size they find appropriate
-                    if (settingsDialog.ShowDialog() == true) {
-                        string settingsPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt";
-                        StreamWriter sw = new StreamWriter(settingsPath);
-                        sw.WriteLine("dotsize: " + settingsDialog.CurrentLabelSize.Text);
-                        sw.Close();
-                        EditDotSizeInConfig(AnalyzedListBox.SelectedIndex); //update the dotsize in DLC's config file
-                        AnalyzeVideo(AnalyzedListBox.SelectedIndex);
+
+                    if (File.Exists(selectedVideo.ThumbnailPath)) { //MediaToolKit not as reliable when it comes to thumbnails, in case it fails we just analyze with default label size
+                        AnalysisSettings settingsDialog = new AnalysisSettings(selectedVideo.ThumbnailPath, selectedVideo.Name, dotsize); //display a window with a thumbnail where the user can choose the label size they find appropriate
+                        if (settingsDialog.ShowDialog() == true) {
+                            string settingsPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt";
+                            StreamWriter sw = new StreamWriter(settingsPath);
+                            sw.WriteLine("dotsize: " + settingsDialog.CurrentLabelSize.Text);
+                            sw.Close();
+                            EditDotSizeInConfig(AnalyzedListBox.SelectedIndex); //update the dotsize in DLC's config file
+                            AnalyzeVideo(AnalyzedListBox.SelectedIndex);
+                        }
+                        else EnableInteraction();
                     }
-                    else EnableInteraction();
+                    else { //thumbnail doesn't exist (its creation failed)
+                        AnalyzeVideo(AnalyzedListBox.SelectedIndex);
+                    } 
                 }
             }
         }
