@@ -30,7 +30,7 @@ namespace VisualGaitLab.OtherWindows {
     public partial class ImportWindow : Window {
 
 
-
+        
 
 
         // MARK: Variables
@@ -229,28 +229,32 @@ namespace VisualGaitLab.OtherWindows {
 
                 engine.GetMetadata(vid);
                 var segment = VideoDuration / 15; //divide the duration by 15
+                Random r = new Random(); //we use random ints because if the user adds more than one vid in a session the old thumbnails can't be deleted and are out of date on the timeline
+                var imageNames = new List<string>();
 
                 for (int i = 0; i < 15; i++) { //and keep capturing the thumbnail at the correct location (Eg. thumbnail at loc 3 is 3*segment where segment is one 15th of the video)
                     var options = new ConversionOptions { Seek = TimeSpan.FromSeconds(i * segment) };
-                    var outputFile = new MediaFile { Filename = string.Format("{0}\\thumb{1}.jpg", cacheLocation, i) };
+                    var thumbName = r.Next(0, 10000000).ToString() + ".jpg";
+                    var outputFile = new MediaFile { Filename = cacheLocation + "\\" + thumbName };
+                    imageNames.Add(thumbName);
                     engine.GetThumbnail(vid, outputFile, options);
                 }
 
-                ImportTimeLineImage1.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb0.jpg", UriKind.Absolute));
-                ImportTimeLineImage2.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb1.jpg", UriKind.Absolute));
-                ImportTimeLineImage3.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb2.jpg", UriKind.Absolute));
-                ImportTimeLineImage4.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb3.jpg", UriKind.Absolute));
-                ImportTimeLineImage5.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb4.jpg", UriKind.Absolute));
-                ImportTimeLineImage6.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb5.jpg", UriKind.Absolute));
-                ImportTimeLineImage7.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb6.jpg", UriKind.Absolute));
-                ImportTimeLineImage8.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb7.jpg", UriKind.Absolute));
-                ImportTimeLineImage9.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb8.jpg", UriKind.Absolute));
-                ImportTimeLineImage10.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb9.jpg", UriKind.Absolute));
-                ImportTimeLineImage11.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb10.jpg", UriKind.Absolute));
-                ImportTimeLineImage12.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb11.jpg", UriKind.Absolute));
-                ImportTimeLineImage13.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb12.jpg", UriKind.Absolute));
-                ImportTimeLineImage14.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb13.jpg", UriKind.Absolute));
-                ImportTimeLineImage15.Source = new BitmapImage(new Uri(cacheLocation + "\\thumb14.jpg", UriKind.Absolute));
+                ImportTimeLineImage1.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[0], UriKind.Absolute));
+                ImportTimeLineImage2.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[1], UriKind.Absolute));
+                ImportTimeLineImage3.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[2], UriKind.Absolute));
+                ImportTimeLineImage4.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[3], UriKind.Absolute));
+                ImportTimeLineImage5.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[4], UriKind.Absolute));
+                ImportTimeLineImage6.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[5], UriKind.Absolute));
+                ImportTimeLineImage7.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[6], UriKind.Absolute));
+                ImportTimeLineImage8.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[7], UriKind.Absolute));
+                ImportTimeLineImage9.Source = new BitmapImage(new Uri(cacheLocation + "\\" + imageNames[8], UriKind.Absolute));
+                ImportTimeLineImage10.Source = new BitmapImage(new Uri(cacheLocation + "\\"+ imageNames[9], UriKind.Absolute));
+                ImportTimeLineImage11.Source = new BitmapImage(new Uri(cacheLocation + "\\"+ imageNames[10], UriKind.Absolute));
+                ImportTimeLineImage12.Source = new BitmapImage(new Uri(cacheLocation + "\\"+ imageNames[11], UriKind.Absolute));
+                ImportTimeLineImage13.Source = new BitmapImage(new Uri(cacheLocation + "\\"+ imageNames[12], UriKind.Absolute));
+                ImportTimeLineImage14.Source = new BitmapImage(new Uri(cacheLocation + "\\"+ imageNames[13], UriKind.Absolute));
+                ImportTimeLineImage15.Source = new BitmapImage(new Uri(cacheLocation + "\\"+ imageNames[14], UriKind.Absolute));
             }
         }
 

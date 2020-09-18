@@ -82,7 +82,7 @@ namespace VisualGaitLab
             MessageBox.Show(
                 "We STRONGLY recommend that you first quickly run through the entire process before committing to a project (to make sure VGL runs well on your machine)." +
                 "\n\n" +
-                "version 2.0.1", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+                "version 2.0.0 - OSF frozen", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
 

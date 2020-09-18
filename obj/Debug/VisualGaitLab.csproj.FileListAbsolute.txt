@@ -99,4 +99,3 @@ D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\ImportWindow.
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\ImportWindow.baml
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\BitrateWindow.g.cs
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\BitrateWindow.baml
-D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\VisualGaitLab.csprojAssemblyReference.cache
