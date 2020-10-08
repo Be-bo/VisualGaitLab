@@ -29,8 +29,8 @@ namespace VisualGaitLab {
         }
 
         private void FinishInstallation() { //finish the installation by running the installation script
-            if (MessageBox.Show("VDLC *REQUIRES* that you install the latest drivers before running this installation (click cancel and rerun the installation once you have the latest drivers). Keep in mind that only Nvidia GPUs are supported. By Clicking \"OK\" you're agreeing with Miniconda 3 and FFmpeg being installed onto your computer (into the VDLC's installation folder).",
-               "CRITICAL Information", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) == MessageBoxResult.Cancel) {
+            if (MessageBox.Show("We recommend installing the latest GPU drivers. Keep in mind that only Nvidia GPUs are supported. By Clicking \"OK\" you're agreeing with Miniconda 3 and FFmpeg being installed onto your computer (into the VGL's installation folder).",
+               "Information", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) == MessageBoxResult.Cancel) {
                 this.Close();
             }
             else {
