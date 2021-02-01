@@ -100,7 +100,7 @@
 
                         <!-- Tab's Bottom Part-->
                         <DockPanel Name="TrainingAddDock" Visibility="Collapsed" Grid.Row="1" Margin="5" Cursor="Hand">
-                            <Image Name="TrainingAddImage" Source="add.png" Height="20" Width="20" HorizontalAlignment="Left" />
+                            <Image Name="TrainingAddImage" Source="/Images/add.png" Height="20" Width="20" HorizontalAlignment="Left" />
                             <Button Name="TrainingAddButton" Click="AddClicked">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
@@ -180,7 +180,7 @@
 
                         <!-- Tab's Bottom Part-->
                         <DockPanel Name="AnalyzeAddDock" Grid.Row="1" Margin="5" Cursor="Hand">
-                            <Image Name="AnalyzeAddImage" Source="add.png" Height="20" Width="20" HorizontalAlignment="Left" />
+                            <Image Name="AnalyzeAddImage" Source="/Images/add.png" Height="20" Width="20" HorizontalAlignment="Left" />
                             <Button Click="AnalyzeAddClicked">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
