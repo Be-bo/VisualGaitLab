@@ -247,7 +247,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Row="1" Name="CurrentFrameText" Source="example.png" Margin="5"/>
+                    <Image Grid.Row="1" Name="CurrentFrameText" Source="/Images/example.png" Margin="5"/>
 
                     <DockPanel LastChildFill="True" Grid.Row="2" Margin="5">
                         <TextBlock DockPanel.Dock="Left" Width="100" Text="Full Length: " VerticalAlignment="Center" TextAlignment="Left"/>

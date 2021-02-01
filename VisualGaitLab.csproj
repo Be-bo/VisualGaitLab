@@ -251,7 +251,6 @@
     <Resource Include="cross.png" />
     <Resource Include="dir.png" />
     <Resource Include="edit.png" />
-    <Resource Include="example.png" />
     <Resource Include="help.png" />
     <Resource Include="hint.png" />
     <Resource Include="logo.png" />
