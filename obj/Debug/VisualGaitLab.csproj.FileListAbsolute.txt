@@ -99,3 +99,46 @@ D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\ImportWindow.
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\ImportWindow.baml
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\BitrateWindow.g.cs
 D:\HBI\Visual Studio Projects\VisualGaitLab\obj\Debug\OtherWindows\BitrateWindow.baml
+C:\Aaallmine\git_repos\vgl\bin\Debug\VisualGaitLab.exe.config
+C:\Aaallmine\git_repos\vgl\bin\Debug\VisualGaitLab.exe
+C:\Aaallmine\git_repos\vgl\bin\Debug\VisualGaitLab.pdb
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab.csprojAssemblyReference.cache
+C:\Aaallmine\git_repos\vgl\obj\Debug\GaitAnalysis\GaitWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\MainWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\EditVideo.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\LoadingWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\GaitAnalysis\GaitWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\MainWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\AddBodyPartWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\AnalysisSettings.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\BitrateWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\CreateProjectDialog.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\DependencyLoadingWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\EditVideo.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\EvalWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\FramesToExtractDialog.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\ImportWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\LoadingWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\MeasureWindow.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\TrainingSettings.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\App.g.cs
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab_MarkupCompile.cache
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab_MarkupCompile.lref
+C:\Aaallmine\git_repos\vgl\obj\Debug\App.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\AddBodyPartWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\AnalysisSettings.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\BitrateWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\CreateProjectDialog.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\DependencyLoadingWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\EvalWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\FramesToExtractDialog.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\ImportWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\MeasureWindow.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\OtherWindows\TrainingSettings.baml
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab.g.resources
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab.Properties.Resources.resources
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab.csproj.GenerateResource.cache
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab.csproj.CoreCompileInputs.cache
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab.csproj.CopyComplete
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab.exe
+C:\Aaallmine\git_repos\vgl\obj\Debug\VisualGaitLab.pdb
