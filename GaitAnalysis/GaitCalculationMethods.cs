@@ -480,7 +480,8 @@ namespace VisualGaitLab.GaitAnalysis {
             for (int i = 0; i < allFramesByStride.Count; i++) {
                 allValuesInMillis.Add((((double)allFramesByStride[i]) / (FPS)) * 1000); //first get all values for swing and stance in ms (Eg. stride 1 has a swing lasting 200ms and a stance lasting 300ms, we add up those for each stride)
             }
-            double mean = allValuesInMillis.Average(); //get the mean of either stance and swing
+            double mean = allValuesInMillis.Average(); //get the mean of either stance or swing
+            Console.WriteLine(mean);
             return CalculateSEM(allValuesInMillis, mean); //now we can actually calcuate the SEM with the baseline function
         }
 
@@ -493,6 +494,16 @@ namespace VisualGaitLab.GaitAnalysis {
             }
             double mean = allValuesInMillis.Average(); //get the average stride duration
             return CalculateSEM(allValuesInMillis, mean); //and use the baseline calculation method for SEM
+        }
+
+
+
+        // MARK: Test button
+        private void GaitSupplementaryButton_Click(object sender, RoutedEventArgs e) {
+            Console.WriteLine(HindLeftStancesByStride.Count);
+            Console.WriteLine(HindLeftStancesByStride[0]);
+            Console.WriteLine(HindLeftStancesByStride[1]);
+            Console.WriteLine(CalculateSwingStanceSEM(HindLeftStancesByStride));
         }
 
         private void PrepSEM() { //method that calculates all the relevant SEM values for gait data export
