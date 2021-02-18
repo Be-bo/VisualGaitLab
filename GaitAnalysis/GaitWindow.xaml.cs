@@ -106,11 +106,5 @@ namespace VisualGaitLab.GaitAnalysis {
                 }
             }
         }
-
-
-
-
-
-        
     }
 }

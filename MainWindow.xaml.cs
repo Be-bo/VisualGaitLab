@@ -27,10 +27,8 @@ namespace VisualGaitLab
         Project CurrentProject;
         string ProgramFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab";
         string WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Projects";
-        //string WorkingDirectory = @"D:\dlc";
         string EnvDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
         string EnvName = "dlc-windowsGPU";
-        //string EnvDirectory = @"D:\miniconda\envs\dlc-windowsCPU";
         string Drive = "c:";
         BrushConverter converter = new System.Windows.Media.BrushConverter();
         Regex NumberRegex = new Regex("^[0-9]*$");
