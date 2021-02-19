@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using VisualGaitLab.OtherWindows;
@@ -112,44 +111,11 @@ namespace VisualGaitLab {
         private void AddClicked(object sender, RoutedEventArgs e) //add a new training video
         {
             BarInteraction();
-            AddTrainingVideo();
+            AddNewVideo("videos", false);
         }
 
-        private void AddTrainingVideo() //logic for adding a training video
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog(); //open a file dialog to let the user choose which video to add
-            openFileDialog.Title = "Select a video";
-            if (openFileDialog.ShowDialog() == true) {
-                string fullPath = openFileDialog.FileName;
-                if (fullPath.ToLower().EndsWith(".avi") || fullPath.ToLower().EndsWith(".mp4") || fullPath.ToLower().EndsWith(".wmv") || fullPath.ToLower().EndsWith(".mov")) {
-                    if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), "videos"), FileSystemUtils.GetFileNameWithExtension(fullPath))) {
 
-                        if (FileSystemUtils.FileNameOk(fullPath)) {
-                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, false, EnvDirectory, EnvName, Drive, ProgramFolder);
-                            if (window.ShowDialog() == true) {
-                                SyncUI();
-                                EnableInteraction();
-                            }else{
-                            EnableInteraction();
-                            }
-                        }
-                        else {
-                            MessageBox.Show("File names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
-                            EnableInteraction();
-                        }
-                    } else {
-                        MessageBox.Show("Video with a similar or an identical name has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
-                        EnableInteraction();
-                    }
-                } else {
-                    MessageBox.Show("Video cannot be added. Your video format is not supported.", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
-                    EnableInteraction();
-                }
-            }
-            else {
-                EnableInteraction();
-            }
-        }
+
 
         private void DeleteClicked(object sender, RoutedEventArgs e) //delete training video clicked
         {

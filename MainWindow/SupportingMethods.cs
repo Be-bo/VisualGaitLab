@@ -1,15 +1,12 @@
-﻿using MediaToolkit;
+﻿using Microsoft.Win32;
+using MediaToolkit;
 using MediaToolkit.Model;
 using MediaToolkit.Options;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
+using VisualGaitLab.OtherWindows;
 using VisualGaitLab.SupportingClasses;
 
 namespace VisualGaitLab {
@@ -107,6 +104,62 @@ namespace VisualGaitLab {
             }
         }
 
-        
+
+
+
+        // MARK: Add Video function
+
+
+        private void AddNewVideo(String vidoePath, bool isAnalysisVid) //logic for adding a training/analysis video
+        {
+            //open a file dialog to let the user choose which video to add
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
+            openFileDialog.Title = "Select videos";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string fullPath = openFileDialog.FileName;
+                if (fullPath.ToLower().EndsWith(".avi") || fullPath.ToLower().EndsWith(".mp4") || fullPath.ToLower().EndsWith(".wmv") || fullPath.ToLower().EndsWith(".mov"))
+                {
+                    if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), vidoePath), FileSystemUtils.GetFileNameWithExtension(fullPath)))
+                    {
+
+                        if (FileSystemUtils.FileNameOk(fullPath))
+                        {
+                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, isAnalysisVid, EnvDirectory, EnvName, Drive, ProgramFolder);
+                            if (window.ShowDialog() == true)
+                            {
+                                SyncUI();
+                                EnableInteraction();
+                            }
+                            else
+                            {
+                                EnableInteraction();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("File names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
+                            EnableInteraction();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Video with a similar or an identical name has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
+                        EnableInteraction();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Video cannot be added. Your video format is not supported.", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
+                    EnableInteraction();
+                }
+            }
+            else
+            {
+                EnableInteraction();
+            }
+        }
     }
 }

@@ -1,12 +1,8 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using VisualGaitLab.OtherWindows;
@@ -18,16 +14,16 @@ namespace VisualGaitLab {
 
         // MARK: Listbox Related Methods
 
-        private void AnalyzedListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) { //listen to selected item to know which object to target when right mouse button clicked
-            AnalysisVideo selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
-            if (selectedVideo != null) {
-                if (selectedVideo.IsAnalyzed) {
-                    AnalyzeButton.IsEnabled = false;
-                }
-                else {
-                    AnalyzeButton.IsEnabled = true;
-                }
+        private void AnalyzedListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) { //listen to selected item to alter analyze button accordingly
+            int selectedCount = AnalyzedListBox.SelectedItems.Count;
+            
+            if (selectedCount > 0) {
                 AnalyzeButton.IsEnabled = true;
+                AnalyzeButton.Content = "Analyze (" + selectedCount + ")";
+            } 
+            else {
+                AnalyzeButton.IsEnabled = false;
+                AnalyzeButton.Content = "Analyze";
             }
         }
 
@@ -82,69 +78,8 @@ namespace VisualGaitLab {
 
         private void AnalyzeAddClicked(object sender, RoutedEventArgs e) {
             BarInteraction();
-            AddVideoForAnalysis();
+            AddNewVideo("analyzed-videos", true);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // MARK: Add Video Functions
-
-        private void AddVideoForAnalysis() //add a new video to analyze
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog(); //open a file dialog to let the user choose which video to add
-            openFileDialog.Title = "Select a video";
-            if (openFileDialog.ShowDialog() == true) {
-                string fullPath = openFileDialog.FileName;
-                if (fullPath.ToLower().EndsWith(".avi") || fullPath.ToLower().EndsWith(".mp4") || fullPath.ToLower().EndsWith(".wmv") || fullPath.ToLower().EndsWith(".mov")) {
-                    if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), "analyzed-videos", FileSystemUtils.GetFileName(fullPath)), FileSystemUtils.GetFileNameWithExtension(fullPath))) {
-
-                        if (FileSystemUtils.FileNameOk(fullPath)) {
-                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, true, EnvDirectory, EnvName, Drive, ProgramFolder);
-                            if (window.ShowDialog() == true) {
-                                SyncUI();
-                                EnableInteraction();
-                            }
-                            else {
-                                EnableInteraction();
-                            }
-                        }
-                        else {
-                            MessageBox.Show("File names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
-                            EnableInteraction();
-                        }
-                    }
-                    else {
-                        MessageBox.Show("Video with a similar or an identical name has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
-                        EnableInteraction();
-                    }
-                }
-                else {
-                    MessageBox.Show("Video cannot be added. Your video format is not supported.", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
-                    EnableInteraction();
-                }
-            }
-            else {
-                EnableInteraction();
-            }
-        }
-
-
-
-
-
-
-
-
 
 
 
@@ -156,11 +91,13 @@ namespace VisualGaitLab {
         private void AnalyzeDeleteClicked(object sender, RoutedEventArgs e) //delete the selected video
         {
             BarInteraction();
-            if (MessageBox.Show("Are you sure?", "Delete Video", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) {
+            AnalysisVideo selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
+
+            if (MessageBox.Show("Are you sure you want to delete " + selectedVideo.Name + "?", "Delete Video", 
+                MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) {
                 EnableInteraction();
             }
             else {
-                AnalysisVideo selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
                 int selectedIndex = AnalyzedListBox.SelectedIndex;
                 CurrentProject.AnalysisVideos.RemoveAt(selectedIndex);
                 AnalyzedListBox.ItemsSource = CurrentProject.AnalysisVideos;

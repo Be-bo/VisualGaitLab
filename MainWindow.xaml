@@ -129,7 +129,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <ListBox Name="AnalyzedListBox" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="AnalyzedListBox_SelectionChanged">
+                        <ListBox Name="AnalyzedListBox" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="AnalyzedListBox_SelectionChanged" SelectionMode="Extended">
 
                             <!-- List Box Settings -->
                             <ListBox.Resources>
