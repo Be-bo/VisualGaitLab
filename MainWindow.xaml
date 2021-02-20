@@ -104,7 +104,7 @@
                             <Button Name="TrainingAddButton" Click="AddClicked">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Label Name="TrainingAddLabel" Content="Add Video" Height="26" Foreground="{StaticResource DefaultBlueBrush}" FontSize="15"/>
+                                        <Label Name="TrainingAddLabel" Content="Add Videos" Height="26" Foreground="{StaticResource DefaultBlueBrush}" FontSize="15"/>
                                     </ControlTemplate>
                                 </Button.Template>
                             </Button>
@@ -184,7 +184,7 @@
                             <Button Click="AnalyzeAddClicked">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Label Name="AnalyzeAddLabel" Content="Add Video" Height="26" Foreground="#0d89ff" FontSize="15"/>
+                                        <Label Name="AnalyzeAddLabel" Content="Add Videos" Height="26" Foreground="#0d89ff" FontSize="15"/>
                                     </ControlTemplate>
                                 </Button.Template>
                             </Button>

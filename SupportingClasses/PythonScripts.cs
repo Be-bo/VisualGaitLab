@@ -64,16 +64,20 @@ namespace VisualGaitLab.SupportingClasses {
             CreateLabeledVideo = new List<string>();
             CreateLabeledVideo.Add("import deeplabcut");
             CreateLabeledVideo.Add("import os");
+            CreateLabeledVideo.Add("import sys");
             CreateLabeledVideo.Add("os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'");
             CreateLabeledVideo.Add("config_path = r'config_path_identifier'");
-            CreateLabeledVideo.Add("deeplabcut.create_labeled_video(config_path,[r'video_path_identifier'],save_frames=True)");
+            CreateLabeledVideo.Add("video_paths = sys.argv[1:]");
+            CreateLabeledVideo.Add("deeplabcut.create_labeled_video(config_path,video_paths,save_frames=True)");
 
             AnalyzeVideo = new List<string>();
             AnalyzeVideo.Add("import deeplabcut");
             AnalyzeVideo.Add("import os");
+            AnalyzeVideo.Add("import sys");
             AnalyzeVideo.Add("os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'");
             AnalyzeVideo.Add("config_path = r'config_path_identifier'");
-            AnalyzeVideo.Add("deeplabcut.analyze_videos(config_path,[r'video_path_identifier'],save_as_csv=True)");
+            AnalyzeVideo.Add("video_paths = sys.argv[1:]");
+            AnalyzeVideo.Add("deeplabcut.analyze_videos(config_path,video_paths,save_as_csv=True)");
 
             ExtractAll = new List<string>();
             ExtractAll.Add("import deeplabcut");

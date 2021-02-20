@@ -98,7 +98,7 @@ namespace VisualGaitLab {
                     if (sw.BaseStream.CanWrite) {
                         sw.WriteLine(Drive);
                         sw.WriteLine("cd " + EnvDirectory);
-                        sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
+                        sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                         sw.WriteLine("conda activate " + EnvName);
                         sw.WriteLine("ipython vdlc_create_new_project.py");
                         

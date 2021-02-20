@@ -10,7 +10,10 @@
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}">
     <StackPanel>
-        <Label Name="ProgressLabel" Content="Starting..." VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <DockPanel>
+            <Label Name="ProgressLabel" Content="Starting..." VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <Label Name="ProgressLabel2" Content="" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        </DockPanel>
         <Controls:MetroProgressBar Name="ProgressBar" Height="30" Foreground="{StaticResource DefaultBlueBrush}" BorderThickness="1" BorderBrush="{StaticResource ControlGreyBrush}" Margin="5" UseLayoutRounding="True"/>
     </StackPanel>
 </Window>

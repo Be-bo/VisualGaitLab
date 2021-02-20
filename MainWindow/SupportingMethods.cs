@@ -119,47 +119,31 @@ namespace VisualGaitLab {
 
             if (openFileDialog.ShowDialog() == true)
             {
-                string fullPath = openFileDialog.FileName;
-                if (fullPath.ToLower().EndsWith(".avi") || fullPath.ToLower().EndsWith(".mp4") || fullPath.ToLower().EndsWith(".wmv") || fullPath.ToLower().EndsWith(".mov"))
-                {
-                    if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), vidoePath), FileSystemUtils.GetFileNameWithExtension(fullPath)))
-                    {
+                bool syncUI = false;
 
-                        if (FileSystemUtils.FileNameOk(fullPath))
+                foreach (var fullPath in openFileDialog.FileNames)
+                {
+                    if (fullPath.ToLower().EndsWith(".avi") || fullPath.ToLower().EndsWith(".mp4") || fullPath.ToLower().EndsWith(".wmv") || fullPath.ToLower().EndsWith(".mov"))
+                    {
+                        if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), vidoePath), FileSystemUtils.GetFileNameWithExtension(fullPath)))
                         {
-                            ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, isAnalysisVid, EnvDirectory, EnvName, Drive, ProgramFolder);
-                            if (window.ShowDialog() == true)
+                            if (FileSystemUtils.FileNameOk(fullPath))
                             {
-                                SyncUI();
-                                EnableInteraction();
+                                ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, isAnalysisVid, EnvDirectory, EnvName, Drive, ProgramFolder);
+                                if (window.ShowDialog() == true) syncUI = true;
                             }
                             else
-                            {
-                                EnableInteraction();
-                            }
+                                MessageBox.Show("File names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
-                        {
-                            MessageBox.Show("File names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
-                            EnableInteraction();
-                        }
+                            MessageBox.Show("Video with a similar or an identical name has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
-                    {
-                        MessageBox.Show("Video with a similar or an identical name has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
-                        EnableInteraction();
-                    }
+                        MessageBox.Show("Video cannot be added. Your video format is not supported.", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                else
-                {
-                    MessageBox.Show("Video cannot be added. Your video format is not supported.", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
-                    EnableInteraction();
-                }
+                if (syncUI) SyncUI();
             }
-            else
-            {
-                EnableInteraction();
-            }
+            EnableInteraction();
         }
     }
 }

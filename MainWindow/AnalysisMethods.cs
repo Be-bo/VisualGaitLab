@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -126,21 +128,65 @@ namespace VisualGaitLab {
 
         // MARK: Actual Analysis Methods
 
-        private void AnalyzeButton_Click(object sender, RoutedEventArgs e) //analyze the currently selected video
+        private void AnalyzeButton_Click(object sender, RoutedEventArgs e) //analyze the currently selected videos
         {
             BarInteraction();
-            var selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
-            if (selectedVideo != null) {
-                if (selectedVideo.IsAnalyzed) {
-                    MessageBox.Show("Please delete the old video and add it again, or add its copy under a different name.", "Re-analysis Not Supported", MessageBoxButton.OK);
-                    EnableInteraction();
+            Dictionary<int, AnalysisVideo> videosToAnalyze = new Dictionary<int, AnalysisVideo>();
+
+            // filter out videos that have already been analyzed
+            foreach (var item in AnalyzedListBox.SelectedItems)
+            {
+                var video = (AnalysisVideo)item;
+                int index = AnalyzedListBox.Items.IndexOf(item);
+
+                if (video != null && index >= 0) {
+                    if (video.IsAnalyzed)
+                    {
+                        // Can cancel entire process or continue analyzing other videos
+                        var result = MessageBox.Show(
+                            "Video" + video.Name + " has already been analyzed. Please delete the old video and add it again, or add its copy under a different name.", 
+                            "Re-analysis Not Supported", MessageBoxButton.OKCancel
+                            );
+                        if (result == MessageBoxResult.Cancel) break;
+                    }
+                    else videosToAnalyze.Add(index, video);  // Add video to analyze later
                 }
-                else {
-                    StreamReader sr = new StreamReader(selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt"); //set this video's setting for labeled video dot size to default = 5
+            }
+
+            if (videosToAnalyze.Count > 0)
+            {
+                // Set Label Size and if successful, analyze videos
+                if (SetLabelSize(videosToAnalyze)) AnalyzeVideos(videosToAnalyze);
+                else EnableInteraction();
+            }
+            else EnableInteraction();
+        }
+
+
+        /**
+         * Set label size for given video
+         * Returns true if user didn't cancel operation
+         */
+        private bool SetLabelSize(Dictionary<int, AnalysisVideo> videos)
+        {
+            bool useSameLabel = false;
+            string dotsize = "5";
+
+            foreach (var item in videos) //Key = index in listbox, Value = video 
+            {
+                string settingsPath = item.Value.Path.Substring(0, item.Value.Path.LastIndexOf("\\")) + "\\settings.txt";
+
+                // Read in and adjust labelsize
+                if (!useSameLabel)
+                {
+                    // Read in dot size for this video (default = 5)
+                    StreamReader sr = new StreamReader(settingsPath);
                     String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
-                    string dotsize = "5";
-                    foreach (string row in rows) {
-                        if (row.Contains("dotsize:")) {
+
+                    foreach (string row in rows)
+                    {
+                        if (row.Contains("dotsize:"))
+                        {
                             dotsize = row.Substring(row.IndexOf(":") + 2);
                             dotsize = dotsize.Replace(" ", String.Empty);
                             break;
@@ -148,37 +194,42 @@ namespace VisualGaitLab {
                     }
                     sr.Close();
 
-                    if (File.Exists(selectedVideo.ThumbnailPath)) { //MediaToolKit not as reliable when it comes to thumbnails, in case it fails we just analyze with default label size
-                        AnalysisSettings settingsDialog = new AnalysisSettings(selectedVideo.ThumbnailPath, selectedVideo.Name, dotsize); //display a window with a thumbnail where the user can choose the label size they find appropriate
-                        if (settingsDialog.ShowDialog() == true) {
-                            string settingsPath = selectedVideo.Path.Substring(0, selectedVideo.Path.LastIndexOf("\\")) + "\\settings.txt";
-                            StreamWriter sw = new StreamWriter(settingsPath);
-                            sw.WriteLine("dotsize: " + settingsDialog.CurrentLabelSize.Text);
-                            sw.Close();
-                            EditDotSizeInConfig(AnalyzedListBox.SelectedIndex); //update the dotsize in DLC's config file
-                            AnalyzeVideo(AnalyzedListBox.SelectedIndex);
+                    // Display a window with a thumbnail where the user can choose the label size they find appropriate
+                    if (File.Exists(item.Value.ThumbnailPath))
+                    {
+                        // MediaToolKit not as reliable when it comes to thumbnails, in case it fails we just analyze with default label size
+                        AnalysisSettings settingsDialog = new AnalysisSettings(item.Value.ThumbnailPath, item.Value.Name, dotsize);
+                        if (settingsDialog.ShowDialog() == true)
+                        {
+                            useSameLabel = settingsDialog.getCheckBoxValue();
+                            dotsize = settingsDialog.CurrentLabelSize.Text;
                         }
-                        else EnableInteraction();
+                        else return false; // User cancelled the operation
                     }
-                    else { //thumbnail doesn't exist (its creation failed)
-                        AnalyzeVideo(AnalyzedListBox.SelectedIndex);
-                    } 
                 }
+
+                // Update Dotsize in settings.txt for video
+                StreamWriter sw = new StreamWriter(settingsPath);
+                sw.WriteLine("dotsize: " + dotsize);
+                sw.Close();
+                EditDotSizeInConfig(AnalyzedListBox.SelectedIndex); //update the dotsize in DLC's config file
             }
+            return true;
         }
 
-        private void AnalyzeVideo(int pos) //analyze the video at the position in the list box (passed in as param)
+
+        // Analyze videos for the corresponding analysis videos using DLC's built in analyze_videos function
+        // If not in Debug mode, it redirects the output to the loading window accordingly
+        private void AnalyzeVideos(Dictionary<int, AnalysisVideo> videos)
         {
-            bool errorDuringAnalysis = false;
-            string errorMessage = "No Error";
-            AnalysisVideo video = CurrentProject.AnalysisVideos[pos];
+            // Prepare script
             string filePath = EnvDirectory + "\\vdlc_analyze_video.py";
             FileSystemUtils.MurderPython();
-            FileSystemUtils.RenewScript(filePath, AllScripts.AnalyzeVideo); //prepare script
+            FileSystemUtils.RenewScript(filePath, AllScripts.AnalyzeVideo); 
             FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
-            FileSystemUtils.ReplaceStringInFile(filePath, "video_path_identifier", video.Path);
 
-            Process p = new Process(); //prepare cmd process
+            // Prepare cmd process
+            Process p = new Process(); 
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
             info.RedirectStandardInput = true;
@@ -187,9 +238,7 @@ namespace VisualGaitLab {
             info.Verb = "runas";
             info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
 
-            string progressMax = "0";
-            string progressValue = "0";
-            this.Dispatcher.Invoke(() => //once done close the loading window
+            Dispatcher.Invoke(() => //once done close the loading window
             {
                 LoadingWindow = new LoadingWindow();
                 LoadingWindow.Title = "Analyzing";
@@ -197,33 +246,53 @@ namespace VisualGaitLab {
                 LoadingWindow.Closed += LoadingClosed;
             });
 
+            bool errorDuringAnalysis = false;
+            string errorMessage = "No Error";
+            string progressValue = "0";
+            string progressMax = "0";
+            int videoProgValue = 0;
 
+            
             //NONDEBUG -----------------------------------------------------------------------------------------------
-            if (info.CreateNoWindow) { //redirect output if debug mode disabled
+            if (info.CreateNoWindow)
+            { //redirect output if debug mode disabled
                 p.OutputDataReceived += new DataReceivedEventHandler((sender, e) => //feed cmd output to the loading window so the user knows the progress of the analysis
                 {
-                    if (!String.IsNullOrEmpty(e.Data)) {
+                    if (!string.IsNullOrEmpty(e.Data))
+                    {
                         string line = e.Data;
                         Console.WriteLine(line);
 
-                        if (line.Contains("OOM")) {
+                        if (line.Contains("OOM"))
+                        {
                             errorMessage = "Analysis failed due to insufficient GPU memory. Try importing the video again and reducing its resolution, and/or cropping it.";
                             errorDuringAnalysis = true;
                             FileSystemUtils.MurderPython();
                         }
 
-                        if (line.Contains("progress_maximum")) {
+                        if (line.Contains("progress_maximum"))
+                        {
                             progressMax = line.Substring(line.IndexOf(":") + 1, line.IndexOf("#") - line.IndexOf(":") - 1);
-                            this.Dispatcher.Invoke(() => {
+                            Dispatcher.Invoke(() => {
                                 LoadingWindow.ProgressBar.Maximum = int.Parse(progressMax);
                             });
                         }
 
-                        if (line.Contains("progress_value")) {
+                        if (line.Contains("progress_value"))
+                        {
                             progressValue = line.Substring(line.IndexOf(":") + 1, line.IndexOf("#") - line.IndexOf(":") - 1);
-                            this.Dispatcher.Invoke(() => {
-                                string progressInfo = progressValue + " / " + progressMax + " frames";
-                                LoadingWindow.ProgressLabel.Content = progressInfo;
+                            Dispatcher.Invoke(() => {
+                                LoadingWindow.ProgressLabel2.Content = progressValue + " / " + progressMax + " frames";
+                                LoadingWindow.ProgressBar.Value = int.Parse(progressValue);
+                            });
+                        }
+
+                        if (line.Contains("Starting to analyze"))
+                        {
+                            videoProgValue++;
+                            string videoName = line.Split('\\').Last();
+                            Dispatcher.Invoke(() => {
+                                LoadingWindow.ProgressLabel.Content = "Analyzing " + videoName + "(" + videoProgValue + " / " + videos.Count + ")";
                                 LoadingWindow.ProgressBar.Value = int.Parse(progressValue);
                             });
                         }
@@ -235,7 +304,8 @@ namespace VisualGaitLab {
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
-                if (errorDuringAnalysis) {
+                if (errorDuringAnalysis)
+                {
                     this.Dispatcher.Invoke(() => {
                         LoadingWindow.Close();
                         EnableInteraction();
@@ -244,35 +314,39 @@ namespace VisualGaitLab {
                     MessageBox.Show(errorMessage, "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
+                // If done analyzing, start creating labelled videos
                 this.Dispatcher.Invoke(() => {
-                    LoadingWindow.ProgressLabel.Content = "Creating labeled video (will take a while)...";
+                    LoadingWindow.ProgressLabel.Content = "Creating labeled videos (will take a while)...";
                 });
-                CreateLabeledVideo(video);
+                CreateLabeledVideos(videos);
             };
 
             p.StartInfo = info;
             p.Start();
 
-            using (StreamWriter sw = p.StandardInput) {
-                if (sw.BaseStream.CanWrite) {
+            using (StreamWriter sw = p.StandardInput)
+            {
+                if (sw.BaseStream.CanWrite)
+                {
                     sw.WriteLine(Drive);
                     sw.WriteLine("cd " + EnvDirectory);
-                    sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
+                    sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.WriteLine("ipython vdlc_analyze_video.py");
+                    sw.Write("ipython vdlc_analyze_video.py");
 
-                    if (info.CreateNoWindow == false) { //for debug purposes
-                        sw.WriteLine("");
-                        sw.WriteLine("");
-                        sw.WriteLine("");
-                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                    // Arguments
+                    foreach (var video in videos.Values) sw.Write(" " + video.Path);
+                    sw.WriteLine("");
+
+                    if (info.CreateNoWindow == false)
+                    { //for debug purposes
+                        sw.WriteLine("\n\n\nECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
                         p.WaitForExit();
                         sw.WriteLine("Done, exiting.");
                     }
                 }
             }
-
-            if(info.CreateNoWindow) p.BeginOutputReadLine();//only redirect output if debug enabled
+            if (info.CreateNoWindow) p.BeginOutputReadLine();   //only redirect output if debug enabled
         }
 
 
@@ -292,13 +366,16 @@ namespace VisualGaitLab {
 
         // MARK: Creating Labeled Video Methods
 
-        private void CreateLabeledVideo(AnalysisVideo video) //create a labeled video for the corresponding analysis video using DLC's built in create_labeled_video function
+        // Create a labeled video for the corresponding analysis video using DLC's built in create_labeled_video function
+        private void CreateLabeledVideos(Dictionary<int, AnalysisVideo> videos) 
         {
+            // Preapare Script
             string filePath = EnvDirectory + "\\vdlc_create_labeled_video.py";
             FileSystemUtils.MurderPython();
             FileSystemUtils.RenewScript(filePath, AllScripts.CreateLabeledVideo);
             FileSystemUtils.ReplaceStringInFile(filePath, "config_path_identifier", CurrentProject.ConfigPath);
-            FileSystemUtils.ReplaceStringInFile(filePath, "video_path_identifier", video.Path);
+
+            // Prepare process
             Process p = new Process();
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
@@ -309,7 +386,7 @@ namespace VisualGaitLab {
 
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
-                this.Dispatcher.Invoke(() => {
+                Dispatcher.Invoke(() => {
                     LoadingWindow.Close();
                 });
                 SyncUI();
@@ -323,11 +400,15 @@ namespace VisualGaitLab {
                 if (sw.BaseStream.CanWrite) {
                     sw.WriteLine(Drive);
                     sw.WriteLine("cd " + EnvDirectory);
-                    sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
+                    sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.WriteLine("ipython vdlc_create_labeled_video.py");
+                    sw.Write("ipython vdlc_create_labeled_video.py");
 
-                    if (info.CreateNoWindow == false) { //for debug purposes
+                    // Arguments
+                    foreach (var video in videos.Values) sw.Write(" " + video.Path);
+                    sw.WriteLine("");
+
+                    if (!info.CreateNoWindow) { //for debug purposes
                         sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
                         p.WaitForExit();
                         sw.WriteLine("Done, exiting.");
