@@ -107,10 +107,10 @@ namespace VisualGaitLab {
 
 
 
-        // MARK: Add Video function
+        // MARK: Add Multiple Videos function
 
 
-        private void AddNewVideo(String vidoePath, bool isAnalysisVid) //logic for adding a training/analysis video
+        private void AddNewVideos(string resultingPath, bool isAnalysisVid) //logic for adding a training/analysis video
         {
             //open a file dialog to let the user choose which video to add
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -123,9 +123,12 @@ namespace VisualGaitLab {
 
                 foreach (var fullPath in openFileDialog.FileNames)
                 {
-                    if (fullPath.ToLower().EndsWith(".avi") || fullPath.ToLower().EndsWith(".mp4") || fullPath.ToLower().EndsWith(".wmv") || fullPath.ToLower().EndsWith(".mov"))
+                    string[] temp = fullPath.Split('\\');
+                    string videoName = temp[temp.Length - 1];
+
+                    if (videoName.ToLower().EndsWith(".avi") || videoName.ToLower().EndsWith(".mp4") || videoName.ToLower().EndsWith(".wmv") || videoName.ToLower().EndsWith(".mov"))
                     {
-                        if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), vidoePath), FileSystemUtils.GetFileNameWithExtension(fullPath)))
+                        if (!FileSystemUtils.NameAlreadyInDir(FileSystemUtils.ExtendPath(FileSystemUtils.GetParentFolder(CurrentProject.ConfigPath), resultingPath), FileSystemUtils.GetFileNameWithExtension(fullPath)))
                         {
                             if (FileSystemUtils.FileNameOk(fullPath))
                             {
@@ -133,13 +136,13 @@ namespace VisualGaitLab {
                                 if (window.ShowDialog() == true) syncUI = true;
                             }
                             else
-                                MessageBox.Show("File names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show(fullPath + "\n\nFile names must be 25 characters or less, with only alphanumeric characters, dashes, and underscores allowed.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
-                            MessageBox.Show("Video with a similar or an identical name has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Video with a similar or an identical name as \"" + videoName + "\" has already been added. Please rename your new video.", "Name Already Taken", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
-                        MessageBox.Show("Video cannot be added. Your video format is not supported.", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("\"" + videoName + "\" cannot be added. Your video format is not supported.\n (Supported formats include: .avi, .mp4, .wmv, .mov)", "Unsupported Action", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 if (syncUI) SyncUI();
             }

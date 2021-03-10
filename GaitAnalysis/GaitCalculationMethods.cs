@@ -45,18 +45,23 @@ namespace VisualGaitLab.GaitAnalysis {
                 return isInStanceArray;
             }
             else {
-                List<int> switches = new List<int>();
-                switches.Add(0); // the first position is technically a switch
-                bool gettingBigger = true;
+                List<int> switches = new List<int>
+                {
+                    0 // the first position is technically a switch
+                };
                 bool previous = true;
 
                 // find switches
                 for (int i = 1; i < allX.Count; i++) {
-                    if (allX[i] >= allX[i - 1]) {
+                    bool gettingBigger;
+
+                    if (allX[i] >= allX[i - 1])
+                    {
                         gettingBigger = true;
                         if (i == 1) previous = true;
                     }
-                    else {
+                    else
+                    {
                         gettingBigger = false;
                         if (i == 1) previous = false;
                     }
@@ -72,7 +77,7 @@ namespace VisualGaitLab.GaitAnalysis {
                 List<float> switchSlopes = new List<float>();
                 for (int i = 1; i < switches.Count; i++) {
                     slopeSum = 0;
-                    for (int j = switches[i - 1] + 1; j < switches[i]; j++) slopeSum = slopeSum + CalculateSlope(allX[j], allX[j - 1], j, (j - 1));
+                    for (int j = switches[i - 1] + 1; j < switches[i]; j++) slopeSum += CalculateSlope(allX[j], allX[j - 1], j, (j - 1));
                     switchSlopes.Add(slopeSum); // each slopeSum[a-1] starting at a+1 corresponds to series between switches[a-1] AND switches[a]
                 }
 
@@ -113,17 +118,18 @@ namespace VisualGaitLab.GaitAnalysis {
             int stanceFrames = 0;
             int swingFrames = 0;
             int switchCounter = 0; //each switch from 0->1 or 1->0 increments this number, once the num reaches 2 (= stance and swing occured) we reset it to 0 and increment the number of strides
-            int current = inStanceArray[start + 1];
             int previous = inStanceArray[start];
             int currentStances = 0;
             int currentSwings = 0;
             stanceFrameNumByStride = new List<int>();
             swingFrameNumByStride = new List<int>();
-            switchPositions = new List<int>();
-            switchPositions.Add(start);
+            switchPositions = new List<int>
+            {
+                start
+            };
 
             for (int i = start + 1; i <= end; i++) { //go through all the accepted frames of the video
-                current = inStanceArray[i];
+                int current = inStanceArray[i];
                 if (current == 1) {
                     stanceFrames++;
                     currentStances++;
@@ -175,7 +181,7 @@ namespace VisualGaitLab.GaitAnalysis {
                     i++;
                 }
 
-                for (int j = 0; j + 1 < switchPositions.Count; j = j + 2) { //for everything between the tails and incomplete strides
+                for (int j = 0; j + 1 < switchPositions.Count; j += 2) { //for everything between the tails and incomplete strides
                     int frameDistance = switchPositions[j + 2] - switchPositions[j]; //we grab the distance between the first frame of the current stance and the last frame of the current swing
                                                                                      //for example let's say the current stride looks like this: first frame (stance) ->1111111111000000<- last frame (swing), the frame distance is 16
                                                                                      //             and just as all the other strides this one has 3 switch positions:  ^=j       ^=j+1 ^j+2 (!!!j+2 corresponds to the beginning of the next step so it's always 1, it's the last frame of the current stride + 1)
@@ -184,7 +190,7 @@ namespace VisualGaitLab.GaitAnalysis {
                         int startPos = switchPositions[j];
                         int endPos = switchPositions[j + 2];
                         distance = CalculateDistanceBetweenPoints(midPointXs[startPos], midPointYs[startPos], midPointXs[endPos], midPointYs[endPos]);
-                        distance = distance * RealWorldMultiplier;
+                        distance *= RealWorldMultiplier;
                     }
                     else { //for the treadmill scenario we have to use the treadmill's speed
                         double timeDistance = (double)frameDistance / FPS; //then we simply calculate the duration of the stride in seconds
@@ -214,7 +220,7 @@ namespace VisualGaitLab.GaitAnalysis {
             double difSum = 0;
             for (int i = 0; i < strides.Count; i++) {
                 double currentDif = Math.Pow(strides[i] - mean, 2);
-                difSum = difSum + currentDif;
+                difSum += currentDif;
                 differencesSquared.Add(currentDif);
             }
             //double difMean = differencesSquared.Average();
@@ -226,10 +232,10 @@ namespace VisualGaitLab.GaitAnalysis {
             int stanceSum = 0;
             int swingSum = 0;
             for (int i = 0; i < allStancesByStrides.Count; i++) { //get all stances by stride (Eg. stride 1 has 20 stance frames, we add those up for all strides)
-                stanceSum = stanceSum + allStancesByStrides[i];
+                stanceSum += allStancesByStrides[i];
             }
             for (int i = 0; i < allSwingsByStrides.Count; i++) { //same for swings
-                swingSum = swingSum + allSwingsByStrides[i];
+                swingSum += allSwingsByStrides[i];
             }
             float durationInSeconds = ((float)stanceSum + (float)swingSum) / (float)FPS; //add up the swings and the stances to get stride frame duration, convert to seconds
             float frequency = (float)numberOfStrides / durationInSeconds; //and divide the number of strides by the duration of all the relevant strides summed up (remember, tail of incomplete strides in the data are cut off so we cannot simply divide by the duration of the video)
@@ -300,12 +306,12 @@ namespace VisualGaitLab.GaitAnalysis {
             double m2 = (y2 - y1) / (x2 - x1);
             double m1 = (yb - ya) / (xb - xa);
 
-            double angle2 = getAngleFromSlope(m2, y2, y1, x2, x1);
-            double angle1 = getAngleFromSlope(m1, yb, ya, xb, xa);
+            double angle2 = GetAngleFromSlope(m2, y2, y1, x2, x1);
+            double angle1 = GetAngleFromSlope(m1, yb, ya, xb, xa);
             return Math.Abs(angle1 - angle2);
         }
 
-        private double getAngleFromSlope(double m, float y2, float y1, float x2, float x1) {
+        private double GetAngleFromSlope(double m, float y2, float y1, float x2, float x1) {
             double atanAngle = Math.Atan(m) * (180 / Math.PI);
             double toSubtractFrom = 180; //case Q3
 
@@ -327,16 +333,16 @@ namespace VisualGaitLab.GaitAnalysis {
             double flSum = 0;
             double frSum = 0;
             for (int i = 0; i < HindLeftPawAnglesAdjusted.Count; i++) { //getting the sum of all relevant angle values
-                hlSum = hlSum + HindLeftPawAnglesAdjusted[i];
+                hlSum += HindLeftPawAnglesAdjusted[i];
             }
             for (int i = 0; i < HindRightPawAnglesAdjusted.Count; i++) {
-                hrSum = hrSum + HindRightPawAnglesAdjusted[i];
+                hrSum += HindRightPawAnglesAdjusted[i];
             }
             for (int i = 0; i < FrontLeftPawAnglesAdjusted.Count; i++) {
-                flSum = flSum + FrontLeftPawAnglesAdjusted[i];
+                flSum += FrontLeftPawAnglesAdjusted[i];
             }
             for (int i = 0; i < FrontRightPawAnglesAdjusted.Count; i++) {
-                frSum = frSum + FrontRightPawAnglesAdjusted[i];
+                frSum += FrontRightPawAnglesAdjusted[i];
             }
             HindLeftPawAngleAvg = hlSum / HindLeftPawAnglesAdjusted.Count; //getting the average
             HindRightPawAngleAvg = hrSum / HindRightPawAnglesAdjusted.Count;
@@ -347,27 +353,27 @@ namespace VisualGaitLab.GaitAnalysis {
             hlSum = 0;
             flSum = 0;
             for (int i = 0; i < HindStanceWidths.Count; i++) {
-                hlSum = hlSum + HindStanceWidths[i];
-                flSum = flSum + ForeStanceWidths[i];
+                hlSum += HindStanceWidths[i];
+                flSum += ForeStanceWidths[i];
             }
             HindStanceWidthAvg = hlSum / HindStanceWidths.Count;
             ForeStanceWidthAvg = flSum / ForeStanceWidths.Count;
 
             //stride lengths, same approach
             double sum = 0;
-            for (int i = 0; i < HindLeftStrides.Count; i++) sum = sum + HindLeftStrides[i];
+            for (int i = 0; i < HindLeftStrides.Count; i++) sum += HindLeftStrides[i];
             HindLeftStrideLenAvg = sum / HindLeftStrides.Count;
 
             sum = 0;
-            for (int i = 0; i < HindRightStrides.Count; i++) sum = sum + HindRightStrides[i];
+            for (int i = 0; i < HindRightStrides.Count; i++) sum += HindRightStrides[i];
             HindRightStrideLenAvg = sum / HindRightStrides.Count;
 
             sum = 0;
-            for (int i = 0; i < FrontLeftStrides.Count; i++) sum = sum + FrontLeftStrides[i];
+            for (int i = 0; i < FrontLeftStrides.Count; i++) sum += FrontLeftStrides[i];
             FrontLeftStrideLenAvg = sum / FrontLeftStrides.Count;
 
             sum = 0;
-            for (int i = 0; i < FrontRightStrides.Count; i++) sum = sum + FrontRightStrides[i];
+            for (int i = 0; i < FrontRightStrides.Count; i++) sum += FrontRightStrides[i];
             FrontRightStrideLenAvg = sum / FrontRightStrides.Count;
         }
 
@@ -443,7 +449,7 @@ namespace VisualGaitLab.GaitAnalysis {
         private double GetCrossProduct(List<double> listA, List<double> listB) {
             double sum = 0;
             for (int i = 0; i < listA.Count; i++) {
-                sum = sum + listA[i] * listB[i];
+                sum += listA[i] * listB[i];
             }
             return sum;
         }
@@ -466,7 +472,7 @@ namespace VisualGaitLab.GaitAnalysis {
         private double CalculateSEM(List<double> allValues, double mean) { //baseline SEM calculation for a list of double values along with their mean
             double SDnumerator = 0;
             for (int i = 0; i < allValues.Count; i++) { //get the sum numerator of the Standard Deviation
-                SDnumerator = SDnumerator + Math.Pow(allValues[i] - mean, 2);
+                SDnumerator += Math.Pow(allValues[i] - mean, 2);
             }
 
             double sd = Math.Sqrt(SDnumerator / (allValues.Count - 1)); //get SD by dividing by n-1

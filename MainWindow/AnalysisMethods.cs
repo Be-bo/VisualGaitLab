@@ -80,7 +80,7 @@ namespace VisualGaitLab {
 
         private void AnalyzeAddClicked(object sender, RoutedEventArgs e) {
             BarInteraction();
-            AddNewVideo("analyzed-videos", true);
+            AddNewVideos("analyzed-videos", true);
         }
 
 
@@ -292,7 +292,7 @@ namespace VisualGaitLab {
                             videoProgValue++;
                             string videoName = line.Split('\\').Last();
                             Dispatcher.Invoke(() => {
-                                LoadingWindow.ProgressLabel.Content = "Analyzing " + videoName + "(" + videoProgValue + " / " + videos.Count + ")";
+                                LoadingWindow.ProgressLabel.Content = "Analyzing " + videoName + " (" + videoProgValue + "/" + videos.Count + ")";
                                 LoadingWindow.ProgressBar.Value = int.Parse(progressValue);
                             });
                         }
@@ -317,6 +317,7 @@ namespace VisualGaitLab {
                 // If done analyzing, start creating labelled videos
                 this.Dispatcher.Invoke(() => {
                     LoadingWindow.ProgressLabel.Content = "Creating labeled videos (will take a while)...";
+                    LoadingWindow.ProgressLabel2.Content = "";
                 });
                 CreateLabeledVideos(videos);
             };

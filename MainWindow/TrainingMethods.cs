@@ -111,7 +111,7 @@ namespace VisualGaitLab {
         private void AddClicked(object sender, RoutedEventArgs e) //add a new training video
         {
             BarInteraction();
-            AddNewVideo("videos", false);
+            AddNewVideos("videos", false);
         }
 
 
