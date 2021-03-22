@@ -4,6 +4,7 @@ using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using VisualGaitLab.OtherWindows;
 
 namespace VisualGaitLab.GaitAnalysis {
     /// <summary>
@@ -19,6 +20,14 @@ namespace VisualGaitLab.GaitAnalysis {
             GaitTempPath = gaitTempPath;
             IsFreeRun = isFreeRun;
             SetUpGaitForVid();
+
+            // Adjust Elements relating to Bias
+            if (isFreeRun) {
+                BiasValue.Text = "Bias: " + bias.ToString();
+            } else {
+                BiasValue.Visibility = Visibility.Hidden;
+                GaitBiasAdjustButton.Visibility = Visibility.Hidden;
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
@@ -95,6 +104,53 @@ namespace VisualGaitLab.GaitAnalysis {
                     }
                 }
             }
+        }
+
+
+
+        // Mark: Add/Adjust Bias
+
+        private void GaitAdjustBias_Click(object sender, RoutedEventArgs e)  // Change the bias to calculate swing & stance and adjust analysis 
+        {
+            BarInteraction();
+            AdjustBiasWindow adjustBiasWindow = new AdjustBiasWindow(bias);
+            if (adjustBiasWindow.ShowDialog() == true)
+            {
+                double newBias = adjustBiasWindow.GetAdjustedBias();
+                
+                if (newBias != bias)
+                {
+                    // Update Bias
+                    bias = newBias;
+                    BiasValue.Text = "Bias: " + bias.ToString();
+
+                    // Recalculate
+                    ResetCalculatedFields();
+                    ReadCurrentState(false);
+                    SetUpPawCharts();
+                    SetStaticData();
+                    SetUpCrossCorrelationCharts();
+                    UpdateFrame(false);
+                }
+            }
+            EnableInteraction();
+        }
+
+
+        private void BarInteraction()
+        { //show the progress ring and disable the primary window so the user can't click anything, also make the window opaque
+            this.Dispatcher.Invoke(() => {
+                IsEnabled = false;
+                Opacity = 0.3;
+            });
+        }
+
+        private void EnableInteraction()
+        { //cancel all the effects of the BarInteraction method
+            this.Dispatcher.Invoke(() => {
+                IsEnabled = true;
+                Opacity = 1;
+            });
         }
     }
 }

@@ -277,7 +277,14 @@
                         <TextBlock Margin="0, 20, 0, 0" Text="Right Fore" TextAlignment="Center"/>
                         <lvc:CartesianChart MinHeight="70" Name="RightFrontChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="RightFrontChart_MouseRightButtonUp"/>
 
-                        <Button Name="GaitAutoCorrectButton" Content="Auto-Correct" HorizontalAlignment="Right" Margin="5" Click="GaitAutoCorrectButton_Click" Style="{StaticResource PositiveButton}"/>
+                        <DockPanel LastChildFill="True">
+                            <TextBlock Name="BiasValue" Text="Bias: " Margin="5" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" DockPanel.Dock="Right">
+                                <Button Name="GaitAutoCorrectButton" Content="Auto-Correct" Margin="5" Click="GaitAutoCorrectButton_Click" Style="{StaticResource PositiveButton}"/>
+                                <Button Name="GaitBiasAdjustButton" Content="Adjust Bias" Margin="5" Click="GaitAdjustBias_Click" Style="{StaticResource PositiveButton}"/>
+                            </StackPanel>
+                        </DockPanel>
+                        
                     </StackPanel>
                 </Grid>
             </Grid>

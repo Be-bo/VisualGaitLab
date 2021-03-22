@@ -115,6 +115,9 @@
     <Compile Include="OtherWindows\AddBodyPartWindow.xaml.cs">
       <DependentUpon>AddBodyPartWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OtherWindows\AdjustBiasWindow.xaml.cs">
+      <DependentUpon>AdjustBiasWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OtherWindows\AnalysisSettings.xaml.cs">
       <DependentUpon>AnalysisSettings.xaml</DependentUpon>
     </Compile>
@@ -171,6 +174,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="OtherWindows\AddBodyPartWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OtherWindows\AdjustBiasWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

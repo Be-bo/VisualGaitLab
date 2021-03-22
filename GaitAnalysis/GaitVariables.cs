@@ -97,7 +97,7 @@ namespace VisualGaitLab.GaitAnalysis {
         private List<int> FrontLeftInStance;
         private List<int> FrontRightInStance;
 
-
+        private double bias = 1;
 
 
 

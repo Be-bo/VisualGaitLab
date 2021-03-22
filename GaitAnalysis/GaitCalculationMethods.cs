@@ -15,6 +15,7 @@ namespace VisualGaitLab.GaitAnalysis {
 
 
         // MARK: Static Data (averages and ratios based on all frames)
+
         private List<int> GetInStanceArray(List<float> allX, List<float> allY, List<float> allXotherMarker, List<float> allYotherMarker, ref List<double> footMidPointXs, ref List<double> footMidpointYs) {
 
             if (IsFreeRun) { //free running bottom view of the cage (no treadmill) or just a cat walk
@@ -32,9 +33,9 @@ namespace VisualGaitLab.GaitAnalysis {
                     posDifferences.Add(CalculateDistanceBetweenPoints(footMidPointXs[i - 1], footMidpointYs[i - 1], footMidPointXs[i], footMidpointYs[i]));
                 }
 
-                double quarterAvg = posDifferences.Average() / 4; //get avg/4
-                for (int i = 0; i < posDifferences.Count; i++) { //use avg/4 to determine what is stance and what is swing
-                    if (posDifferences[i] < quarterAvg) {
+                double avgDiff = posDifferences.Average() * bias; // get avg of frame differences (k = adjustment to get best result)
+                for (int i = 0; i < posDifferences.Count; i++) { //use avg to determine what is stance and what is swing
+                    if (posDifferences[i] < avgDiff) {
                         isInStanceArray.Add(1); //if small dif -> stance (paw in one spot)
                     }
                     else {
@@ -44,7 +45,7 @@ namespace VisualGaitLab.GaitAnalysis {
 
                 return isInStanceArray;
             }
-            else {
+            else { // treadmill
                 List<int> switches = new List<int>
                 {
                     0 // the first position is technically a switch
@@ -103,7 +104,8 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void CalculateGaitBasics(ref List<int> inStanceArray, ref int stanceDuration, ref int swingDuration, ref int numberOfStrides, ref List<int> switchPositions,
-            ref List<int> stanceFrameNumByStride, ref List<int> swingFrameNumByStride) {
+            ref List<int> stanceFrameNumByStride, ref List<int> swingFrameNumByStride) 
+        {
             //eliminate tails:
             int start = 1;
             while (inStanceArray[start] == inStanceArray[start - 1]) start++; //eliminate the first series (it's always a partial stance/swing -> we disregard)
@@ -268,6 +270,7 @@ namespace VisualGaitLab.GaitAnalysis {
             for (int i = 0; i < GaitNumberOfFrames; i++) {
                 //Paw Angles
                 CalculateCenterOfMass(i); //center of mass is necessary for paw angles
+                
                 double angle = GetPawAngle(HindLeftYs[i], HindLeftHeelYs[i], HindLeftXs[i], HindLeftHeelXs[i],
                    CenterOfMassY, SuperButtYs[i], CenterOfMassX, SuperButtXs[i]);
                 HindLeftPawAngles.Add(angle);
@@ -283,6 +286,7 @@ namespace VisualGaitLab.GaitAnalysis {
                 angle = GetPawAngle(FrontRightYs[i], FrontRightHeelYs[i], FrontRightXs[i], FrontRightHeelXs[i],
                    NoseYs[i], CenterOfMassY, NoseXs[i], CenterOfMassX);
                 FrontRightPawAngles.Add(angle);
+
 
                 //Stance Width
                 // right y - left y (midpoints of each paw)

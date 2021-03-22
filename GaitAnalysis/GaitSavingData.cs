@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -29,8 +30,8 @@ namespace VisualGaitLab.GaitAnalysis {
             List<string> tempList = new List<string>();
             tempList.Add(RealWorldMultiplier.ToString());
             tempList.Add(TreadmillSpeed.ToString());
-            if (IsFreeRun) tempList.Add("1");
-            else tempList.Add("0");
+            tempList.Add(IsFreeRun ? "1" : "0");
+            tempList.Add(bias.ToString());
             System.IO.File.WriteAllLines(stateFolder + "\\inputParams.txt", tempList);
 
             //saving in stance lists to a separate folder
@@ -75,9 +76,9 @@ namespace VisualGaitLab.GaitAnalysis {
             SaveMetrics(stateFolder);
         }
 
-        private void ReadCurrentState() {
+        private void ReadCurrentState(bool loadPrevious) {
             string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate"; //reading in stance lists from the folder
-            if (Directory.Exists(stateFolder) && File.Exists(stateFolder + "\\HindLeftInStance.txt") && File.Exists(stateFolder + "\\HindRightInStance.txt") && File.Exists(stateFolder + "\\FrontLeftInStance.txt") && File.Exists(stateFolder + "\\FrontRightInStance.txt")) {
+            if (loadPrevious && Directory.Exists(stateFolder) && File.Exists(stateFolder + "\\HindLeftInStance.txt") && File.Exists(stateFolder + "\\HindRightInStance.txt") && File.Exists(stateFolder + "\\FrontLeftInStance.txt") && File.Exists(stateFolder + "\\FrontRightInStance.txt")) {
                 HindLeftInStance = File.ReadAllLines(stateFolder + "\\HindLeftInStance.txt").ToList().ConvertAll(item => int.Parse(item));
                 HindRightInStance = File.ReadAllLines(stateFolder + "\\HindRightInStance.txt").ToList().ConvertAll(item => int.Parse(item));
                 FrontLeftInStance = File.ReadAllLines(stateFolder + "\\FrontLeftInStance.txt").ToList().ConvertAll(item => int.Parse(item));
@@ -96,6 +97,18 @@ namespace VisualGaitLab.GaitAnalysis {
 
                     FrontRightMidPointXs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
                     FrontRightMidPointYs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
+                }
+
+                if(File.Exists(stateFolder + "\\inputParams.txt"))
+                {
+                    List<double> tempList = File.ReadAllLines(stateFolder + "\\inputParams.txt").ToList().ConvertAll(item => double.Parse(item));
+                    if (tempList.Count > 3)
+                    {
+                        RealWorldMultiplier = tempList[0];
+                        TreadmillSpeed = tempList[1];
+                        IsFreeRun = tempList[2] == 1;
+                        bias = tempList[3];
+                    }
                 }
                 
                 MessageBox.Show("Loaded saved data from previous session.", "Data Loaded", MessageBoxButton.OK);
