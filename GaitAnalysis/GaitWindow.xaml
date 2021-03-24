@@ -25,7 +25,7 @@
 
 
                 <!-- RIGHT COLUMN (all the calculations) -->
-                <StackPanel Grid.Column="1">
+                <StackPanel Grid.Column="1" Margin="5">
 
                     <!-- Static Data -->
                     <Label Content="Static Data" HorizontalContentAlignment="Center" FontWeight="Bold"/>

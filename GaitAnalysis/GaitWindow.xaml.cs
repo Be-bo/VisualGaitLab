@@ -21,6 +21,9 @@ namespace VisualGaitLab.GaitAnalysis {
             IsFreeRun = isFreeRun;
             SetUpGaitForVid();
 
+            // Window Title
+            Title = "GaitWindow - " + gaitVideoName;
+
             // Adjust Elements relating to Bias
             if (isFreeRun) {
                 BiasValue.Text = "Bias: " + bias.ToString();
