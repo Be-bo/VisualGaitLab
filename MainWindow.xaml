@@ -100,11 +100,11 @@
 
                         <!-- Tab's Bottom Part-->
                         <DockPanel Name="TrainingAddDock" Visibility="Collapsed" Grid.Row="1" Margin="5" Cursor="Hand">
-                            <Image Name="TrainingAddImage" Source="add.png" Height="20" Width="20" HorizontalAlignment="Left" />
+                            <Image Name="TrainingAddImage" Source="/Images/add.png" Height="20" Width="20" HorizontalAlignment="Left" />
                             <Button Name="TrainingAddButton" Click="AddClicked">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Label Name="TrainingAddLabel" Content="Add Video" Height="26" Foreground="{StaticResource DefaultBlueBrush}" FontSize="15"/>
+                                        <Label Name="TrainingAddLabel" Content="Add Videos" Height="26" Foreground="{StaticResource DefaultBlueBrush}" FontSize="15"/>
                                     </ControlTemplate>
                                 </Button.Template>
                             </Button>
@@ -129,7 +129,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <ListBox Name="AnalyzedListBox" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="AnalyzedListBox_SelectionChanged">
+                        <ListBox Name="AnalyzedListBox" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="AnalyzedListBox_SelectionChanged" SelectionMode="Extended">
 
                             <!-- List Box Settings -->
                             <ListBox.Resources>
@@ -180,11 +180,11 @@
 
                         <!-- Tab's Bottom Part-->
                         <DockPanel Name="AnalyzeAddDock" Grid.Row="1" Margin="5" Cursor="Hand">
-                            <Image Name="AnalyzeAddImage" Source="add.png" Height="20" Width="20" HorizontalAlignment="Left" />
+                            <Image Name="AnalyzeAddImage" Source="/Images/add.png" Height="20" Width="20" HorizontalAlignment="Left" />
                             <Button Click="AnalyzeAddClicked">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Label Name="AnalyzeAddLabel" Content="Add Video" Height="26" Foreground="#0d89ff" FontSize="15"/>
+                                        <Label Name="AnalyzeAddLabel" Content="Add Videos" Height="26" Foreground="#0d89ff" FontSize="15"/>
                                     </ControlTemplate>
                                 </Button.Template>
                             </Button>

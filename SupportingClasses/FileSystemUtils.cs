@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace VisualGaitLab.SupportingClasses {
     static class FileSystemUtils {
+
+        public const string CONDA_ACTIVATE_PATH = "\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"";
+
+
         public static string GetFileName(string inputPath) {
             var withExtension = inputPath.Substring(inputPath.LastIndexOf("\\")+1);
             return withExtension.Substring(0, withExtension.LastIndexOf("."));

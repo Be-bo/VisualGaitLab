@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\ControlzEx.dll</HintPath>
@@ -112,6 +115,9 @@
     <Compile Include="OtherWindows\AddBodyPartWindow.xaml.cs">
       <DependentUpon>AddBodyPartWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OtherWindows\AdjustBiasWindow.xaml.cs">
+      <DependentUpon>AdjustBiasWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OtherWindows\AnalysisSettings.xaml.cs">
       <DependentUpon>AnalysisSettings.xaml</DependentUpon>
     </Compile>
@@ -168,6 +174,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="OtherWindows\AddBodyPartWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OtherWindows\AdjustBiasWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -244,23 +254,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="add.png" />
-    <Resource Include="add_disabled.png" />
-    <Resource Include="analyze.png" />
-    <Resource Include="check.png" />
-    <Resource Include="cross.png" />
-    <Resource Include="dir.png" />
-    <Resource Include="edit.png" />
-    <Resource Include="example.png" />
-    <Resource Include="help.png" />
-    <Resource Include="hint.png" />
-    <Resource Include="logo.png" />
-    <Resource Include="mouse.png" />
-    <Resource Include="network.png" />
-    <Resource Include="settings.png" />
-    <Resource Include="thumbnail.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="GaitAnalysis\logo.png" />
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +270,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="OtherWindows\selectwindow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\add.png" />
+    <Resource Include="Images\add_disabled.png" />
+    <Resource Include="Images\analyze.png" />
+    <Resource Include="Images\check.png" />
+    <Resource Include="Images\cross.png" />
+    <Resource Include="Images\dir.png" />
+    <Resource Include="Images\edit.png" />
+    <Resource Include="Images\example.png" />
+    <Resource Include="Images\help.png" />
+    <Resource Include="Images\hint.png" />
+    <Resource Include="logo.png" />
+    <Resource Include="Images\mouse.png" />
+    <Resource Include="Images\network.png" />
+    <Resource Include="Images\readme_visual.png" />
+    <Resource Include="Images\settings.png" />
+    <Resource Include="Images\thumbnail.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

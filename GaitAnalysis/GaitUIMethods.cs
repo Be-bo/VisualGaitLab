@@ -189,8 +189,7 @@ namespace VisualGaitLab.GaitAnalysis {
             LFGaitSymmetryLabel.Text = LHGaitSymmetryLabel.Text;
             RFGaitSymmetryLabel.Text = LHGaitSymmetryLabel.Text;
 
-
-
+            
 
             //Stride Lengths, Stride Length Variability
             CalculateStrideData(HindLeftInStance.Count, ref HindLeftStrideLengths, ref HindLeftStrides, ref HindLeftSwitchPositions, ref HindLeftMidPointXs, ref HindLeftMidPointYs);
@@ -208,7 +207,7 @@ namespace VisualGaitLab.GaitAnalysis {
             LFStrideLengthVariabilityLabel.Text = string.Format("{0:00.00}", FrontLeftStrideLengthVariability);
             RFStrideLengthVariabilityLabel.Text = string.Format("{0:00.00}", FrontRightStrideLengthVariability);
 
-
+            
 
             //Dynamic Data Averages and precalculations for all frames
             CalculatePawAnglesAndStanceWidths();

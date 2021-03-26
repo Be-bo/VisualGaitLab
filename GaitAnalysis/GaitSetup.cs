@@ -48,7 +48,7 @@ namespace VisualGaitLab.GaitAnalysis {
             if (ts != null) { //if we successfully managed to obtain the length let the program proceed
                 GaitVideoLength = ParseDuration(ts.ToString());
                 ReadResults();
-                ReadCurrentState();
+                ReadCurrentState(true);
                 SetUpPawCharts();
                 SetStaticData();
                 SetUpCrossCorrelationCharts();
@@ -122,16 +122,37 @@ namespace VisualGaitLab.GaitAnalysis {
 
         private void SetUpPawCharts() { //set up the primary top 4 charts corresponding to mouse's paws
 
-            ZoomingOptions moozinOptions = ZoomingOptions.X;
-
-            LeftHindChart.Zoom = moozinOptions; //set up zooming along the X axis for all paw charts
-            LeftFrontChart.Zoom = moozinOptions;
-            RightFrontChart.Zoom = moozinOptions;
-            RightHindChart.Zoom = moozinOptions;
+            // Temporary arrays to apply same operation to each component
+            var charts = new CartesianChart[] { LeftHindChart, LeftFrontChart, RightHindChart, RightFrontChart };
+            var observables = new IChartValues[] { HindLeftObservables, FrontLeftObservables, HindRightObservables, FrontRightObservables };
+            var scatters = new IChartValues[] { HindLeftScatter, FrontLeftScatter, HindRightScatter, FrontRightScatter };
 
             GaitNumberOfFrames = HindLeftInStance.Count; //a few more values we need to initialize but needed to parse the .csv for first
             XMAX = GaitNumberOfFrames;
             FPS = (int)(GaitNumberOfFrames / GaitVideoLength);
+
+
+            if (GaitFirstSetup)
+            { // First time setup
+
+                // Set up zooming along the X axis for all paw charts
+                foreach (var chart in charts) chart.Zoom = ZoomingOptions.X;
+
+                // Add a scatter plot to each chart with a single value
+                // (it will be moving through the chart as the current frame updates to indicate to the user which x value corresponds to the frame they're seeing)
+                foreach (var scatter in scatters) scatter.Add(new ObservablePoint());
+
+                GaitFirstSetup = false;
+            }
+            else
+            { // Reset Charts
+                for (int i = 0; i < charts.Length; i++)
+                {
+                    charts[i].Series.Clear();
+                    observables[i].Clear();
+                }
+            }
+
 
             for (int i = 0; i < HindLeftInStance.Count; i++) { //set the .csv results 
                 HindLeftObservables.Add(new ObservablePoint(i, HindLeftInStance[i])); //set up list values for all charts as Observable Points (chart will automatically update if there's a change to any of its values)
@@ -139,129 +160,46 @@ namespace VisualGaitLab.GaitAnalysis {
                 FrontLeftObservables.Add(new ObservablePoint(i, FrontLeftInStance[i]));
                 FrontRightObservables.Add(new ObservablePoint(i, FrontRightInStance[i]));
             }
+            
 
-            HindLeftScatter.Add(new ObservablePoint()); //and also add a scatter plot to each chart with a single value (it will be moving through the chart as the current frame updates to indicate to the user which x value corresponds to the frame they're seeing)
-            HindRightScatter.Add(new ObservablePoint());
-            FrontLeftScatter.Add(new ObservablePoint());
-            FrontRightScatter.Add(new ObservablePoint());
+            // Clear the x an y axes that are created by default and add custom ones
+            PrimaryGaitGrid.Visibility = Visibility.Visible;
 
-            if (GaitFirstSetup) { //if we're setting everything up for the first time clear the x an y axes that are created by default and add custom ones
-                PrimaryGaitGrid.Visibility = Visibility.Visible;
+            foreach (var chart in charts)
+            {
+                chart.AxisX.Clear();
+                chart.AxisY.Clear();
+            }
 
-                LeftHindChart.AxisX.Clear();
-                LeftHindChart.AxisY.Clear();
-
-                LeftFrontChart.AxisX.Clear();
-                LeftFrontChart.AxisY.Clear();
-
-                RightHindChart.AxisX.Clear();
-                RightHindChart.AxisY.Clear();
-
-                RightFrontChart.AxisX.Clear();
-                RightFrontChart.AxisY.Clear();
-
-
-
-                // left hind
-                LeftHindChart.AxisX.Add(new Axis {
+            // Set Charts (leftHind, LeftFront, RightHind, RightFront)
+            for (int i = 0; i < charts.Length; i++)
+            {
+                charts[i].AxisX.Add(new Axis
+                {
                     MaxValue = XMAX,
                     MinValue = XMIN
                 });
-                ((Axis)(LeftHindChart.AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
+                ((Axis)(charts[i].AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
 
-                LeftHindChart.AxisY.Add(new Axis {
+                charts[i].AxisY.Add(new Axis
+                {
                     MaxValue = YMAX,
                     MinValue = YMIN,
                     LabelFormatter = val => val == 0 ? "Swing" : "Stance"
                 });
 
-                LeftHindChart.Series.Add(new LineSeries { //also add all the values that indicate if the mouse is in stance or swing
-                    Values = HindLeftObservables,
+                charts[i].Series.Add(new LineSeries
+                { //also add all the values that indicate if the mouse is in stance or swing
+                    Values = observables[i],
                     PointGeometrySize = 0,
                     LineSmoothness = 0,
                 });
 
-                LeftHindChart.Series.Add(new ScatterSeries { //and add the single point that shows which x value we're looking at (i.e. which x corresponds to the current frame)
-                    Values = HindLeftScatter,
+                charts[i].Series.Add(new ScatterSeries
+                { //and add the single point that shows which x value we're looking at (i.e. which x corresponds to the current frame)
+                    Values = scatters[i],
                     PointGeometry = DefaultGeometries.Circle,
                 });
-
-
-                //left front
-                LeftFrontChart.AxisX.Add(new Axis {
-                    MaxValue = XMAX,
-                    MinValue = XMIN
-                });
-                ((Axis)(LeftFrontChart.AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
-
-                LeftFrontChart.AxisY.Add(new Axis {
-                    MaxValue = YMAX,
-                    MinValue = YMIN,
-                    LabelFormatter = val => val == 0 ? "Swing" : "Stance"
-                });
-
-                LeftFrontChart.Series.Add(new LineSeries {
-                    Values = FrontLeftObservables,
-                    PointGeometrySize = 0,
-                    LineSmoothness = 0
-                });
-
-                LeftFrontChart.Series.Add(new ScatterSeries {
-                    Values = FrontLeftScatter,
-                    PointGeometry = DefaultGeometries.Circle,
-                });
-
-
-                //right hind
-                RightHindChart.AxisX.Add(new Axis {
-                    MaxValue = XMAX,
-                    MinValue = XMIN
-                });
-                ((Axis)(RightHindChart.AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
-
-                RightHindChart.AxisY.Add(new Axis {
-                    MaxValue = YMAX,
-                    MinValue = YMIN,
-                    LabelFormatter = val => val == 0 ? "Swing" : "Stance"
-                });
-
-                RightHindChart.Series.Add(new LineSeries {
-                    Values = HindRightObservables,
-                    PointGeometrySize = 0,
-                    LineSmoothness = 0
-                });
-
-                RightHindChart.Series.Add(new ScatterSeries {
-                    Values = HindRightScatter,
-                    PointGeometry = DefaultGeometries.Circle
-                });
-
-
-                //right front
-                RightFrontChart.AxisX.Add(new Axis {
-                    MaxValue = XMAX,
-                    MinValue = XMIN
-                });
-                ((Axis)(RightFrontChart.AxisX[0])).RangeChanged += new LiveCharts.Events.RangeChangedHandler(Axis_RangeChanged); //sync zooming
-
-                RightFrontChart.AxisY.Add(new Axis {
-                    MaxValue = YMAX,
-                    MinValue = YMIN,
-                    LabelFormatter = val => val == 0 ? "Swing" : "Stance"
-                });
-
-                RightFrontChart.Series.Add(new LineSeries {
-                    Values = FrontRightObservables,
-                    PointGeometrySize = 0,
-                    LineSmoothness = 0,
-                });
-
-                RightFrontChart.Series.Add(new ScatterSeries {
-                    Values = FrontRightScatter,
-                    PointGeometry = DefaultGeometries.Circle
-                });
-
-                GaitFirstSetup = false;
             }
 
             FrameSlider.Value = 0; //move to the beginning with the slider
@@ -409,6 +347,26 @@ namespace VisualGaitLab.GaitAnalysis {
             string seconds = stringDuration.Substring(stringDuration.LastIndexOf(":") + 1, (stringDuration.Length - (stringDuration.LastIndexOf(":") + 1)));
             double totalInSeconds = double.Parse(hours) * 3600 + double.Parse(minutes) * 60 + double.Parse(seconds);
             return totalInSeconds;
+        }
+
+
+
+
+
+
+        // MARK: Reset midPoints and InStance values
+
+        private void ResetCalculatedFields()
+        {
+            foreach (var midpoints in new List<double>[] { HindLeftMidPointXs, HindLeftMidPointYs, HindRightMidPointXs, HindRightMidPointYs,
+                                                           FrontLeftMidPointXs, FrontLeftMidPointYs, FrontRightMidPointXs, FrontRightMidPointYs })
+            {
+                midpoints.Clear();
+            }
+            foreach (var inStances in new List<int>[] { HindLeftInStance, HindRightInStance, FrontLeftInStance, FrontRightInStance })
+            {
+                inStances.Clear();
+            }
         }
     }
 }

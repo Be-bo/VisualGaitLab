@@ -7,15 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -818,7 +813,7 @@ namespace VisualGaitLab.OtherWindows {
                 if (sw.BaseStream.CanWrite) {
                     sw.WriteLine(Drive);
                     sw.WriteLine("cd " + EnvDirectory);
-                    sw.WriteLine("\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"");
+                    sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_add_video.py");
 

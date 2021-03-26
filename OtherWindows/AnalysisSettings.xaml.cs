@@ -48,5 +48,10 @@ namespace VisualGaitLab.OtherWindows {
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
             DialogResult = false;
         }
+
+        public bool getCheckBoxValue()
+        {
+            return SameSizeForAnalysisCheckBox.IsChecked ?? false;
+        }
     }
 }
