@@ -175,9 +175,9 @@ namespace VisualGaitLab {
                             newVid.Name = videoFiles[i].Substring(videoFiles[i].LastIndexOf("\\") + 1, videoFiles[i].LastIndexOf(".") - videoFiles[i].LastIndexOf("\\") - 1);
                             newVid.Path = videoFiles[i];
                             newVid.FramesExtracted = false;
-                            newVid.ExtractedImageName = "cross.png";
+                            newVid.ExtractedImageName = "Images/cross.png";
                             newVid.FramesLabeled = false;
-                            newVid.LabeledImageName = "cross.png";
+                            newVid.LabeledImageName = "Images/cross.png";
                             newVid.Frames = 0;
 
                             string labeledDataSingleVideoPath = projectPath + "\\labeled-data\\" + newVid.Name;
@@ -187,10 +187,10 @@ namespace VisualGaitLab {
                                 int frameCount = 0;
                                 for (int j = 0; j < allFiles.Length; j++) {
                                     if (allFiles[j].Contains(".png")) { frameCount++; }
-                                    if (allFiles[j].Contains(".h5")) { newVid.FramesLabeled = true; newVid.LabeledImageName = "check.png"; }
+                                    if (allFiles[j].Contains(".h5")) { newVid.FramesLabeled = true; newVid.LabeledImageName = "Images/check.png"; }
                                 }
                                 newVid.Frames = frameCount;
-                                if (newVid.Frames > 0) { newVid.FramesExtracted = true; newVid.ExtractedImageName = "check.png"; }
+                                if (newVid.Frames > 0) { newVid.FramesExtracted = true; newVid.ExtractedImageName = "Images/check.png"; }
 
                             }
                             else { //labeled folder doesn't exists, on the video has been added
@@ -279,10 +279,10 @@ namespace VisualGaitLab {
                     newVideo.ThumbnailPath = "thumbnail.png";
                     var files = Directory.GetFiles(analyzedVideosPath + "\\" + newVideo.Name);
                     newVideo.IsAnalyzed = false;
-                    newVideo.AnalyzedImageName = "cross.png";
+                    newVideo.AnalyzedImageName = "Images/cross.png";
                     foreach (var file in files) {
                         if ((file.Contains(".mp4") || file.Contains(".avi")) && (!file.Contains("labeled"))) { newVideo.Path = file; }
-                        if (file.Contains(".h5")) { newVideo.IsAnalyzed = true; newVideo.AnalyzedImageName = "check.png"; } //check if teh video is analyzed
+                        if (file.Contains(".h5")) { newVideo.IsAnalyzed = true; newVideo.AnalyzedImageName = "Images/check.png"; } //check if teh video is analyzed
                         if (file.Contains(".png")) newVideo.ThumbnailPath = file;
                     }
                     if (newVideo.Path != null) CurrentProject.AnalysisVideos.Add(newVideo);

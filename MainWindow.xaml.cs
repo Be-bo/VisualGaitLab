@@ -205,11 +205,11 @@ namespace VisualGaitLab
                 if (vid.IsAnalyzed) {
                     string gaitStateFolder = vid.Path.Substring(0, vid.Path.LastIndexOf("\\")) + "\\gaitsavedstate";
                     if (Directory.Exists(gaitStateFolder) && File.Exists(gaitStateFolder + "\\metrics.txt")) {
-                        vid.GaitAnalyzedImageName = "check.png";
+                        vid.GaitAnalyzedImageName = "Images/check.png";
                         vid.IsGaitAnalyzed = true;
                     }
                     else {
-                        vid.GaitAnalyzedImageName = "cross.png";
+                        vid.GaitAnalyzedImageName = "Images/cross.png";
                         vid.IsGaitAnalyzed = false;
                     }
                     GaitVideos.Add(vid);

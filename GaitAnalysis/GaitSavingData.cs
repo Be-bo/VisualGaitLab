@@ -99,7 +99,8 @@ namespace VisualGaitLab.GaitAnalysis {
                     FrontRightMidPointYs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
                 }
 
-                if(File.Exists(stateFolder + "\\inputParams.txt"))
+                bias = 0.25;   // Old versions of VGL have this default bias
+                if (File.Exists(stateFolder + "\\inputParams.txt"))
                 {
                     List<double> tempList = File.ReadAllLines(stateFolder + "\\inputParams.txt").ToList().ConvertAll(item => double.Parse(item));
                     if (tempList.Count > 3)
