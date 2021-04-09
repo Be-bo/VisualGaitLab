@@ -40,7 +40,7 @@ So Start should have the following dialogs by at the end: Welcome, License Agree
 ### Build
 11. Right click on the Setup project in Solution Explorer and click Rebuild.
 This will take a while so make sure everything else is fine before building.
-12. 
+12. Go to the Debug folder in the project directory and use the .msi file as the installer. (the .exe file is unnecessary) 
 
 
 ## References and Tutorials

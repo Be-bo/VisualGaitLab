@@ -35,6 +35,7 @@ namespace VisualGaitLab.SupportingClasses {
             LabelFrames.Add("config_path = r'config_path_identifier'");
             LabelFrames.Add("deeplabcut.label_frames(config_path, r'video_path_identifier')");
 
+            //TODO: add multiple videos
             AddVideo = new List<string>();
             AddVideo.Add("import deeplabcut");
             AddVideo.Add("config_path = r'config_path_identifier'");
@@ -68,6 +69,7 @@ namespace VisualGaitLab.SupportingClasses {
             CreateLabeledVideo.Add("os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'");
             CreateLabeledVideo.Add("config_path = r'config_path_identifier'");
             CreateLabeledVideo.Add("video_paths = sys.argv[1:]");
+            CreateLabeledVideo.Add("print('video paths:', video_paths)");
             CreateLabeledVideo.Add("deeplabcut.create_labeled_video(config_path,video_paths,save_frames=True)");
 
             AnalyzeVideo = new List<string>();

@@ -222,6 +222,7 @@ namespace VisualGaitLab {
         // If not in Debug mode, it redirects the output to the loading window accordingly
         private void AnalyzeVideos(Dictionary<int, AnalysisVideo> videos)
         {
+            Console.WriteLine("Analyzing video...");
             // Prepare script
             string filePath = EnvDirectory + "\\vdlc_analyze_video.py";
             FileSystemUtils.MurderPython();
@@ -233,7 +234,7 @@ namespace VisualGaitLab {
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
             info.RedirectStandardInput = true;
-            info.RedirectStandardOutput = !ReadShowDebugConsole();
+            info.RedirectStandardOutput = true; //!ReadShowDebugConsole(); 
             info.UseShellExecute = false;
             info.Verb = "runas";
             info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
@@ -336,7 +337,7 @@ namespace VisualGaitLab {
                     sw.Write("ipython vdlc_analyze_video.py");
 
                     // Arguments
-                    foreach (var video in videos.Values) sw.Write(" " + video.Path);
+                    foreach (var video in videos.Values) sw.Write(" \"" + video.Path + "\"");
                     sw.WriteLine("");
 
                     if (info.CreateNoWindow == false)
@@ -406,7 +407,7 @@ namespace VisualGaitLab {
                     sw.Write("ipython vdlc_create_labeled_video.py");
 
                     // Arguments
-                    foreach (var video in videos.Values) sw.Write(" " + video.Path);
+                    foreach (var video in videos.Values) sw.Write(" \"" + video.Path + "\"");
                     sw.WriteLine("");
 
                     if (!info.CreateNoWindow) { //for debug purposes

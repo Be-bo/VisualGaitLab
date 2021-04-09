@@ -115,10 +115,21 @@ namespace VisualGaitLab.GaitAnalysis {
                 MessageBox.Show("Loaded saved data from previous session.", "Data Loaded", MessageBoxButton.OK);
             }
             else {
-                HindLeftInStance = GetInStanceArray(HindLeftXs, HindLeftYs, HindLeftHeelXs, HindLeftHeelYs, ref HindLeftMidPointXs, ref HindLeftMidPointYs); //calculate in stance arrays for all paws (0 means that in the current frame the paw is in swing and 1 means that it's in stance)
-                HindRightInStance = GetInStanceArray(HindRightXs, HindRightYs, HindRightHeelXs, HindRightHeelYs, ref HindRightMidPointXs, ref HindRightMidPointYs);
-                FrontLeftInStance = GetInStanceArray(FrontLeftXs, FrontLeftYs, FrontLeftHeelXs, FrontLeftHeelYs, ref FrontLeftMidPointXs, ref FrontLeftMidPointYs);
-                FrontRightInStance = GetInStanceArray(FrontRightXs, FrontRightYs, FrontRightHeelXs, FrontRightHeelYs, ref FrontRightMidPointXs, ref FrontRightMidPointYs);
+                // Calculate in stance arrays for all paws (0 means that in the current frame the paw is in swing and 1 means that it's in stance)
+                if (IsFreeRun)
+                {
+                    HindLeftInStance = GetCatWalkInStanceArray(HindLeftXs, HindLeftYs, HindLeftHeelXs, HindLeftHeelYs, ref HindLeftMidPointXs, ref HindLeftMidPointYs); 
+                    HindRightInStance = GetCatWalkInStanceArray(HindRightXs, HindRightYs, HindRightHeelXs, HindRightHeelYs, ref HindRightMidPointXs, ref HindRightMidPointYs);
+                    FrontLeftInStance = GetCatWalkInStanceArray(FrontLeftXs, FrontLeftYs, FrontLeftHeelXs, FrontLeftHeelYs, ref FrontLeftMidPointXs, ref FrontLeftMidPointYs);
+                    FrontRightInStance = GetCatWalkInStanceArray(FrontRightXs, FrontRightYs, FrontRightHeelXs, FrontRightHeelYs, ref FrontRightMidPointXs, ref FrontRightMidPointYs);
+                }
+                else
+                {
+                    HindLeftInStance = GetTreadMillInStanceArray(HindLeftXs);
+                    HindRightInStance = GetTreadMillInStanceArray(HindRightXs);
+                    FrontLeftInStance = GetTreadMillInStanceArray(FrontLeftXs);
+                    FrontRightInStance = GetTreadMillInStanceArray(FrontRightXs);
+                }
             }
         }
 

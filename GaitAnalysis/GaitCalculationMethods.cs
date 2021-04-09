@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace VisualGaitLab.GaitAnalysis {
@@ -16,84 +14,81 @@ namespace VisualGaitLab.GaitAnalysis {
 
         // MARK: Static Data (averages and ratios based on all frames)
 
-        private List<int> GetInStanceArray(List<float> allX, List<float> allY, List<float> allXotherMarker, List<float> allYotherMarker, ref List<double> footMidPointXs, ref List<double> footMidpointYs) {
+        private List<int> GetTreadMillInStanceArray(List<float> allX)
+        {
+            // the first position is technically a switch
+            List<int> switches = new List<int> { 0 };
+            bool previous = true;
+            if (allX.Count > 0) previous = allX[1] >= allX[0];
 
-            if (IsFreeRun) { //free running bottom view of the cage (no treadmill) or just a cat walk
-                List<double> posDifferences = new List<double>(); //difs in paw positions will be used to calculate switches instead of vectors
-                List<int> isInStanceArray = new List<int>();
+            // find switches
+            for (int i = 1; i < allX.Count; i++)
+            {
+                bool gettingBigger;
 
-                for (int i = 0; i < allX.Count; i++) { //get array of midpoints for both X and Y positions for all frames of the video
-                    footMidPointXs.Add((allX[i] + allXotherMarker[i]) / 2);
-                }
-                for (int i = 0; i < allY.Count; i++) {
-                    footMidpointYs.Add((allY[i] + allYotherMarker[i]) / 2);
-                }
+                if (allX[i] >= allX[i - 1]) gettingBigger = true;
+                else gettingBigger = false;
 
-                for (int i = 1; i < footMidpointYs.Count; i++) { //calculate the array of differences between paw positions (midpoints)
-                    posDifferences.Add(CalculateDistanceBetweenPoints(footMidPointXs[i - 1], footMidpointYs[i - 1], footMidPointXs[i], footMidpointYs[i]));
-                }
-
-                double avgDiff = posDifferences.Average() * bias; // get avg of frame differences (k = adjustment to get best result)
-                for (int i = 0; i < posDifferences.Count; i++) { //use avg to determine what is stance and what is swing
-                    if (posDifferences[i] < avgDiff) {
-                        isInStanceArray.Add(1); //if small dif -> stance (paw in one spot)
-                    }
-                    else {
-                        isInStanceArray.Add(0); //if large dif -> swing (paw in the air)
-                    }
-                }
-
-                return isInStanceArray;
+                if (previous != gettingBigger) switches.Add(i);
+                previous = gettingBigger;
             }
-            else { // treadmill
-                List<int> switches = new List<int>
-                {
-                    0 // the first position is technically a switch
-                };
-                bool previous = true;
 
-                // find switches
-                for (int i = 1; i < allX.Count; i++) {
-                    bool gettingBigger;
+            switches.Add(allX.Count - 1);
 
-                    if (allX[i] >= allX[i - 1])
-                    {
-                        gettingBigger = true;
-                        if (i == 1) previous = true;
-                    }
-                    else
-                    {
-                        gettingBigger = false;
-                        if (i == 1) previous = false;
-                    }
-
-                    if (previous != gettingBigger) switches.Add(i);
-                    previous = gettingBigger;
-                }
-
-                switches.Add(allX.Count - 1);
-
-                // find trends for switches (if the given switch segment vector is getting bigger -> swing, or smaller -> stance)
-                float slopeSum;
-                List<float> switchSlopes = new List<float>();
-                for (int i = 1; i < switches.Count; i++) {
-                    slopeSum = 0;
-                    for (int j = switches[i - 1] + 1; j < switches[i]; j++) slopeSum += CalculateSlope(allX[j], allX[j - 1], j, (j - 1));
-                    switchSlopes.Add(slopeSum); // each slopeSum[a-1] starting at a+1 corresponds to series between switches[a-1] AND switches[a]
-                }
-
-                // use slope sums to determine stance and swing
-                List<int> isStanceArray = new List<int>();
-                int isStance; // technically a bool but int is easy to plot
-                for (int i = 1; i < switches.Count; i++) {
-                    if (switchSlopes[i - 1] >= 0) isStance = 0; // slope positive, going faster than the treadmill -> swing
-                    else isStance = 1; // slope negative, going slower than the treadmill -> stance
-                    for (int j = switches[i - 1]; j < switches[i]; j++) isStanceArray.Add(isStance);
-                }
-
-                return isStanceArray; //the autocorrect feature corrects whatever this function returns (i.e. this is where autocorrect is tapping into the calculation pipeline)
+            // find trends for switches (if the given switch segment vector is getting bigger -> swing, or smaller -> stance)
+            float slopeSum;
+            List<float> switchSlopes = new List<float>();
+            for (int i = 1; i < switches.Count; i++)
+            {
+                slopeSum = 0;
+                for (int j = switches[i - 1] + 1; j < switches[i]; j++) slopeSum += CalculateSlope(allX[j], allX[j - 1], j, (j - 1));
+                switchSlopes.Add(slopeSum); // each slopeSum[a-1] starting at a+1 corresponds to series between switches[a-1] AND switches[a]
             }
+
+            // use slope sums to determine stance and swing
+            List<int> isStanceArray = new List<int>();
+            int isStance; // technically a bool but int is easy to plot
+            for (int i = 1; i < switches.Count; i++)
+            {
+                if (switchSlopes[i - 1] >= 0) isStance = 0; // slope positive, going faster than the treadmill -> swing
+                else isStance = 1; // slope negative, going slower than the treadmill -> stance
+                for (int j = switches[i - 1]; j < switches[i]; j++) isStanceArray.Add(isStance);
+            }
+
+            return isStanceArray; //the autocorrect feature corrects whatever this function returns (i.e. this is where autocorrect is tapping into the calculation pipeline)
         }
+
+
+        // Free running bottom view of the cage (no treadmill) or just a cat walk
+        private List<int> GetCatWalkInStanceArray(List<float> allX, List<float> allY, List<float> allXotherMarker, List<float> allYotherMarker, ref List<double> footMidPointXs, ref List<double> footMidpointYs) {
+ 
+            List<double> posDifferences = new List<double>(); //difs in paw positions will be used to calculate switches instead of vectors
+            List<int> isInStanceArray = new List<int>();
+
+            for (int i = 0; i < allX.Count; i++) { //get array of midpoints for both X and Y positions for all frames of the video
+                footMidPointXs.Add((allX[i] + allXotherMarker[i]) / 2);
+            }
+            for (int i = 0; i < allY.Count; i++) {
+                footMidpointYs.Add((allY[i] + allYotherMarker[i]) / 2);
+            }
+
+            for (int i = 1; i < footMidpointYs.Count; i++) { //calculate the array of differences between paw positions (midpoints)
+                posDifferences.Add(CalculateDistanceBetweenPoints(footMidPointXs[i - 1], footMidpointYs[i - 1], footMidPointXs[i], footMidpointYs[i]));
+            }
+
+            double avgDiff = posDifferences.Average() * bias; // get avg of frame differences (k = adjustment to get best result)
+            for (int i = 0; i < posDifferences.Count; i++) { //use avg to determine what is stance and what is swing
+                if (posDifferences[i] < avgDiff) {
+                    isInStanceArray.Add(1); //if small dif -> stance (paw in one spot)
+                }
+                else {
+                    isInStanceArray.Add(0); //if large dif -> swing (paw in the air)
+                }
+            }
+
+            return isInStanceArray;
+        }
+
 
         private double CalculateDistanceBetweenPoints(double x1, double y1, double x2, double y2) {
             return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2)); //ret dist between two points using Pythagorean Theorem
