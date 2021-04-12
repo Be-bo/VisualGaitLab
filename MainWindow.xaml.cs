@@ -5,10 +5,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using VisualGaitLab.GaitAnalysis;
 using VisualGaitLab.OtherWindows;
 using VisualGaitLab.SupportingClasses;
@@ -29,8 +27,6 @@ namespace VisualGaitLab
         string EnvDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
         string EnvName = "dlc-windowsGPU";
         string Drive = "c:";
-        BrushConverter converter = new System.Windows.Media.BrushConverter();
-        Regex NumberRegex = new Regex("^[0-9]*$");
         PythonScripts AllScripts = new PythonScripts();
         LoadingWindow LoadingWindow;
         List<AnalysisVideo> GaitVideos;
@@ -49,7 +45,7 @@ namespace VisualGaitLab
 
             if (IsAdministrator() == false) {
                 // Restart program and run as admin (because we're digging around the C: drive)
-                var exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                var exeName = Process.GetCurrentProcess().MainModule.FileName;
                 ProcessStartInfo startInfo = new ProcessStartInfo(exeName);
                 startInfo.Verb = "runas";
                 System.Diagnostics.Process.Start(startInfo);

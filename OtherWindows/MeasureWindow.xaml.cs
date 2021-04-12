@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace VisualGaitLab.OtherWindows {
     /// <summary>
@@ -21,8 +13,8 @@ namespace VisualGaitLab.OtherWindows {
 
         private string ImagePath;
         private BitmapImage Bmap;
-        Regex NumberRegex = new Regex("^[0-9]*$");
-        Regex ZeroRegex = new Regex("^[0]*$");
+        Regex FloatRegex = new Regex("^[0-9]+(?:\\.[0-9]+)?$");
+        Regex ZeroRegex = new Regex("^[0]*(?:\\.[0]*)?$");
 
         public MeasureWindow(string imagePath) { //set up canvas with a screenshot from the current video
             InitializeComponent();
@@ -53,7 +45,7 @@ namespace VisualGaitLab.OtherWindows {
         private void CheckInput() {
             if (DistanceTextBox != null && ContinueButton != null && TreadmillSpeedTextBox != null) {
                 if ((bool)AnalysisTypeRadioTreadmill.IsChecked) {
-                    if (NumberRegex.IsMatch(DistanceTextBox.Text) && !ZeroRegex.IsMatch(DistanceTextBox.Text) && NumberRegex.IsMatch(TreadmillSpeedTextBox.Text) && !ZeroRegex.IsMatch(TreadmillSpeedTextBox.Text)) {
+                    if (FloatRegex.IsMatch(DistanceTextBox.Text) && !ZeroRegex.IsMatch(DistanceTextBox.Text) && FloatRegex.IsMatch(TreadmillSpeedTextBox.Text) && !ZeroRegex.IsMatch(TreadmillSpeedTextBox.Text)) {
                         ContinueButton.IsEnabled = true;
                     }
                     else {
@@ -61,7 +53,7 @@ namespace VisualGaitLab.OtherWindows {
                     }
                 }
                 if((bool)AnalysisTypeRadioFreeWalking.IsChecked) {
-                    if(NumberRegex.IsMatch(DistanceTextBox.Text) && !ZeroRegex.IsMatch(DistanceTextBox.Text)) {
+                    if(FloatRegex.IsMatch(DistanceTextBox.Text) && !ZeroRegex.IsMatch(DistanceTextBox.Text)) {
                         ContinueButton.IsEnabled = true;
                     } else {
                         ContinueButton.IsEnabled = false;
@@ -107,7 +99,7 @@ namespace VisualGaitLab.OtherWindows {
             double secondPointActualY = (double)secondPointY * (imageHeight / onScreenHeight);
 
             double pixelDistance = Math.Sqrt(Math.Pow(secondPointActualX - firstPointActualX, 2) + Math.Pow(secondPointActualY - firstPointActualY, 2));
-            return int.Parse(DistanceTextBox.Text) / pixelDistance;
+            return float.Parse(DistanceTextBox.Text) / pixelDistance;
         }
 
         private void AnalysisTypeRadioFreeWalking_Checked(object sender, RoutedEventArgs e) { //free walking selected, bar the treadmill speed option

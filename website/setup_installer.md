@@ -6,6 +6,9 @@
 - deps folder (includes a frozen version of deeplabcut)
 - VS InstallerProjects extension
 
+## Notes
+If the installer project has already been setup, you only need to build your solution and rebuild the installer project.
+
 
 ## Steps
 
