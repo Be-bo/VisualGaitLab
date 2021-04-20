@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace VisualGaitLab.OtherWindows {
     /// <summary>
@@ -19,24 +11,22 @@ namespace VisualGaitLab.OtherWindows {
     /// </summary>
     public partial class CreateProjectDialog : Window {
         public List<string> bodyParts = new List<string>();
-        private BrushConverter converter = new System.Windows.Media.BrushConverter();
-        private bool isGateOnly = false;
+        private BrushConverter converter = new BrushConverter();
 
         public CreateProjectDialog(bool gaitOnly) //set up body parts for the new project, if it's a gait project then leave the Add Bodypart feature hidden
         {
             InitializeComponent();
-            isGateOnly = gaitOnly;
-            if (isGateOnly) {
-                bodyParts.Add("HindLeft1");
-                bodyParts.Add("HindLeft2");
-                bodyParts.Add("HindRight1");
-                bodyParts.Add("HindRight2");
-                bodyParts.Add("FrontLeft1");
-                bodyParts.Add("FrontLeft2");
-                bodyParts.Add("FrontRight1");
-                bodyParts.Add("FrontRight2");
+            if (gaitOnly) {
                 bodyParts.Add("Nose");
                 bodyParts.Add("Butt");
+                bodyParts.Add("FrontRight1");
+                bodyParts.Add("FrontRight2");
+                bodyParts.Add("FrontLeft1");
+                bodyParts.Add("FrontLeft2");
+                bodyParts.Add("HindRight1");
+                bodyParts.Add("HindRight2");
+                bodyParts.Add("HindLeft1");
+                bodyParts.Add("HindLeft2");
                 bodyParts.Add("MidPointLeft");
                 bodyParts.Add("MidPointRight");
             }

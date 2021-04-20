@@ -16,16 +16,72 @@
             <!-- Actual Content -->
             <Grid Name="PrimaryGaitGrid" Visibility="Hidden">
                 <Grid.ColumnDefinitions>
+                    <!-- margins of 10 px -->
+                    <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
 
+                
+                <!-- LEFT COLUMN (charts and image with slider)-->
+                <Grid Grid.Column="1">
 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Current Frame Pic-->
+                    <Image Grid.Row="0" Name="CurrentFrameText" Source="/Images/example.png" Margin="5"/>
+
+                    <!-- Frame Slider -->
+                    <DockPanel LastChildFill="True" Grid.Row="1" Margin="5">
+                        <TextBlock DockPanel.Dock="Left" Width="100" Text="Full Length: " VerticalAlignment="Center" TextAlignment="Left"/>
+                        <TextBlock Name="FrameText" DockPanel.Dock="Right" Width="Auto" Text="Frame: 0" TextAlignment="Right"/>
+                        <Slider Name="FrameSlider" ValueChanged="Slider_ValueChanged"/>
+                    </DockPanel>
+
+                    <!-- Zoom Slider -->
+                    <DockPanel LastChildFill="True" Grid.Row="2" Margin="5" Height="30">
+                        <TextBlock DockPanel.Dock="Left" Width="100" Text="Segment: " VerticalAlignment="Center" TextAlignment="Left"/>
+                        <TextBox Name="ZoomSliderEndBox" Style="{StaticResource DialogTextBoxStyle}" DockPanel.Dock="Right" VerticalAlignment="Center" Height="20" Width="60" Text="Max"/>
+                        <TextBox Name="ZoomSliderStartBox" Style="{StaticResource DialogTextBoxStyle}" DockPanel.Dock="Right" VerticalAlignment="Center" Height="20" Width="60" Text="0"/>
+                        <Slider Name="ZoomSlider" VerticalAlignment="Center" ValueChanged="ZoomSlider_ValueChanged" Value="0" Maximum="100"/>
+                    </DockPanel>
+
+                    <!-- Swing/Stance Graphs -->
+                    <StackPanel Width="Auto" Height="Auto" Grid.Row="3" Margin="5,5,-10,5">
+                        <TextBlock Margin="0, 20, 0, 0" Text="Right Fore" TextAlignment="Center"/>
+                        <lvc:CartesianChart MinHeight="70" Name="RightFrontChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="RightFrontChart_MouseRightButtonUp"/>
+
+                        <TextBlock Margin="0, 20, 0, 0" Text="Left Fore" TextAlignment="Center"/>
+                        <lvc:CartesianChart MinHeight="70" Name="LeftFrontChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="LeftFrontChart_MouseRightButtonUp"/>
+                        
+                        <TextBlock Margin="0, 20, 0, 0" Text="Right Hind" TextAlignment="Center"/>
+                        <lvc:CartesianChart MinHeight="70" Name="RightHindChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="RightHindChart_MouseRightButtonUp"/>
+
+                        <TextBlock Margin="0, 20, 0, 0" Text="Left Hind" TextAlignment="Center"/>
+                        <lvc:CartesianChart MinHeight="70" Name="LeftHindChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="LeftHindChart_MouseRightButtonUp"/>
+                    </StackPanel>
+
+                    <!-- Bias and Buttons -->
+                    <DockPanel LastChildFill="True" Grid.Row="4">
+                        <TextBlock Name="BiasValue" Text="Bias: " Margin="5" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" DockPanel.Dock="Right">
+                            <Button Name="GaitAutoCorrectButton" Content="Auto-Correct" Margin="5" Click="GaitAutoCorrectButton_Click" Style="{StaticResource PositiveButton}"/>
+                            <Button Name="GaitBiasAdjustButton" Content="Adjust Bias" Margin="5" Click="GaitAdjustBias_Click" Style="{StaticResource PositiveButton}"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+
+                
                 <!-- RIGHT COLUMN (all the calculations) -->
-                <StackPanel Grid.Column="1" Margin="5">
+                <StackPanel Grid.Column="3">
 
                     <!-- Static Data -->
                     <Label Content="Static Data" HorizontalContentAlignment="Center" FontWeight="Bold"/>
@@ -232,61 +288,7 @@
                 </StackPanel>
 
 
-                <!-- LEFT COLUMN (charts and image with slider)-->
-                <Grid Grid.Column="0">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Image Grid.Row="1" Name="CurrentFrameText" Source="/Images/example.png" Margin="5"/>
-
-                    <DockPanel LastChildFill="True" Grid.Row="2" Margin="5">
-                        <TextBlock DockPanel.Dock="Left" Width="100" Text="Full Length: " VerticalAlignment="Center" TextAlignment="Left"/>
-                        <TextBlock Name="FrameText" DockPanel.Dock="Right" Width="Auto" Text="Frame: 0" TextAlignment="Right"/>
-                        <Slider Name="FrameSlider" ValueChanged="Slider_ValueChanged"/>
-                    </DockPanel>
-
-                    <DockPanel LastChildFill="True" Grid.Row="3" Margin="5" Height="30">
-                        <TextBlock DockPanel.Dock="Left" Width="100" Text="Segment: " VerticalAlignment="Center" TextAlignment="Left"/>
-                        <TextBox Name="ZoomSliderEndBox" Style="{StaticResource DialogTextBoxStyle}" DockPanel.Dock="Right" VerticalAlignment="Center" Height="20" Width="60" Text="Max"/>
-                        <TextBox Name="ZoomSliderStartBox" Style="{StaticResource DialogTextBoxStyle}" DockPanel.Dock="Right" VerticalAlignment="Center" Height="20" Width="60" Text="0"/>
-                        <Slider Name="ZoomSlider" VerticalAlignment="Center" ValueChanged="ZoomSlider_ValueChanged" Value="0" Maximum="100"/>
-                    </DockPanel>
-
-
-
-                    <StackPanel Width="Auto" Height="Auto" Grid.Row="4" Margin="5,5,-10,5">
-                        <TextBlock Margin="0, 20, 0, 0" Text="Left Hind" TextAlignment="Center"/>
-                        <lvc:CartesianChart MinHeight="70" Name="LeftHindChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="LeftHindChart_MouseRightButtonUp"/>
-
-                        <TextBlock Margin="0, 20, 0, 0" Text="Left Fore" TextAlignment="Center"/>
-                        <lvc:CartesianChart MinHeight="70" Name="LeftFrontChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="LeftFrontChart_MouseRightButtonUp"/>
-
-                        <TextBlock Margin="0, 20, 0, 0" Text="Right Hind" TextAlignment="Center"/>
-                        <lvc:CartesianChart MinHeight="70" Name="RightHindChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="RightHindChart_MouseRightButtonUp"/>
-
-                        <TextBlock Margin="0, 20, 0, 0" Text="Right Fore" TextAlignment="Center"/>
-                        <lvc:CartesianChart MinHeight="70" Name="RightFrontChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}" MouseRightButtonUp="RightFrontChart_MouseRightButtonUp"/>
-
-                        <DockPanel LastChildFill="True">
-                            <TextBlock Name="BiasValue" Text="Bias: " Margin="5" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" DockPanel.Dock="Right">
-                                <Button Name="GaitAutoCorrectButton" Content="Auto-Correct" Margin="5" Click="GaitAutoCorrectButton_Click" Style="{StaticResource PositiveButton}"/>
-                                <Button Name="GaitBiasAdjustButton" Content="Adjust Bias" Margin="5" Click="GaitAdjustBias_Click" Style="{StaticResource PositiveButton}"/>
-                            </StackPanel>
-                        </DockPanel>
-                        
-                    </StackPanel>
-                </Grid>
+                
             </Grid>
 
 

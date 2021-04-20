@@ -8,9 +8,10 @@ namespace VisualGaitLab.SupportingClasses {
     [Serializable]
     public class Project {
 
+        // For Opening an existing project
         public Project() {
             IsTrained = false;
-            DisplayIters = "100";
+            DisplayIters = "10";
             SaveIters = "5000";
             EndIters = "100000";
             TrainingVideos = new List<TrainingVideo>();
@@ -29,6 +30,22 @@ namespace VisualGaitLab.SupportingClasses {
             TrainTime = "";
             TrainingSplit = "0.80";
             GlobalScale = 0.8;
+        }
+
+        // For Creating a new project
+        public Project(bool gaitOnly, string name, string scorer, List<string> bodyparts) : this()
+        {
+            IsGaitOnly = gaitOnly;
+            Name = name;
+            Scorer = scorer;
+            BodyParts = bodyparts.Select(x => "- " + x).ToList();   // Add a '-' in front of each body part
+
+            // Date Identifier
+            string month = DateTime.Now.Month.ToString();
+            string day = DateTime.Now.Day.ToString();
+            if (month.Length < 2) month = "0" + month;
+            if (day.Length < 2) day = "0" + day;
+            DateIdentifier = DateTime.Now.Year.ToString() + "-" + month + "-" + day;
         }
 
         public List<TrainingVideo> TrainingVideos { get; set; }

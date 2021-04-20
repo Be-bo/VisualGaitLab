@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using VisualGaitLab.OtherWindows;
 using VisualGaitLab.SupportingClasses;
@@ -35,6 +33,7 @@ namespace VisualGaitLab {
             }
         }
 
+
         private bool ProjectExists(Project proj) {
             if (File.Exists(proj.ConfigPath)) return true;
             else return false;
@@ -43,23 +42,19 @@ namespace VisualGaitLab {
 
         private void CreateNewProject(CreateProjectDialog dialog, bool gaitOnly) //call create_new_project function from DeepLabCut
         {
-            Project newProject = new Project();
-            newProject.IsGaitOnly = gaitOnly;
-            newProject.TrainedWith = new List<string>();
-            newProject.DisplayIters = "10";
-            newProject.BodyParts = dialog.bodyParts;
-            for (int i = 0; i < newProject.BodyParts.Count; i++) newProject.BodyParts[i] = "- " + newProject.BodyParts[i];
-            string month = DateTime.Now.Month.ToString();
-            string day = DateTime.Now.Day.ToString();
-            if (month.Length < 2) month = "0" + month;
-            if (day.Length < 2) day = "0" + day;
-            newProject.DateIdentifier = DateTime.Now.Year.ToString() + "-" + month + "-" + day;
-            newProject.Name = dialog.projectNameTextBox.Text;
-            newProject.Scorer = dialog.authorTextBox.Text;
-            newProject.TrainingVideos = new List<TrainingVideo>();
+            // Create new Project
+            Project newProject = new Project(
+                gaitOnly, 
+                dialog.projectNameTextBox.Text, 
+                dialog.authorTextBox.Text, 
+                dialog.bodyParts);
+  
+            // Config Path
             string filePath = EnvDirectory + "\\vdlc_create_new_project.py";
             string copyVideosBool = "True";
             newProject.ConfigPath = WorkingDirectory + "\\" + newProject.Name + "-" + newProject.Scorer + "-" + newProject.DateIdentifier + "\\" + "config.yaml";
+            
+            // Create DLC project
             if (!ProjectExists(newProject)) {
                 FileSystemUtils.MurderPython();
                 FileSystemUtils.RenewScript(filePath, AllScripts.CreateProject); //prepare the script for creating a new project
@@ -114,7 +109,6 @@ namespace VisualGaitLab {
                 EnableInteraction();
                 MessageBox.Show("Your project cannot be created because a project with that name already exists. Go to \\Program Files (x86)\\VDLC\\Projects and delete the old project folder.", "Cannot Create Project", MessageBoxButton.OK);
             }
-
         }
 
 
@@ -136,7 +130,6 @@ namespace VisualGaitLab {
             dialog.IsFolderPicker = true;
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok) {
                 CurrentProject = new Project();
-                CurrentProject.DisplayIters = "10";
                 CurrentProject.ConfigPath = dialog.FileName + "\\config.yaml";
                 TrainingListBox.ItemsSource = null;
                 AnalyzedListBox.ItemsSource = null;

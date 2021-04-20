@@ -166,7 +166,7 @@ namespace VisualGaitLab {
         private void SetBodyParts(Project project) { //set body parts in the config file
             // read the config file
             List<string> configFile = new List<string>();
-            int bodypartsTitlePos = 0;
+            int startOfbodypartsPos = 0;
             int endOfBodypartsPos = 0;
             using (var reader = new StreamReader(project.ConfigPath)) {
                 int index = 0;
@@ -174,7 +174,7 @@ namespace VisualGaitLab {
                 while (!reader.EndOfStream) {
                     line = reader.ReadLine();
                     configFile.Add(line);
-                    if (line.Contains("bodyparts:")) bodypartsTitlePos = index;
+                    if (line.Contains("bodyparts:")) startOfbodypartsPos = index + 1;
                     if (line.Contains("start:")) {
                         endOfBodypartsPos = index;
                     }
@@ -183,13 +183,13 @@ namespace VisualGaitLab {
             }
 
             // remove the existing bodyparts
-            for (int i = bodypartsTitlePos + 1; i < endOfBodypartsPos; i++) {
-                configFile.RemoveAt(bodypartsTitlePos + 1);
+            for (int i = startOfbodypartsPos; i < endOfBodypartsPos; i++) {
+                configFile.RemoveAt(startOfbodypartsPos);
             }
 
             // add this project's bodyparts
             for (int i = 0; i < project.BodyParts.Count; i++) {
-                configFile.Insert(bodypartsTitlePos + 1, project.BodyParts[i]);
+                configFile.Insert(startOfbodypartsPos + i, project.BodyParts[i]);
             }
 
             // write into the config file
