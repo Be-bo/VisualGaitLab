@@ -221,7 +221,7 @@ namespace VisualGaitLab.GaitAnalysis {
 
 
 
-        // MARK: Cross Correlation Methods - CURRENTLY NOT IN USE
+        // MARK: Cross Correlation Methods
 
         private void SetUpCrossCorrelationCharts() { //same setup as the 4 paw charts above except we're displaying cross correlation values so no scatter plot indicating the current frame is necesssary
             CalculateCrossCorrelationSeries(ref HindLeftInStance, ref HindRightInStance, ref HindLimbsCrossCorrelation); //the cross correlation values also need to be calculated first

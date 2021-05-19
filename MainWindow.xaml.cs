@@ -250,15 +250,10 @@ namespace VisualGaitLab
                 }
                 BarInteraction();
 
-                string stateFolder = gaitVideoPath.Substring(0, gaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate"; //check if input params saved from before
+                // Check if Gait data is saved from before
+                string stateFolder = gaitVideoPath.Substring(0, gaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate"; 
                 if (Directory.Exists(stateFolder) && File.Exists(stateFolder + "\\inputParams.txt")) {
-                    List<float> inputParams = File.ReadAllLines(stateFolder + "\\inputParams.txt").ToList().ConvertAll(item => float.Parse(item));
-                    bool isFreeRun = false;
-                    if (inputParams.Count >= 3) {
-                        isFreeRun = inputParams[2] == 1;
-                    }
-
-                    GaitWindow gaitWindow = new GaitWindow(inputParams[0], inputParams[1], gaitVideoPath, gaitVideoName, gaitTempPath, isFreeRun);
+                    GaitWindow gaitWindow = new GaitWindow(gaitVideoPath, gaitVideoName, gaitTempPath);
                     if (gaitWindow.ShowDialog() == true) {
                         SyncUI();
                     }
@@ -279,9 +274,7 @@ namespace VisualGaitLab
                         }
                         EnableInteraction();
                     }
-                    else {
-                        EnableInteraction();
-                    }
+                    else EnableInteraction();
                 }
             }
         }

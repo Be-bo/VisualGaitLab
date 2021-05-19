@@ -77,7 +77,28 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void ReadCurrentState(bool loadPrevious) {
-            string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate"; //reading in stance lists from the folder
+            string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
+
+            // Gait Input Parameters
+            if (loadPrevious)
+            {
+                if (File.Exists(stateFolder + "\\inputParams.txt"))
+                {
+                    List<double> tempList = File.ReadAllLines(stateFolder + "\\inputParams.txt").ToList().ConvertAll(item => double.Parse(item));
+                    if (tempList.Count >= 3)
+                    {
+                        RealWorldMultiplier = tempList[0];
+                        TreadmillSpeed = tempList[1];
+                        IsFreeRun = tempList[2] == 1;
+                    }
+                    if (tempList.Count > 3) bias = tempList[3];
+                    else bias = 0.25;   // Old versions of VGL have this default bias
+                }
+
+                //TODO: gaitSettings Parameters
+            }
+
+            // Read in stance List
             if (loadPrevious && Directory.Exists(stateFolder) && File.Exists(stateFolder + "\\HindLeftInStance.txt") && File.Exists(stateFolder + "\\HindRightInStance.txt") && File.Exists(stateFolder + "\\FrontLeftInStance.txt") && File.Exists(stateFolder + "\\FrontRightInStance.txt")) {
                 HindLeftInStance = File.ReadAllLines(stateFolder + "\\HindLeftInStance.txt").ToList().ConvertAll(item => int.Parse(item));
                 HindRightInStance = File.ReadAllLines(stateFolder + "\\HindRightInStance.txt").ToList().ConvertAll(item => int.Parse(item));
@@ -97,19 +118,6 @@ namespace VisualGaitLab.GaitAnalysis {
 
                     FrontRightMidPointXs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointXs.txt").ToList().ConvertAll(item => double.Parse(item));
                     FrontRightMidPointYs = File.ReadAllLines(stateFolder + "\\FrontRightMidPointYs.txt").ToList().ConvertAll(item => double.Parse(item));
-                }
-
-                bias = 0.25;   // Old versions of VGL have this default bias
-                if (File.Exists(stateFolder + "\\inputParams.txt"))
-                {
-                    List<double> tempList = File.ReadAllLines(stateFolder + "\\inputParams.txt").ToList().ConvertAll(item => double.Parse(item));
-                    if (tempList.Count > 3)
-                    {
-                        RealWorldMultiplier = tempList[0];
-                        TreadmillSpeed = tempList[1];
-                        IsFreeRun = tempList[2] == 1;
-                        bias = tempList[3];
-                    }
                 }
                 
                 MessageBox.Show("Loaded saved data from previous session.", "Data Loaded", MessageBoxButton.OK);

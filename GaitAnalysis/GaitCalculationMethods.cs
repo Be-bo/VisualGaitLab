@@ -168,46 +168,47 @@ namespace VisualGaitLab.GaitAnalysis {
             if (switchPositions.Count < 3) {
                 MessageBox.Show("Video cannot be added because it's too short. Program will close.", "Video Too Short");
                 this.DialogResult = true;
+                return;
             }
-            else {
-                strides = new List<double>();
-                strideLengths = new List<double>();
-                int i = 0;
-                while (i < switchPositions[0]) { //add 0 mm stride lengths for all the initial frames that aren't used in calculations (incomplete strides)
-                    strideLengths.Add(0);
-                    i++;
-                }
+            
+            strides = new List<double>();
+            strideLengths = new List<double>();
+            int i = 0;
+            while (i < switchPositions[0]) { //add 0 mm stride lengths for all the initial frames that aren't used in calculations (incomplete strides)
+                strideLengths.Add(0);
+                i++;
+            }
 
-                for (int j = 0; j + 1 < switchPositions.Count; j += 2) { //for everything between the tails and incomplete strides
+            for (int j = 0; j + 1 < switchPositions.Count; j += 2) { //for everything between the tails and incomplete strides
+                double distance;
+                if (IsFreeRun) { //don't have treadmill speed for the freewalk type analysis, have to grab actual position difference
+                    int startPos = switchPositions[j];
+                    int endPos = switchPositions[j + 2];
+                    distance = CalculateDistanceBetweenPoints(midPointXs[startPos], midPointYs[startPos], midPointXs[endPos], midPointYs[endPos]);
+                    distance *= RealWorldMultiplier; // Convert from pixels to mm
+                }
+                else { //for the treadmill scenario we have to use the treadmill's speed
                     int frameDistance = switchPositions[j + 2] - switchPositions[j]; //we grab the distance between the first frame of the current stance and the last frame of the current swing
                                                                                      //for example let's say the current stride looks like this: first frame (stance) ->1111111111000000<- last frame (swing), the frame distance is 16
                                                                                      //             and just as all the other strides this one has 3 switch positions:  ^=j       ^=j+1 ^j+2 (!!!j+2 corresponds to the beginning of the next step so it's always 1, it's the last frame of the current stride + 1)
-                    double distance;
-                    if (IsFreeRun) { //don't have treadmill speed for the freewalk type analysis, have to grab actual position difference
-                        int startPos = switchPositions[j];
-                        int endPos = switchPositions[j + 2];
-                        distance = CalculateDistanceBetweenPoints(midPointXs[startPos], midPointYs[startPos], midPointXs[endPos], midPointYs[endPos]);
-                        distance *= RealWorldMultiplier;
-                    }
-                    else { //for the treadmill scenario we have to use the treadmill's speed
-                        double timeDistance = (double)frameDistance / FPS; //then we simply calculate the duration of the stride in seconds
-                        distance = TreadmillSpeed * timeDistance; //and use treadmill speed to get the distance that the paw has traveled through this stride
-                    }
 
-                    strides.Add(distance);
-
-                    for (int k = switchPositions[j]; k < switchPositions[j + 2]; k++) { //fill in the distance for all of the stride's frames
-                        strideLengths.Add(distance);
-                    }
-                    //the reason I decided to add the stride length so many times was to make the values easily accessible (i.e. we don't have to worry about stride frame ranges when showing the current value to the user, we simply go strideLengths[currentFrame])
-                    //it also makes exporting this data easier
+                    double timeDistance = (double)frameDistance / FPS; //then we simply calculate the duration of the stride in seconds
+                    distance = TreadmillSpeed * timeDistance; //and use treadmill speed to get the distance that the paw has traveled through this stride
                 }
 
-                i = switchPositions[switchPositions.Count - 1];
-                while (i < totalCount) { //add 0 mm stride lengths for all the trailing frames that aren't used in calculations (incomplete strides)
-                    strideLengths.Add(0);
-                    i++;
+                strides.Add(distance);
+
+                for (int k = switchPositions[j]; k < switchPositions[j + 2]; k++) { //fill in the distance for all of the stride's frames
+                    strideLengths.Add(distance);
                 }
+                //the reason I decided to add the stride length so many times was to make the values easily accessible (i.e. we don't have to worry about stride frame ranges when showing the current value to the user, we simply go strideLengths[currentFrame])
+                //it also makes exporting this data easier
+            }
+
+            i = switchPositions[switchPositions.Count - 1];
+            while (i < totalCount) { //add 0 mm stride lengths for all the trailing frames that aren't used in calculations (incomplete strides)
+                strideLengths.Add(0);
+                i++;
             }
         }
 
@@ -296,8 +297,11 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void CalculateCenterOfMass(int forFrame) { //"center of mass" is between the top mid point and the bottom midpoint (run the program and label a video for gait to see which points I'm referring to)
-            CenterOfMassX = (RightMidPointXs[forFrame] + LeftMidPointXs[forFrame]) / 2;
-            CenterOfMassY = (RightMidPointYs[forFrame] + LeftMidPointYs[forFrame]) / 2;
+            if (forFrame < RightMidPointXs.Count)
+            {
+                CenterOfMassX = (RightMidPointXs[forFrame] + LeftMidPointXs[forFrame]) / 2;
+                CenterOfMassY = (RightMidPointYs[forFrame] + LeftMidPointYs[forFrame]) / 2;
+            }
         }
 
         private double GetPawAngle(float y2, float y1, float x2, float x1, float yb, float ya, float xb, float xa) { //get an angle between two lines (for hind paws its between their respective points and the "butt-center of mass" line)
@@ -499,16 +503,6 @@ namespace VisualGaitLab.GaitAnalysis {
             }
             double mean = allValuesInMillis.Average(); //get the average stride duration
             return CalculateSEM(allValuesInMillis, mean); //and use the baseline calculation method for SEM
-        }
-
-
-
-        // MARK: Test button
-        private void GaitSupplementaryButton_Click(object sender, RoutedEventArgs e) {
-            Console.WriteLine(HindLeftStancesByStride.Count);
-            Console.WriteLine(HindLeftStancesByStride[0]);
-            Console.WriteLine(HindLeftStancesByStride[1]);
-            Console.WriteLine(CalculateSwingStanceSEM(HindLeftStancesByStride));
         }
 
         private void PrepSEM() { //method that calculates all the relevant SEM values for gait data export

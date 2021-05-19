@@ -277,11 +277,9 @@
                     </Grid>
 
 
-
-
-
+                    <!-- Bottom Right Buttons -->
                     <StackPanel Orientation="Horizontal" Margin="0,20,0,0" HorizontalAlignment="Right">
-                        <Button Name="GaitSupplementaryButton" Content="TEST" HorizontalAlignment="Right" Margin="5" Click="GaitSupplementaryButton_Click" Style="{StaticResource PositiveButton}" Visibility="Collapsed"/>
+                        <Button Name="GaitAdjustSettingsButton" Content="Adjust Settings" HorizontalAlignment="Right" Margin="5" Click="GaitAdjustSettingsButton_Click" Style="{StaticResource PositiveButton}"/>
                         <Button Name="GaitExportButton" Content="Export" HorizontalAlignment="Right" Margin="5" Click="GaitExportButton_Click" Style="{StaticResource PositiveButton}"/>
                     </StackPanel>
 
@@ -291,7 +289,7 @@
                 
             </Grid>
 
-
+            <!-- Paw Correlation Charts: currently unused -->
             <StackPanel Visibility="Collapsed" Width="Auto" Height="Auto" Grid.Row="4" Margin="5,5,-10,5">
                 <TextBlock Margin="0, 20, 0, 0" Text="Hind Paws Correlation" TextAlignment="Center"/>
                 <lvc:CartesianChart MinHeight="70" Name="HindCorrelationChart" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}"/>

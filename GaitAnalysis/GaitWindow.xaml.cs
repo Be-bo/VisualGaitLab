@@ -3,6 +3,7 @@ using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using VisualGaitLab.OtherWindows;
 
@@ -11,25 +12,40 @@ namespace VisualGaitLab.GaitAnalysis {
     /// Interaction logic for GaitWindow.xaml.
     /// </summary>
     public partial class GaitWindow : Window {
-        public GaitWindow(double realWorldMultiplier, float treadmillSpeed, string gaitVideoPath, string gaitVideoName, string gaitTempPath, bool isFreeRun) {
+        public GaitWindow(string gaitVideoPath, string gaitVideoName, string gaitTempPath) {
+            InitializeComponent();
+            CommonConstr(gaitVideoPath, gaitVideoName, gaitTempPath);
+        }
+
+        public GaitWindow(double realWorldMultiplier, float treadmillSpeed, string gaitVideoPath, string gaitVideoName, string gaitTempPath, bool isFreeRun) 
+        {
             InitializeComponent();
             RealWorldMultiplier = realWorldMultiplier;
             TreadmillSpeed = treadmillSpeed;
+            IsFreeRun = isFreeRun;
+            CommonConstr(gaitVideoPath, gaitVideoName, gaitTempPath);
+        }
+
+        private void CommonConstr(string gaitVideoPath, string gaitVideoName, string gaitTempPath)
+        {
             GaitVideoPath = gaitVideoPath;
             GaitVideoName = gaitVideoName;
             GaitTempPath = gaitTempPath;
-            IsFreeRun = isFreeRun;
             SetUpGaitForVid();
+            Console.WriteLine("multiplier: " + RealWorldMultiplier);
 
             // Window Title
             Title = "GaitWindow - " + gaitVideoName;
 
             // Adjust Elements relating to Bias
-            if (isFreeRun) {
+            if (IsFreeRun)
+            {
                 BiasValue.Text = "Bias: " + bias.ToString();
-            } else {
-                BiasValue.Visibility = Visibility.Hidden;
-                GaitBiasAdjustButton.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                BiasValue.Visibility = Visibility.Collapsed;
+                GaitBiasAdjustButton.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -113,8 +129,8 @@ namespace VisualGaitLab.GaitAnalysis {
 
         // Mark: Add/Adjust Bias
 
-        private void GaitAdjustBias_Click(object sender, RoutedEventArgs e)  // Change the bias to calculate swing & stance and adjust analysis 
-        {
+        private void GaitAdjustBias_Click(object sender, RoutedEventArgs e)
+        { // Change the bias to calculate swing & stance and adjust analysis 
             BarInteraction();
             AdjustBiasWindow adjustBiasWindow = new AdjustBiasWindow(bias);
             if (adjustBiasWindow.ShowDialog() == true)
@@ -154,6 +170,37 @@ namespace VisualGaitLab.GaitAnalysis {
                 IsEnabled = true;
                 Opacity = 1;
             });
+        }
+
+        // Adjust Settings Button
+        private void GaitAdjustSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            string gaitVideoName = GaitVideoPath.Substring(GaitVideoPath.LastIndexOf("\\") + 1, GaitVideoPath.LastIndexOf(".") - GaitVideoPath.LastIndexOf("\\"));
+            string gaitTempPath = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\temp-" + gaitVideoName;
+            var files = Directory.EnumerateFiles(gaitTempPath);
+            var file = ""; //might crash
+            foreach (var currentImg in files)
+            {
+                if (currentImg.Contains(".png"))
+                {
+                    file = currentImg;
+                    break;
+                }
+            }
+            BarInteraction();
+
+            MeasureWindow window = new MeasureWindow(file); //spawn the same settings window as before
+            if (window.ShowDialog() == true)
+            {
+                RealWorldMultiplier = window.getSinglePixelSize();
+                TreadmillSpeed = float.Parse(window.TreadmillSpeedTextBox.Text);
+                if ((bool)window.AnalysisTypeRadioFreeWalking.IsChecked) IsFreeRun = true;
+                else IsFreeRun = false;
+
+                SetStaticData();
+                EnableInteraction();
+            }
+            else EnableInteraction();
         }
     }
 }
