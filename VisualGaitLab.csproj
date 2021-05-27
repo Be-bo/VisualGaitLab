@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="SupportingClasses\AnalysisVideo.cs" />
     <Compile Include="SupportingClasses\FileSystemUtils.cs" />
+    <Compile Include="SupportingClasses\MathUtils.cs" />
     <Compile Include="SupportingClasses\Project.cs" />
     <Compile Include="SupportingClasses\PythonScripts.cs" />
     <Compile Include="SupportingClasses\TrainingVideo.cs" />

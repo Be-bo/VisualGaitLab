@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using static VisualGaitLab.SupportingClasses.MathUtils;
 
 namespace VisualGaitLab.GaitAnalysis {
     public partial class GaitWindow : Window {
-
-
-
-
-
 
 
         // MARK: Static Data (averages and ratios based on all frames)
@@ -90,13 +86,7 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
 
-        private double CalculateDistanceBetweenPoints(double x1, double y1, double x2, double y2) {
-            return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2)); //ret dist between two points using Pythagorean Theorem
-        }
 
-        private float CalculateSlope(float y2, float y1, float x2, float x1) {
-            return (float)((y2 - y1) / (x2 - x1));
-        }
 
         private void CalculateGaitBasics(ref List<int> inStanceArray, ref int stanceDuration, ref int swingDuration, ref int numberOfStrides, ref List<int> switchPositions,
             ref List<int> stanceFrameNumByStride, ref List<int> swingFrameNumByStride) 

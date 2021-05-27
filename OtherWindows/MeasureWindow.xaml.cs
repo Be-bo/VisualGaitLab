@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using static VisualGaitLab.SupportingClasses.MathUtils;
+
 
 namespace VisualGaitLab.OtherWindows {
     /// <summary>
@@ -20,7 +22,6 @@ namespace VisualGaitLab.OtherWindows {
         private static Vector2 thumbie2_loc;
         private static string distance_txt;
         private static string speed_txt;
-        private static bool isFreeRun;
 
 
         public MeasureWindow(string imagePath) { //set up canvas with a screenshot from the current video
@@ -58,16 +59,22 @@ namespace VisualGaitLab.OtherWindows {
 
         private void SetStaticSettings()
         {
-            Console.WriteLine("\nbool: " + isFreeRun);
-
-            if (isFreeRun) AnalysisTypeRadioFreeWalking_Checked(null, null);
-            else AnalysisTypeRadioFreeWalking_Unchecked(null, null);
-
             if (distance_txt == null) distance_txt = DistanceTextBox.Text;
             else DistanceTextBox.Text = distance_txt;
 
             if (speed_txt == null) speed_txt = TreadmillSpeedTextBox.Text;
             else TreadmillSpeedTextBox.Text = speed_txt;
+
+            if (speed_txt != "0")
+            {
+                AnalysisTypeRadioTreadmill.IsChecked = true;
+                AnalysisTypeRadioFreeWalking.IsChecked = false;
+            }
+            else
+            {
+                AnalysisTypeRadioTreadmill.IsChecked = false;
+                AnalysisTypeRadioFreeWalking.IsChecked = true;
+            }
         }
 
         private void ContinueButton_Click(object sender, RoutedEventArgs e) {
@@ -137,34 +144,35 @@ namespace VisualGaitLab.OtherWindows {
         }
 
         public double getSinglePixelSize() { //return the number of milimeters corresponding to a single pixel based on the current position of the two green dots and the user inputted distance between them
-            double onScreenHeight = MeasuringCanvas.ActualHeight;
-            double onScreenWidth = MeasuringCanvas.ActualHeight;
-            int imageHeight = Bmap.PixelHeight;
-            int imageWidth = Bmap.PixelWidth;
-            double firstPointX = Canvas.GetLeft(Thumbie1) + 5; //+ five cuz width and height are 10 -> to get the center of the point
-            double firstPointY = Canvas.GetTop(Thumbie1) + 5;
-            double secondPointX = Canvas.GetLeft(Thumbie2) + 5;
-            double secondPointY = Canvas.GetTop(Thumbie2) + 5;
+            
+            // Need to get the true pixel length
+            double pixelRatioX = Bmap.PixelWidth / MeasuringCanvas.ActualWidth; // image / onScreen
+            double pixelRatioY = Bmap.PixelHeight / MeasuringCanvas.ActualHeight;
 
-            double firstPointActualX = (double)firstPointX * (imageWidth / onScreenWidth);
-            double firstPointActualY = (double)firstPointY * (imageHeight / onScreenHeight);
+            //+ five cuz width and height are 10 -> to get the center of the point
+            double firstPointActualX = (thumbie1_loc.X + 5) * pixelRatioX;
+            double firstPointActualY = (thumbie1_loc.Y + 5) * pixelRatioY;
+            double secondPointActualX = (thumbie2_loc.X + 5) * pixelRatioX;
+            double secondPointActualY = (thumbie2_loc.Y + 5) * pixelRatioY;
 
-            double secondPointActualX = (double)secondPointX * (imageWidth / onScreenWidth);
-            double secondPointActualY = (double)secondPointY * (imageHeight / onScreenHeight);
+            double pixelDistance = CalculateDistanceBetweenPoints(firstPointActualX, firstPointActualY, secondPointActualX, secondPointActualY);
+            double multiplier = float.Parse(DistanceTextBox.Text) / pixelDistance;
 
-            double pixelDistance = Math.Sqrt(Math.Pow(secondPointActualX - firstPointActualX, 2) + Math.Pow(secondPointActualY - firstPointActualY, 2));
-            return float.Parse(DistanceTextBox.Text) / pixelDistance;
+            //TEST
+            Console.WriteLine("pixelRatios: " + pixelRatioX + "," + pixelRatioY);
+            Console.WriteLine("pixelDistance: " + pixelDistance);
+
+            Console.WriteLine("RealWorld Multiplier: " + multiplier);
+            return multiplier;
         }
 
         private void AnalysisTypeRadioFreeWalking_Checked(object sender, RoutedEventArgs e) { //free walking selected, bar the treadmill speed option
             TreadmillSpeedTextBox.IsEnabled = false;
             TreadmillSpeedTextBox.Text = "0";
-            isFreeRun = true;
         }
 
         private void AnalysisTypeRadioFreeWalking_Unchecked(object sender, RoutedEventArgs e) { //free walking unselected, open the treadmill speed option
             TreadmillSpeedTextBox.IsEnabled = true;
-            isFreeRun = false;
         }
     }
 }

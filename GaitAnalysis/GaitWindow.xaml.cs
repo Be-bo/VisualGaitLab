@@ -32,7 +32,6 @@ namespace VisualGaitLab.GaitAnalysis {
             GaitVideoName = gaitVideoName;
             GaitTempPath = gaitTempPath;
             SetUpGaitForVid();
-            Console.WriteLine("multiplier: " + RealWorldMultiplier);
 
             // Window Title
             Title = "GaitWindow - " + gaitVideoName;
@@ -52,7 +51,7 @@ namespace VisualGaitLab.GaitAnalysis {
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 
             if (MessageBox.Show("Do you want to save your data?", "Save Data", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes) {
-                Console.WriteLine("SAVING");
+                Console.WriteLine("SAVING...");
                 SaveCurrentState();
                 MessageBox.Show("Your data has been saved, including any error corrections.", "Data Saved", MessageBoxButton.OK);
             }
@@ -198,6 +197,7 @@ namespace VisualGaitLab.GaitAnalysis {
                 else IsFreeRun = false;
 
                 SetStaticData();
+                UpdateFrame(false);
                 EnableInteraction();
             }
             else EnableInteraction();
