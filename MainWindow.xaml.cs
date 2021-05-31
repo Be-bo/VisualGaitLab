@@ -238,8 +238,8 @@ namespace VisualGaitLab
             AnalysisVideo vid = (AnalysisVideo)GaitListBox.SelectedItem; //get the selected video
             if (vid != null) {
                 string gaitVideoPath = vid.Path; //extract necessary info from the video
-                string gaitVideoName = vid.Path.Substring(vid.Path.LastIndexOf("\\") + 1, vid.Path.LastIndexOf(".") - vid.Path.LastIndexOf("\\"));
-                string gaitTempPath = vid.Path.Substring(0, vid.Path.LastIndexOf("\\")) + "\\temp-" + gaitVideoName;
+                string gaitVideoName = gaitVideoPath.Substring(gaitVideoPath.LastIndexOf("\\") + 1, gaitVideoPath.LastIndexOf(".") - gaitVideoPath.LastIndexOf("\\"));
+                string gaitTempPath = gaitVideoPath.Substring(0, gaitVideoPath.LastIndexOf("\\")) + "\\temp-" + gaitVideoName;
                 var files = Directory.EnumerateFiles(gaitTempPath);
                 var file = ""; //might crash
                 foreach(var currentImg in files) {
@@ -251,7 +251,7 @@ namespace VisualGaitLab
                 BarInteraction();
 
                 // Check if Gait data is saved from before
-                string stateFolder = gaitVideoPath.Substring(0, gaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate"; 
+                string stateFolder = gaitVideoPath.Substring(0, gaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
                 if (Directory.Exists(stateFolder) && File.Exists(stateFolder + "\\inputParams.txt")) {
                     GaitWindow gaitWindow = new GaitWindow(gaitVideoPath, gaitVideoName, gaitTempPath);
                     if (gaitWindow.ShowDialog() == true) {
@@ -261,7 +261,7 @@ namespace VisualGaitLab
                 }
                 else //input params not saved, ask the user for'em
                 {
-                    MeasureWindow window = new MeasureWindow(file); //spawn a window through which the user will give us the treadmill speed and a real world reference (for distance measurements)
+                    MeasureWindow window = new MeasureWindow(file, stateFolder); //spawn a window through which the user will give us the treadmill speed and a real world reference (for distance measurements)
                     if (window.ShowDialog() == true) {
                         double realWorldMultiplier = window.getSinglePixelSize();
                         float treadmillSpeed = float.Parse(window.TreadmillSpeedTextBox.Text);

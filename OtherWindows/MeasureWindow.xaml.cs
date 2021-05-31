@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -16,6 +19,7 @@ namespace VisualGaitLab.OtherWindows {
         Regex FloatRegex = new Regex("^[0-9]+(?:\\.[0-9]+)?$");
         Regex ZeroRegex = new Regex("^[0]*(?:\\.[0]*)?$");
 
+        private string StateFolder;
         private static string ImagePath;
         private static BitmapImage Bmap;
         private static Vector2 thumbie1_loc;
@@ -24,8 +28,9 @@ namespace VisualGaitLab.OtherWindows {
         private static string speed_txt;
 
 
-        public MeasureWindow(string imagePath) { //set up canvas with a screenshot from the current video
+        public MeasureWindow(string imagePath, string stateFolder) { //set up canvas with a screenshot from the current video
             InitializeComponent();
+            StateFolder = stateFolder;
 
             // Set up image
             if (imagePath != ImagePath)
@@ -36,9 +41,52 @@ namespace VisualGaitLab.OtherWindows {
             }
             CanvasBackground.Source = Bmap;
 
+            LoadSettings();
+        }
+
+        
+
+        // MARK: IO operations
+        
+        private void LoadSettings()
+        { // Load previously saved settings if they exist, else use static data or use default empty values
+            string settingsFile = StateFolder + "\\gaitSettings.txt";
+
+            if (Directory.Exists(StateFolder) && File.Exists(settingsFile))
+            {
+                List<string> tempList = File.ReadAllLines(settingsFile).ToList();
+                if (tempList.Count >= 6)
+                {
+                    thumbie1_loc = new Vector2 (float.Parse(tempList[0]), float.Parse(tempList[1]));
+                    thumbie2_loc = new Vector2(float.Parse(tempList[2]), float.Parse(tempList[3]));
+                    distance_txt = tempList[4];
+                    speed_txt = tempList[5];
+                }
+            }
+
             SetThumbieLocations();
             SetStaticSettings();
         }
+
+
+        private void SaveSettings()
+        { // Save settings so the user doesn't have to redo them for the same video
+            Directory.CreateDirectory(StateFolder);            // Make sure the directory exists
+
+            List<string> tempList = new List<string>();
+            tempList.Add(thumbie1_loc.X.ToString());
+            tempList.Add(thumbie1_loc.Y.ToString());
+            tempList.Add(thumbie2_loc.X.ToString());
+            tempList.Add(thumbie2_loc.Y.ToString());
+            tempList.Add(distance_txt);
+            tempList.Add(speed_txt);
+
+            System.IO.File.WriteAllLines(StateFolder + "\\gaitSettings.txt", tempList);
+        }
+
+
+
+        // MARK: Load static values onto the window 
 
 
         private void SetThumbieLocations()
@@ -80,6 +128,7 @@ namespace VisualGaitLab.OtherWindows {
         private void ContinueButton_Click(object sender, RoutedEventArgs e) {
             distance_txt = DistanceTextBox.Text;
             speed_txt = TreadmillSpeedTextBox.Text;
+            SaveSettings();
             this.DialogResult = true;
         }
 

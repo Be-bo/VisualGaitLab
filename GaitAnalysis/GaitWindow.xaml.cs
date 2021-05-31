@@ -174,6 +174,8 @@ namespace VisualGaitLab.GaitAnalysis {
         // Adjust Settings Button
         private void GaitAdjustSettingsButton_Click(object sender, RoutedEventArgs e)
         {
+            string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
+
             string gaitVideoName = GaitVideoPath.Substring(GaitVideoPath.LastIndexOf("\\") + 1, GaitVideoPath.LastIndexOf(".") - GaitVideoPath.LastIndexOf("\\"));
             string gaitTempPath = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\temp-" + gaitVideoName;
             var files = Directory.EnumerateFiles(gaitTempPath);
@@ -188,7 +190,7 @@ namespace VisualGaitLab.GaitAnalysis {
             }
             BarInteraction();
 
-            MeasureWindow window = new MeasureWindow(file); //spawn the same settings window as before
+            MeasureWindow window = new MeasureWindow(file, stateFolder); //spawn the same settings window as before
             if (window.ShowDialog() == true)
             {
                 RealWorldMultiplier = window.getSinglePixelSize();

@@ -254,21 +254,5 @@ namespace VisualGaitLab.GaitAnalysis {
         private double HindRightAverageSwingDurationSEM;
         private double FrontLeftAverageSwingDurationSEM;
         private double FrontRightAverageSwingDurationSEM;
-
-
-
-
-        private void PrintSizesOfAllTypesOfVars() { //a method for testing
-            Console.WriteLine("size: HindLeftInStance " + HindLeftInStance.Count);
-            Console.WriteLine("size: HindLeftStrideLengths " + HindLeftStrideLengths.Count);
-            Console.WriteLine("size: HindLeftSwitchPositions " + HindLeftSwitchPositions.Count);
-            Console.WriteLine("size: HindLeftStrides " + HindLeftStrides.Count);
-            Console.WriteLine("size: HindLeftPawAngles " + HindLeftPawAngles.Count);
-            Console.WriteLine("size: HindLeftPawAnglesAdjusted " + HindLeftPawAnglesAdjusted.Count);
-            Console.WriteLine("size: HindStanceWidths " + HindStanceWidths.Count);
-            Console.WriteLine("size: HindLeftMidPointXs " + HindLeftMidPointXs.Count);
-            Console.WriteLine("size: HindLeftStancesByStride " + HindLeftStancesByStride.Count);
-            Console.WriteLine();
-        }
     }
 }

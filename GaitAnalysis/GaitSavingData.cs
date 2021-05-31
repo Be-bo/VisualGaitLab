@@ -14,67 +14,8 @@ namespace VisualGaitLab.GaitAnalysis {
 
 
 
+        // MARK: Read Saved data or calculate from scratch
 
-        // MARK: Saving State Methods (only includes in stance arrays, everything else gets recalculated)
-
-        private void GaitSaveButton_Click(object sender, RoutedEventArgs e) {
-            SaveCurrentState();
-            MessageBox.Show("Your data has been saved, including any error corrections.", "Data Saved", MessageBoxButton.OK);
-        }
-
-        private void SaveCurrentState() {
-            string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
-            Directory.CreateDirectory(stateFolder);
-
-            //saving input params
-            List<string> tempList = new List<string>();
-            tempList.Add(RealWorldMultiplier.ToString());
-            tempList.Add(TreadmillSpeed.ToString());
-            tempList.Add(IsFreeRun ? "1" : "0");
-            tempList.Add(bias.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\inputParams.txt", tempList);
-
-            //saving in stance lists to a separate folder
-            tempList = HindLeftInStance.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\HindLeftInStance.txt", tempList);
-
-            tempList = HindRightInStance.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\HindRightInStance.txt", tempList);
-
-            tempList = FrontLeftInStance.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\FrontLeftInStance.txt", tempList);
-
-            tempList = FrontRightInStance.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\FrontRightInStance.txt", tempList);
-
-
-
-            tempList = HindLeftMidPointXs.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\HindLeftMidPointXs.txt", tempList);
-
-            tempList = HindLeftMidPointYs.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\HindLeftMidPointYs.txt", tempList);
-
-            tempList = HindRightMidPointXs.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\HindRightMidPointXs.txt", tempList);
-
-            tempList = HindRightMidPointYs.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\HindRightMidPointYs.txt", tempList);
-
-            tempList = FrontLeftMidPointXs.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\FrontLeftMidPointXs.txt", tempList);
-
-            tempList = FrontLeftMidPointYs.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\FrontLeftMidPointYs.txt", tempList);
-
-            tempList = FrontRightMidPointXs.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\FrontRightMidPointXs.txt", tempList);
-
-            tempList = FrontRightMidPointYs.ConvertAll(item => item.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\FrontRightMidPointYs.txt", tempList);
-
-            SaveMetrics(stateFolder);
-        }
 
         private void ReadCurrentState(bool loadPrevious) {
             string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
@@ -94,8 +35,6 @@ namespace VisualGaitLab.GaitAnalysis {
                     if (tempList.Count > 3) bias = tempList[3];
                     else bias = 0.25;   // Old versions of VGL have this default bias
                 }
-
-                //TODO: gaitSettings Parameters
             }
 
             // Read in stance List
@@ -145,7 +84,55 @@ namespace VisualGaitLab.GaitAnalysis {
 
 
 
+        // MARK: Saving State Methods (only includes in stance arrays, everything else gets recalculated)
 
+        private void GaitSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveCurrentState();
+            MessageBox.Show("Your data has been saved, including any error corrections.", "Data Saved", MessageBoxButton.OK);
+        }
+
+        private void SaveCurrentState()
+        {
+            string stateFolder = GaitVideoPath.Substring(0, GaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
+            Directory.CreateDirectory(stateFolder);
+
+            //saving input params
+            List<string> tempList = new List<string>();
+            tempList.Add(RealWorldMultiplier.ToString());
+            tempList.Add(TreadmillSpeed.ToString());
+            tempList.Add(IsFreeRun ? "1" : "0");
+            tempList.Add(bias.ToString());
+            System.IO.File.WriteAllLines(stateFolder + "\\inputParams.txt", tempList);
+
+            // Save inStance lists and metrics
+            SaveInStanceData(stateFolder);
+            SaveMetrics(stateFolder);
+        }
+
+
+
+        // MARK: Saving Stance Data
+        private void SaveInStanceData(string stateFolder)
+        { // saving in stance lists to a separate folder
+            System.IO.File.WriteAllLines(stateFolder + "\\HindLeftInStance.txt", HindLeftInStance.ConvertAll(item => item.ToString()));
+            System.IO.File.WriteAllLines(stateFolder + "\\HindRightInStance.txt", HindRightInStance.ConvertAll(item => item.ToString()));
+
+            System.IO.File.WriteAllLines(stateFolder + "\\FrontLeftInStance.txt", FrontLeftInStance.ConvertAll(item => item.ToString()));
+            System.IO.File.WriteAllLines(stateFolder + "\\FrontRightInStance.txt", FrontRightInStance.ConvertAll(item => item.ToString()));
+
+            System.IO.File.WriteAllLines(stateFolder + "\\HindLeftMidPointXs.txt", HindLeftMidPointXs.ConvertAll(item => item.ToString()));
+            System.IO.File.WriteAllLines(stateFolder + "\\HindLeftMidPointYs.txt", HindLeftMidPointYs.ConvertAll(item => item.ToString()));
+
+            System.IO.File.WriteAllLines(stateFolder + "\\HindRightMidPointXs.txt", HindRightMidPointXs.ConvertAll(item => item.ToString()));
+            System.IO.File.WriteAllLines(stateFolder + "\\HindRightMidPointYs.txt", HindRightMidPointYs.ConvertAll(item => item.ToString()));
+
+            System.IO.File.WriteAllLines(stateFolder + "\\FrontLeftMidPointXs.txt", FrontLeftMidPointXs.ConvertAll(item => item.ToString()));
+            System.IO.File.WriteAllLines(stateFolder + "\\FrontLeftMidPointYs.txt", FrontLeftMidPointYs.ConvertAll(item => item.ToString()));
+
+            System.IO.File.WriteAllLines(stateFolder + "\\FrontRightMidPointXs.txt", FrontRightMidPointXs.ConvertAll(item => item.ToString()));
+            System.IO.File.WriteAllLines(stateFolder + "\\FrontRightMidPointYs.txt", FrontRightMidPointYs.ConvertAll(item => item.ToString()));
+        }
 
 
 
