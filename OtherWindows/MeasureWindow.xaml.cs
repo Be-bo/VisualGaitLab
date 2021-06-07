@@ -66,6 +66,7 @@ namespace VisualGaitLab.OtherWindows {
 
             SetThumbieLocations();
             SetStaticSettings();
+            CheckInput();
         }
 
 
@@ -129,11 +130,11 @@ namespace VisualGaitLab.OtherWindows {
             distance_txt = DistanceTextBox.Text;
             speed_txt = TreadmillSpeedTextBox.Text;
             SaveSettings();
-            this.DialogResult = true;
+            DialogResult = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
-            this.DialogResult = false;
+            DialogResult = false;
         }
 
         private void DistanceTextBox_TextChanged(object sender, TextChangedEventArgs e) {
@@ -207,10 +208,6 @@ namespace VisualGaitLab.OtherWindows {
             double pixelDistance = CalculateDistanceBetweenPoints(firstPointActualX, firstPointActualY, secondPointActualX, secondPointActualY);
             double multiplier = float.Parse(DistanceTextBox.Text) / pixelDistance;
 
-            //TEST
-            Console.WriteLine("pixelRatios: " + pixelRatioX + "," + pixelRatioY);
-            Console.WriteLine("pixelDistance: " + pixelDistance);
-
             Console.WriteLine("RealWorld Multiplier: " + multiplier);
             return multiplier;
         }
@@ -218,10 +215,12 @@ namespace VisualGaitLab.OtherWindows {
         private void AnalysisTypeRadioFreeWalking_Checked(object sender, RoutedEventArgs e) { //free walking selected, bar the treadmill speed option
             TreadmillSpeedTextBox.IsEnabled = false;
             TreadmillSpeedTextBox.Text = "0";
+            CheckInput();
         }
 
         private void AnalysisTypeRadioFreeWalking_Unchecked(object sender, RoutedEventArgs e) { //free walking unselected, open the treadmill speed option
             TreadmillSpeedTextBox.IsEnabled = true;
+            CheckInput();
         }
     }
 }
