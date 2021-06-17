@@ -32,7 +32,7 @@ namespace VisualGaitLab.SupportingClasses
             return ((y2 - y1) / (x2 - x1));
         }
 
-        public static Vector2 FindClosestPoint(float x1, float y1, float x2, float y2, double m2)
+        public static double CalculateDistanceBetweenPointLine(float x1, float y1, float x2, float y2, double m2)
         { // Closest point between point 1 and line with slope m and point 2 on line
 
             double m1 = -(1 / m2);          // slope of perpendicular line
@@ -42,7 +42,8 @@ namespace VisualGaitLab.SupportingClasses
             // Calculate x-coordinate
             float x = (float) ((b2 - b1) / (m1 - m2));
             float y = (float) (m1 * x + b1);
-            return new Vector2(x, y);
+
+            return CalculateDistanceBetweenPoints(x1, y1, x, y);
         }
 
         public static double GetPawAngle(float y2, float y1, float x2, float x1, float yb, float ya, float xb, float xa, double m1)

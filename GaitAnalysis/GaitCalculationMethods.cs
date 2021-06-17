@@ -302,24 +302,24 @@ namespace VisualGaitLab.GaitAnalysis {
             float midPointRightY = MidPoint(HindRightHeelYs[i], HindRightYs[i]);
             float midPointLeftX = MidPoint(HindLeftHeelXs[i], HindLeftXs[i]);
             float midPointLeftY = MidPoint(HindLeftHeelYs[i], HindLeftYs[i]);
-            float centralPointFromRightY = FindClosestPoint(midPointRightX, midPointRightY, CenterOfMassX, CenterOfMassY, BackCentralLine).Y;
-            float centralPointFromLeftY = FindClosestPoint(midPointLeftX, midPointLeftY, CenterOfMassX, CenterOfMassY, BackCentralLine).Y;
+            double distToCenterlineRight = CalculateDistanceBetweenPointLine(midPointRightX, midPointRightY, CenterOfMassX, CenterOfMassY, BackCentralLine);
+            double distToCenterlineLeft = CalculateDistanceBetweenPointLine(midPointLeftX, midPointLeftY, CenterOfMassX, CenterOfMassY, BackCentralLine);
 
             HindStanceWidths.Add((midPointRightY - midPointLeftY) * RealWorldMultiplier);
-            HindRightStanceWidths.Add(Math.Abs(midPointRightY - centralPointFromRightY) * RealWorldMultiplier);
-            HindLeftStanceWidths.Add(Math.Abs(midPointLeftY - centralPointFromLeftY) * RealWorldMultiplier);
+            HindRightStanceWidths.Add(distToCenterlineRight * RealWorldMultiplier);
+            HindLeftStanceWidths.Add(distToCenterlineLeft * RealWorldMultiplier);
 
             // Fore Stance Widths
             midPointRightX = MidPoint(FrontRightHeelXs[i], FrontRightXs[i]);
             midPointRightY = MidPoint(FrontRightHeelYs[i], FrontRightYs[i]);
             midPointLeftX = MidPoint(FrontLeftHeelXs[i], FrontLeftXs[i]);
             midPointLeftY = MidPoint(FrontLeftHeelYs[i], FrontLeftYs[i]);
-            centralPointFromRightY = FindClosestPoint(midPointRightX, midPointRightY, CenterOfMassX, CenterOfMassY, FrontCentralLine).Y;
-            centralPointFromLeftY = FindClosestPoint(midPointLeftX, midPointLeftY, CenterOfMassX, CenterOfMassY, FrontCentralLine).Y;
+            distToCenterlineRight = CalculateDistanceBetweenPointLine(midPointRightX, midPointRightY, CenterOfMassX, CenterOfMassY, FrontCentralLine);
+            distToCenterlineLeft = CalculateDistanceBetweenPointLine(midPointLeftX, midPointLeftY, CenterOfMassX, CenterOfMassY, FrontCentralLine);
 
             ForeStanceWidths.Add((midPointRightY - midPointLeftY) * RealWorldMultiplier);
-            FrontRightStanceWidths.Add(Math.Abs(midPointRightY - centralPointFromRightY) * RealWorldMultiplier);
-            FrontLeftStanceWidths.Add(Math.Abs(midPointLeftY - centralPointFromLeftY) * RealWorldMultiplier);
+            FrontRightStanceWidths.Add(distToCenterlineRight * RealWorldMultiplier);
+            FrontLeftStanceWidths.Add(distToCenterlineLeft * RealWorldMultiplier);
         }
 
         private void CalculateDynamicDataAverages() {
