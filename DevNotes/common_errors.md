@@ -38,3 +38,17 @@ If this is the case, install the snappy module in the same anaconda prompt windo
 - Moved the project folder to another directory
 	- Open the .yaml file 
 	- change the "project_path" to changed project directory path
+
+
+### Old Errors
+- Project won't get created OR Labeling window doesn't open OR Training gets stuck OR Analyzing a video (2nd tab) doesn't work
+  - This problem is most likely related to an insufficient GPU memory, but as of v1.3, VGL should inform you when you run out of memory instead of misbehaving or loading infinitely
+
+- Video is always black in the cropping window.
+  - This problem was fixed in v1.3, cropping/editing has been moved to the Video Prep window which is shown when importing both analysis & training videos
+
+- Video thumbnail is black or grey.
+  - This problem was fixed in v2.0. Creating the thumbnail is a separate operation internally, it shouldn't impact your analysis.
+
+- Labeled video isn't created in the results folder.
+  - The labeled video is provided for convenience, all the relevant labels are in the .cvs output file. This issue is no longer seen as of v2.0. 

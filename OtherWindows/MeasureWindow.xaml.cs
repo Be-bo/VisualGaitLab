@@ -208,6 +208,9 @@ namespace VisualGaitLab.OtherWindows {
             double pixelDistance = CalculateDistanceBetweenPoints(firstPointActualX, firstPointActualY, secondPointActualX, secondPointActualY);
             double multiplier = float.Parse(DistanceTextBox.Text) / pixelDistance;
 
+            // Calculating error:
+            Console.WriteLine("ERROR (W/H): " + (MeasuringCanvas.ActualWidth / MeasuringCanvas.ActualHeight));
+
             Console.WriteLine("RealWorld Multiplier: " + multiplier);
             return multiplier;
         }

@@ -119,11 +119,17 @@ namespace VisualGaitLab.GaitAnalysis {
             }
 
 
-            // Stance Width
-            LHStanceWidthLabel.Text = string.Format("{0:00.00}", HindStanceWidths[GaitCurrentFrame]);
-            RHStanceWidthLabel.Text = string.Format("{0:00.00}", HindStanceWidths[GaitCurrentFrame]);
-            LFStanceWidthLabel.Text = string.Format("{0:00.00}", ForeStanceWidths[GaitCurrentFrame]);
-            RFStanceWidthLabel.Text = string.Format("{0:00.00}", ForeStanceWidths[GaitCurrentFrame]);
+            // Back/Fore Stance Width
+            H1StanceWidthLabel.Text = string.Format("{0:00.00}", HindStanceWidths[GaitCurrentFrame]);
+            H2StanceWidthLabel.Text = string.Format("{0:00.00}", HindStanceWidths[GaitCurrentFrame]);
+            F1StanceWidthLabel.Text = string.Format("{0:00.00}", ForeStanceWidths[GaitCurrentFrame]);
+            F2StanceWidthLabel.Text = string.Format("{0:00.00}", ForeStanceWidths[GaitCurrentFrame]);
+
+            // Individual Stance Width
+            LHStanceWidthLabel.Text = string.Format("{0:00.00}", HindLeftStanceWidths[GaitCurrentFrame]);
+            RHStanceWidthLabel.Text = string.Format("{0:00.00}", HindRightStanceWidths[GaitCurrentFrame]);
+            LFStanceWidthLabel.Text = string.Format("{0:00.00}", FrontLeftStanceWidths[GaitCurrentFrame]);
+            RFStanceWidthLabel.Text = string.Format("{0:00.00}", FrontRightStanceWidths[GaitCurrentFrame]);
 
             // Stride Length
             LFStrideLengthLabel.Text = string.Format("{0:00.00}", FrontLeftStrideLengths[GaitCurrentFrame]);
@@ -217,10 +223,15 @@ namespace VisualGaitLab.GaitAnalysis {
             LFPawAngleAvg.Text = string.Format("{0:00.00}", FrontLeftPawAngleAvg);
             RFPawAngleAvg.Text = string.Format("{0:00.00}", FrontRightPawAngleAvg);
 
-            LHStanceWidthAvg.Text = string.Format("{0:00.00}", HindStanceWidthAvg);
-            RHStanceWidthAvg.Text = string.Format("{0:00.00}", HindStanceWidthAvg);
-            LFStanceWidthAvg.Text = string.Format("{0:00.00}", ForeStanceWidthAvg);
-            RFStanceWidthAvg.Text = string.Format("{0:00.00}", ForeStanceWidthAvg);
+            H1StanceWidthAvg.Text = string.Format("{0:00.00}", HindStanceWidthAvg);
+            H2StanceWidthAvg.Text = string.Format("{0:00.00}", HindStanceWidthAvg);
+            F1StanceWidthAvg.Text = string.Format("{0:00.00}", ForeStanceWidthAvg);
+            F2StanceWidthAvg.Text = string.Format("{0:00.00}", ForeStanceWidthAvg);
+
+            LHStanceWidthAvg.Text = string.Format("{0:00.00}", HindLeftStanceWidthAvg);
+            RHStanceWidthAvg.Text = string.Format("{0:00.00}", HindRightStanceWidthAvg);
+            LFStanceWidthAvg.Text = string.Format("{0:00.00}", FrontLeftStanceWidthAvg);
+            RFStanceWidthAvg.Text = string.Format("{0:00.00}", FrontRightStanceWidthAvg);
 
             LHStrideLengthAvg.Text = string.Format("{0:00.00}", HindLeftStrideLenAvg);
             RHStrideLengthAvg.Text = string.Format("{0:00.00}", HindRightStrideLenAvg);
