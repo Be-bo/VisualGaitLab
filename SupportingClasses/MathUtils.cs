@@ -33,13 +33,13 @@ namespace VisualGaitLab.SupportingClasses
         }
 
         public static double CalculateDistanceBetweenPointLine(float x1, float y1, float x2, float y2, double m2)
-        { // Closest point between point 1 and line with slope m and point 2 on line
+        { // Shortest distance between point 1 and line with slope m and point 2 on line
 
             double m1 = -(1 / m2);          // slope of perpendicular line
             double b1 = y1 - (m1 * x1);     // calculate y-intercept of lines 
             double b2 = y2 - (m2 * x2);
 
-            // Calculate x-coordinate
+            // Get the closest point between point 1 and line 
             float x = (float) ((b2 - b1) / (m1 - m2));
             float y = (float) (m1 * x + b1);
 
