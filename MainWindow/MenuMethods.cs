@@ -44,15 +44,16 @@ namespace VisualGaitLab {
         {
             // Create new Project
             Project newProject = new Project(
-                gaitOnly, 
-                dialog.projectNameTextBox.Text, 
-                dialog.authorTextBox.Text, 
+                gaitOnly,
+                dialog.projectNameTextBox.Text,
+                dialog.authorTextBox.Text,
                 dialog.bodyParts);
   
             // Config Path
             string filePath = EnvDirectory + "\\vdlc_create_new_project.py";
             string copyVideosBool = "True";
-            newProject.ConfigPath = WorkingDirectory + "\\" + newProject.Name + "-" + newProject.Scorer + "-" + newProject.DateIdentifier + "\\" + "config.yaml";
+            newProject.ConfigPath = dialog.projectPathTextBox.Text + "\\" + "config.yaml";
+            WorkingDirectory = dialog.projectFolder;
             
             // Create DLC project
             if (!ProjectExists(newProject)) {

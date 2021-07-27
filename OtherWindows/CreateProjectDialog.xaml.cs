@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,8 @@ namespace VisualGaitLab.OtherWindows {
     public partial class CreateProjectDialog : Window {
         public List<string> bodyParts = new List<string>();
         private BrushConverter converter = new BrushConverter();
+        public string projectFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Projects";
+        private static string dateIdentifier = "";
 
         public CreateProjectDialog(bool gaitOnly) //set up body parts for the new project, if it's a gait project then leave the Add Bodypart feature hidden
         {
@@ -31,11 +34,19 @@ namespace VisualGaitLab.OtherWindows {
                 bodyParts.Add("MidPointRight");
             }
             else {
-                CreateAddDock.Visibility = Visibility.Visible; //make the Add Bodypart feature for custom tracking available if the user didn't choose gait analysis
+                CreateAddButton.Visibility = Visibility.Visible; //make the Add Bodypart feature for custom tracking available if the user didn't choose gait analysis
                 bodyParts.Add("HindRight");
                 bodyParts.Add("HindLeft");
             }
             bodyPartListBox.ItemsSource = bodyParts;
+
+            // Initialize Project Path
+            string month = DateTime.Now.Month.ToString();
+            string day = DateTime.Now.Day.ToString();
+            if (month.Length < 2) month = "0" + month;
+            if (day.Length < 2) day = "0" + day;
+            dateIdentifier = DateTime.Now.Year.ToString() + "-" + month + "-" + day;
+            updateProjectPath();
         }
 
         private void ContentChanged(object sender, TextChangedEventArgs e) //check user's input and allow them to press "Create" if everything checks out
@@ -79,6 +90,7 @@ namespace VisualGaitLab.OtherWindows {
             TextBox box = sender as TextBox;
             var brush = (Brush)converter.ConvertFromString("#000000");
             box.Foreground = brush;
+            updateProjectPath();
         }
 
         private void ProjectNameTextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
@@ -106,6 +118,28 @@ namespace VisualGaitLab.OtherWindows {
             bodyPartListBox.ItemsSource = null;
             bodyPartListBox.ItemsSource = bodyParts;
             ContentChanged(null, null);
+        }
+
+        private void projectPathTextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    projectFolder = dialog.SelectedPath;
+                    updateProjectPath();
+                }
+            }
+        }
+
+        private void updateProjectPath()
+        {
+            projectPathTextBox.Text =
+                projectFolder + "\\" +
+                projectNameTextBox.Text + "-" +
+                authorTextBox.Text + "-" +
+                dateIdentifier;
         }
     }
 }
