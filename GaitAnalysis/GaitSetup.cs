@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using VisualGaitLab.SupportingClasses;
 
 namespace VisualGaitLab.GaitAnalysis {
     public partial class GaitWindow : Window {
@@ -73,34 +74,34 @@ namespace VisualGaitLab.GaitAnalysis {
                         {
                             String[] splitLine = rows[i].Split(',');
 
-                            RightMidPointXs.Add(float.Parse(splitLine[1])); //for now we're skipping probability -> stepping over every third column
-                            RightMidPointYs.Add(GaitVideoHeight - float.Parse(splitLine[2]));
-                            LeftMidPointXs.Add(float.Parse(splitLine[4]));
-                            LeftMidPointYs.Add(GaitVideoHeight - float.Parse(splitLine[5]));
-                            SuperButtXs.Add(float.Parse(splitLine[7]));
-                            SuperButtYs.Add(GaitVideoHeight - float.Parse(splitLine[8]));
-                            NoseXs.Add(float.Parse(splitLine[10]));
-                            NoseYs.Add(GaitVideoHeight - float.Parse(splitLine[11]));
+                            RightMidPointXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.MidPointRightX])); 
+                            RightMidPointYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.MidPointRightY]));
+                            LeftMidPointXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.MidPointLeftX]));
+                            LeftMidPointYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.MidPointLeftY]));
+                            SuperButtXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.ButtX]));
+                            SuperButtYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.ButtY]));
+                            NoseXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.NoseX]));
+                            NoseYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.NoseY]));
 
-                            FrontRightHeelXs.Add(float.Parse(splitLine[13])); //heel marker
-                            FrontRightHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[14]));
-                            FrontRightXs.Add(float.Parse(splitLine[16])); //toe marker
-                            FrontRightYs.Add(GaitVideoHeight - float.Parse(splitLine[17]));
+                            FrontRightHeelXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontRight2X])); //heel marker
+                            FrontRightHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontRight2Y]));
+                            FrontRightXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontRight1X])); //toe marker
+                            FrontRightYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontRight1Y]));
 
-                            FrontLeftHeelXs.Add(float.Parse(splitLine[19]));
-                            FrontLeftHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[20]));
-                            FrontLeftXs.Add(float.Parse(splitLine[22]));
-                            FrontLeftYs.Add(GaitVideoHeight - float.Parse(splitLine[23]));
+                            FrontLeftHeelXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontLeft2X]));
+                            FrontLeftHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontLeft2Y]));
+                            FrontLeftXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontLeft1X]));
+                            FrontLeftYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontLeft1Y]));
 
-                            HindRightHeelXs.Add(float.Parse(splitLine[25]));
-                            HindRightHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[26]));
-                            HindRightXs.Add(float.Parse(splitLine[28]));
-                            HindRightYs.Add(GaitVideoHeight - float.Parse(splitLine[29]));
+                            HindRightHeelXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindRight2X]));
+                            HindRightHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindRight2Y]));
+                            HindRightXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindRight1X]));
+                            HindRightYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindRight1Y]));
 
-                            HindLeftHeelXs.Add(float.Parse(splitLine[31]));
-                            HindLeftHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[32]));
-                            HindLeftXs.Add(float.Parse(splitLine[34]));
-                            HindLeftYs.Add(GaitVideoHeight - float.Parse(splitLine[35]));
+                            HindLeftHeelXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindLeft2X]));
+                            HindLeftHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindLeft2Y]));
+                            HindLeftXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindLeft1X]));
+                            HindLeftYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindLeft1Y]));
                         }
                     }
                 }
