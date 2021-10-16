@@ -68,40 +68,43 @@ namespace VisualGaitLab.GaitAnalysis {
 
             if (!resultsPath.Equals("")) {
                 using (var streamReader = new StreamReader(resultsPath)) {
+
                     String[] rows = Regex.Split(streamReader.ReadToEnd(), "\r\n");
+                    GaitBodyParts.configureColumnNames(rows[1]); // Find column numbers for each body part
+
                     for (int i = 3; i < rows.Count(); i++) {
                         if (rows[i].Length > 5) //to eliminate empty spaces at the end
                         {
                             String[] splitLine = rows[i].Split(',');
 
-                            RightMidPointXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.MidPointRightX])); 
-                            RightMidPointYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.MidPointRightY]));
-                            LeftMidPointXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.MidPointLeftX]));
-                            LeftMidPointYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.MidPointLeftY]));
-                            SuperButtXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.ButtX]));
-                            SuperButtYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.ButtY]));
-                            NoseXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.NoseX]));
-                            NoseYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.NoseY]));
+                            RightMidPointXs.Add(float.Parse(splitLine[GaitBodyParts.MidPointRightX])); 
+                            RightMidPointYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.MidPointRightY]));
+                            LeftMidPointXs.Add(float.Parse(splitLine[GaitBodyParts.MidPointLeftX]));
+                            LeftMidPointYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.MidPointLeftY]));
+                            SuperButtXs.Add(float.Parse(splitLine[GaitBodyParts.ButtX]));
+                            SuperButtYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.ButtY]));
+                            NoseXs.Add(float.Parse(splitLine[GaitBodyParts.NoseX]));
+                            NoseYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.NoseY]));
 
-                            FrontRightHeelXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontRight2X])); //heel marker
-                            FrontRightHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontRight2Y]));
-                            FrontRightXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontRight1X])); //toe marker
-                            FrontRightYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontRight1Y]));
+                            FrontRightHeelXs.Add(float.Parse(splitLine[GaitBodyParts.FrontRight2X])); //heel marker
+                            FrontRightHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.FrontRight2Y]));
+                            FrontRightXs.Add(float.Parse(splitLine[GaitBodyParts.FrontRight1X])); //toe marker
+                            FrontRightYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.FrontRight1Y]));
 
-                            FrontLeftHeelXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontLeft2X]));
-                            FrontLeftHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontLeft2Y]));
-                            FrontLeftXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontLeft1X]));
-                            FrontLeftYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.FrontLeft1Y]));
+                            FrontLeftHeelXs.Add(float.Parse(splitLine[GaitBodyParts.FrontLeft2X]));
+                            FrontLeftHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.FrontLeft2Y]));
+                            FrontLeftXs.Add(float.Parse(splitLine[GaitBodyParts.FrontLeft1X]));
+                            FrontLeftYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.FrontLeft1Y]));
 
-                            HindRightHeelXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindRight2X]));
-                            HindRightHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindRight2Y]));
-                            HindRightXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindRight1X]));
-                            HindRightYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindRight1Y]));
+                            HindRightHeelXs.Add(float.Parse(splitLine[GaitBodyParts.HindRight2X]));
+                            HindRightHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.HindRight2Y]));
+                            HindRightXs.Add(float.Parse(splitLine[GaitBodyParts.HindRight1X]));
+                            HindRightYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.HindRight1Y]));
 
-                            HindLeftHeelXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindLeft2X]));
-                            HindLeftHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindLeft2Y]));
-                            HindLeftXs.Add(float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindLeft1X]));
-                            HindLeftYs.Add(GaitVideoHeight - float.Parse(splitLine[(int)GaitBodyParts.ColNum.HindLeft1Y]));
+                            HindLeftHeelXs.Add(float.Parse(splitLine[GaitBodyParts.HindLeft2X]));
+                            HindLeftHeelYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.HindLeft2Y]));
+                            HindLeftXs.Add(float.Parse(splitLine[GaitBodyParts.HindLeft1X]));
+                            HindLeftYs.Add(GaitVideoHeight - float.Parse(splitLine[GaitBodyParts.HindLeft1Y]));
                         }
                     }
                 }
