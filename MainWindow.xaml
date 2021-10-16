@@ -301,6 +301,103 @@
                         </StackPanel>
                     </Grid>
                 </TabItem>
+
+
+
+                <!-- Post Analysis TAB -->
+                <TabItem Name="PostAnalysis" Visibility="Hidden" IsEnabled="False" Header="Post Analysis" Style="{StaticResource TabItemStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                     
+
+
+                        <!-- Post Analysis Videos Listbox -->
+                        <ListBox Name="PAVidListBox" Margin="5, 10, 5, 5" MinHeight="150" Grid.Row="0" 
+                                 Style="{StaticResource ListBoxStyle}" SelectionChanged="PAVidListBox_SelectionChanged" SelectionMode="Multiple">
+
+                            <!-- List Box Settings -->
+                            <ListBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="3"/>
+                                    <Setter Property="Background" Value="White"/>
+                                </Style>
+                            </ListBox.Resources>
+
+                            <!-- Item Template -->
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Items -->
+                                        <Grid Height="50" Width="70" Margin="5">
+                                            <Border CornerRadius="2">
+                                                <Border.Background>
+                                                    <ImageBrush Stretch="UniformToFill" ImageSource="{Binding ThumbnailPath}"/>
+                                                </Border.Background>
+                                            </Border>
+                                        </Grid>
+                                        <TextBlock Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <!-- Bottom half -->
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+
+                        <!--Parameters-->
+                        <Label Content="Parameters" Grid.Row="0" Grid.Column="0" Margin="5, 10, 5, 5"/>
+                        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <ListBox Name="PAselectedParamsListBox" Margin="5, 10, 5, 5" MinHeight="100" Grid.Column="0"
+                                 Style="{StaticResource ListBoxStyle}" SelectionChanged="PAVidListBox_SelectionChanged" SelectionMode="Multiple">
+                                <!-- List Box Settings -->
+                                <ListBox.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="3"/>
+                                        <Setter Property="Background" Value="White"/>
+                                    </Style>
+                                </ListBox.Resources>
+
+                                <!-- Item Template -->
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                        
+                        
+                        
+                        <Button Name="Button" IsEnabled="False" Grid.Row="1" Content="Analyze Gait" HorizontalAlignment="Right" Margin="5" Click="AnalyzeGaitButton_Click" Style="{StaticResource PositiveButton}"/>
+
+
+                    </Grid>
+                </TabItem>
             </TabControl>
 
         </Grid>
