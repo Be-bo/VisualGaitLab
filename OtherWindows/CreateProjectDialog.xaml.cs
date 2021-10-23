@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using VisualGaitLab.SupportingClasses;
 
 namespace VisualGaitLab.OtherWindows {
     /// <summary>
@@ -20,18 +21,10 @@ namespace VisualGaitLab.OtherWindows {
         {
             InitializeComponent();
             if (gaitOnly) {
-                bodyParts.Add("Nose");
-                bodyParts.Add("Butt");
-                bodyParts.Add("FrontRight1");
-                bodyParts.Add("FrontRight2");
-                bodyParts.Add("FrontLeft1");
-                bodyParts.Add("FrontLeft2");
-                bodyParts.Add("HindRight1");
-                bodyParts.Add("HindRight2");
-                bodyParts.Add("HindLeft1");
-                bodyParts.Add("HindLeft2");
-                bodyParts.Add("MidPointLeft");
-                bodyParts.Add("MidPointRight");
+                foreach (var bodypart in GaitBodyParts.names)
+                {
+                    bodyParts.Add(bodypart);
+                }
             }
             else {
                 CreateAddButton.Visibility = Visibility.Visible; //make the Add Bodypart feature for custom tracking available if the user didn't choose gait analysis
