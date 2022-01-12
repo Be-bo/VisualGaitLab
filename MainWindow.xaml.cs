@@ -95,7 +95,7 @@ namespace VisualGaitLab
         }
 
         private void SyncUI() { //sync the UI with the current state of the project
-            this.Dispatcher.Invoke(() => { //run on the main thread in case the call came from a different thread
+            Dispatcher.Invoke(() => { //run on the main thread in case the call came from a different thread
                 LoadProject(CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\"))); //load the project
                 if (CurrentProject != null) {
                     TrainButton.Visibility = Visibility.Visible;
@@ -147,13 +147,12 @@ namespace VisualGaitLab
                     //if it's a gait focused project show the Gait tab
                     if (CurrentProject.IsGaitOnly) EnableGait();
                     else BarGait();
-                    
                 }
             });
         }
 
         private void BarInteraction() { //show the progress ring and disable the primary window so the user can't click anything, also make the window opaque
-            this.Dispatcher.Invoke(() => {
+            Dispatcher.Invoke(() => {
                 PrimaryGrid.IsEnabled = false;
                 PrimaryGrid.Opacity = 0.3;
                 ProgressRing.IsActive = true;
@@ -161,7 +160,7 @@ namespace VisualGaitLab
         }
 
         private void EnableInteraction() { //cancel all the effects of the BarInteraction method
-            this.Dispatcher.Invoke(() => {
+            Dispatcher.Invoke(() => {
                 PrimaryGrid.IsEnabled = true;
                 PrimaryGrid.Opacity = 1;
                 ProgressRing.IsActive = false;
@@ -207,9 +206,6 @@ namespace VisualGaitLab
             }
         }
 
-        private void PAVidListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
 
-        }
     }
 }
