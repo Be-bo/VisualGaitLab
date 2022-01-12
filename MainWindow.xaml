@@ -305,7 +305,7 @@
 
 
                 <!-- Post Analysis TAB -->
-                <TabItem Name="PostAnalysis" Visibility="Hidden" IsEnabled="False" Header="Post Analysis" Style="{StaticResource TabItemStyle}">
+                <TabItem Name="PostAnalysisTab" Visibility="Hidden" IsEnabled="False" Header="Post Analysis" Style="{StaticResource TabItemStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>

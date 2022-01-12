@@ -113,13 +113,15 @@
     <Compile Include="GaitAnalysis\GaitWindow.xaml.cs">
       <DependentUpon>GaitWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindow\AnalysisMethods.cs" />
+    <Compile Include="MainWindow\AnalysisTabMethods.cs" />
     <Compile Include="MainWindow\ConfigMethods.cs" />
     <Compile Include="MainWindow\DependencyInstallationMethods.cs" />
     <Compile Include="MainWindow\GaitCombinedExport.cs" />
+    <Compile Include="MainWindow\GaitTabMethods.cs" />
     <Compile Include="MainWindow\MenuMethods.cs" />
+    <Compile Include="MainWindow\PostAnalysisTabMethods.cs" />
     <Compile Include="MainWindow\SupportingMethods.cs" />
-    <Compile Include="MainWindow\TrainingMethods.cs" />
+    <Compile Include="MainWindow\TrainingTabMethods.cs" />
     <Compile Include="OtherWindows\AddBodyPartWindow.xaml.cs">
       <DependentUpon>AddBodyPartWindow.xaml</DependentUpon>
     </Compile>

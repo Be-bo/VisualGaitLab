@@ -5,6 +5,7 @@ using VisualGaitLab.SupportingClasses;
 using VisualGaitLab.GaitAnalysis;
 using System.IO;
 using System.Windows.Controls;
+using VisualGaitLab.OtherWindows;
 
 namespace VisualGaitLab
 {

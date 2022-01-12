@@ -144,8 +144,10 @@ namespace VisualGaitLab
                     if (CurrentProject.AnalysisVideos != null && CurrentProject.AnalysisVideos.Count > 0) AnalyzedListBox.ItemsSource = CurrentProject.AnalysisVideos; //if there are analysis videos add them to the analysis listbox
                     else AnalyzedListBox.ItemsSource = null;
 
-                    if (CurrentProject.IsGaitOnly) GaitTab.Visibility = Visibility.Visible; else GaitTab.Visibility = Visibility.Hidden; //if it's a gait focused project show the Gait tab
-                    PrepareGaitTab();
+                    //if it's a gait focused project show the Gait tab
+                    if (CurrentProject.IsGaitOnly) EnableGait();
+                    else BarGait();
+                    
                 }
             });
         }
@@ -172,6 +174,20 @@ namespace VisualGaitLab
 
         private void BarAnalysisPart() { //disable analysis tab
             AnalyzeTab.IsEnabled = false;
+        }
+
+        private void EnableGait()
+        {
+            GaitTab.Visibility = Visibility.Visible;
+            PostAnalysisTab.Visibility = Visibility.Visible;
+            PrepareGaitTab();
+            PreparePostAnalysisTab();
+        }
+
+        private void BarGait()
+        {
+            GaitTab.Visibility = Visibility.Hidden;
+            PostAnalysisTab.Visibility = Visibility.Hidden;
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e) { //not in use currently
