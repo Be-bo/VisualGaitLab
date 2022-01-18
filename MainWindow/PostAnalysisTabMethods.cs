@@ -1,9 +1,10 @@
 ﻿using System.Windows;
 using VisualGaitLab.SupportingClasses;
 using System.IO;
-using System.Windows.Controls;
 using System.Collections.Generic;
 using System;
+using Microsoft.Win32;
+using System.Linq;
 
 namespace VisualGaitLab
 {
@@ -14,23 +15,22 @@ namespace VisualGaitLab
         private void PreparePostAnalysisTab()
         { //set up the Post Analysis tab = grab the list of python scripts from the scripts folder and make them show up here
             PAScripts = new List<CustomScript>();
-            string scriptsFolder = Directory.GetCurrentDirectory() + "\\CustomScripts";
-            string scriptsListFile = "scriptsList.txt";
+            string scriptsListFilePath = Path.Combine(ScriptsFolder, ScriptsListFile);
 
-            if (!Directory.Exists(scriptsFolder))
+            if (!Directory.Exists(ScriptsFolder))
             { // Create directory
-                Directory.CreateDirectory(scriptsFolder);
+                Directory.CreateDirectory(ScriptsFolder);
                 Console.WriteLine("CUSTOM SCRIPTS FOLDER NOT FOUND");
             }
-            if (!File.Exists(Path.Combine(scriptsFolder, scriptsListFile)))
+            if (!File.Exists(scriptsListFilePath))
             { // Create script list file
-                using (File.Create(Path.Combine(scriptsFolder, scriptsListFile))) { }
+                using (File.Create(Path.Combine(ScriptsFolder, ScriptsListFile))) { }
                 Console.WriteLine("SCRIPT LIST FILE NOT FOUND");
             }
 
             // Read all scripts listed in the list
             HashSet<string> scriptPaths = new HashSet<string>();
-            using (StreamReader file = new StreamReader(Path.Combine(scriptsFolder, scriptsListFile)))
+            using (StreamReader file = new StreamReader(scriptsListFilePath))
             {
                 while (file.Peek() >= 0)
                 {
@@ -42,9 +42,9 @@ namespace VisualGaitLab
                 }
             }
             // Extract all Python files in Directory
-            foreach (string s in Directory.GetFiles(scriptsFolder, "*.py"))
+            foreach (string s in Directory.GetFiles(ScriptsFolder, "*.py"))
             {
-                scriptPaths.Add(s);
+                scriptPaths.Add(Path.Combine(ScriptsFolder, s));
             }
 
             // Create scripts
@@ -53,12 +53,7 @@ namespace VisualGaitLab
             {
                 if (File.Exists(s))
                 {
-                    CustomScript script = new CustomScript();
-                    string[] temp = s.Split('\\');
-                    script.Name = temp[temp.Length - 1].Replace(".py", "");
-                    script.Path = scriptsFolder;
-                    PAScripts.Add(script);
-                    Console.WriteLine(s);
+                    PAScripts.Add(new CustomScript(s));
                 }
                 else
                 {
@@ -69,13 +64,13 @@ namespace VisualGaitLab
             // Some scripts not found
             if (notfound.Count > 0)
             { 
-                MessageBoxResult result = MessageBox.Show("The following custom scripts were moved or removed:\n\t-"
-                    + string.Join("\n\t-", notfound)
+                MessageBoxResult result = MessageBox.Show("The following custom scripts were moved or removed:\n\t- "
+                    + string.Join("\n\t- ", notfound)
                     + "\n\nRemove from List?","Scripts Not Found", MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 { // Remove from scriptList
-                    using (StreamWriter sw = new StreamWriter(Path.Combine(scriptsFolder, scriptsListFile), false))
+                    using (StreamWriter sw = new StreamWriter(scriptsListFilePath, false))
                     {
                         foreach (CustomScript s in PAScripts)
                         {
@@ -85,32 +80,65 @@ namespace VisualGaitLab
                 }
             }
 
-            if (PAScripts.Count > 0)
-            {
-                ScriptListBox.ItemsSource = null;
-                ScriptListBox.ItemsSource = PAScripts;
-            }
+            ScriptListBox.ItemsSource = null;
+            ScriptListBox.ItemsSource = PAScripts;
 
         }
 
-        private void ScriptListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
 
-        }
 
         private void NewScriptClicked(object sender, RoutedEventArgs e)
-        {
+        { // Add script path to scriptList.txt
+            BarInteraction();
+            //open a file dialog to let the user choose which video to add
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Python Script | *.py";
+            openFileDialog.InitialDirectory = ScriptsFolder;
+            openFileDialog.Multiselect = true;
+            openFileDialog.Title = "Select Custom Script(s)";
 
+            if (openFileDialog.ShowDialog() == true)
+            {
+
+                // Create a list of current script paths
+
+
+                foreach (var fullPath in openFileDialog.FileNames)
+                {
+                    if (PAScripts.Any(s => s.Path == fullPath))
+                    {
+                        MessageBox.Show("The script file, \"" + fullPath + "\" has already been added.", "Script Already Added", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        PAScripts.Add(new CustomScript(fullPath));
+                    }
+                }
+
+                using (StreamWriter sw = new StreamWriter(Path.Combine(ScriptsFolder, ScriptsListFile), false))
+                {
+                    foreach (CustomScript s in PAScripts)
+                    {
+                        sw.WriteLine(s.Path);
+                    }
+                }
+            }
+            ScriptListBox.Items.Refresh();
+            EnableInteraction();
         }
 
-        private void RunScriptButton_Click(object sender, RoutedEventArgs e)
-        {
 
-        }
 
         private void RefreshScriptsButton_Click(object sender, RoutedEventArgs e)
         {
             PreparePostAnalysisTab();
+        }
+
+
+
+        private void RunScriptButton_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: right click on a script list item
         }
     }
 }

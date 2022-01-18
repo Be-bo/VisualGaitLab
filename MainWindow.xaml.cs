@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,8 @@ namespace VisualGaitLab
         string ProgramFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab";
         string WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Projects";
         string EnvDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
+        string ScriptsFolder = Directory.GetCurrentDirectory() + "\\CustomScripts";
+        string ScriptsListFile = "scriptsList.txt";
         string EnvName = "dlc-windowsGPU";
         string Drive = "c:";
         PythonScripts AllScripts = new PythonScripts();
@@ -192,7 +195,7 @@ namespace VisualGaitLab
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
-            if (PostAnalysisTab.IsSelected && PAScriptsPrepared)
+            if (PostAnalysisTab.IsSelected && !PAScriptsPrepared)
             {
                 PreparePostAnalysisTab();
                 PAScriptsPrepared = true;

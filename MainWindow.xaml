@@ -319,7 +319,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="ScriptListBox_SelectionChanged" SelectionMode="Extended">
+                        <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionMode="Extended">
 
                             <!-- List Box Settings -->
                             <ListBox.Resources>
