@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace VisualGaitLab.SupportingClasses {
     public class PythonScripts //pre-prepared scripts, we use them to interact with DeepLabCut (each script is saved as a string array and when needed, it is created and run through a CMD session)

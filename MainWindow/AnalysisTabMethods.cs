@@ -180,7 +180,7 @@ namespace VisualGaitLab {
                 {
                     // Read in dot size for this video (default = 5)
                     StreamReader sr = new StreamReader(settingsPath);
-                    String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
+                    string[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
 
                     foreach (string row in rows)
                     {

@@ -116,7 +116,6 @@
     <Compile Include="MainWindow\AnalysisTabMethods.cs" />
     <Compile Include="MainWindow\ConfigMethods.cs" />
     <Compile Include="MainWindow\DependencyInstallationMethods.cs" />
-    <Compile Include="MainWindow\GaitCombinedExport.cs" />
     <Compile Include="MainWindow\GaitTabMethods.cs" />
     <Compile Include="MainWindow\MenuMethods.cs" />
     <Compile Include="MainWindow\PostAnalysisTabMethods.cs" />
@@ -162,6 +161,7 @@
       <DependentUpon>TrainingSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\AnalysisVideo.cs" />
+    <Compile Include="SupportingClasses\CustomScript.cs" />
     <Compile Include="SupportingClasses\FileSystemUtils.cs" />
     <Compile Include="SupportingClasses\GaitBodyParts.cs" />
     <Compile Include="SupportingClasses\MathUtils.cs" />
@@ -266,7 +266,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="GaitAnalysis\logo.png" />
+    <Resource Include="Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="OtherWindows\add.png" />
@@ -303,6 +303,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CustomScripts\scriptsList.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CustomScripts\interlimbCoord_script.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CustomScripts\circPlots.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

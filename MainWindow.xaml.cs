@@ -31,6 +31,8 @@ namespace VisualGaitLab
         ListBox DragSource = null;
         ListBox DragTarget = null;
         Stopwatch globalStopWatch = new Stopwatch();
+        List<CustomScript> PAScripts;
+        bool PAScriptsPrepared = false;
 
 
 
@@ -167,30 +169,34 @@ namespace VisualGaitLab
             });
         }
 
-        private void EnableAnalysisPart() { //enable analysis tab
+        private void EnableAnalysisPart() { //enable analysis tabs
             AnalyzeTab.IsEnabled = true;
+            PostAnalysisTab.IsEnabled = true;
         }
 
-        private void BarAnalysisPart() { //disable analysis tab
+        private void BarAnalysisPart() { //disable analysis tabs
             AnalyzeTab.IsEnabled = false;
+            PostAnalysisTab.IsEnabled = false;
         }
 
         private void EnableGait()
         {
             GaitTab.Visibility = Visibility.Visible;
-            PostAnalysisTab.Visibility = Visibility.Visible;
             PrepareGaitTab();
-            PreparePostAnalysisTab();
         }
 
         private void BarGait()
         {
-            GaitTab.Visibility = Visibility.Hidden;
-            PostAnalysisTab.Visibility = Visibility.Hidden;
+            GaitTab.Visibility = Visibility.Collapsed;
         }
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e) { //not in use currently
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
+            if (PostAnalysisTab.IsSelected && PAScriptsPrepared)
+            {
+                PreparePostAnalysisTab();
+                PAScriptsPrepared = true;
+            }
         }
 
 

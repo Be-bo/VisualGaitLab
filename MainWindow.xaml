@@ -198,7 +198,7 @@
 
 
                 <!-- Gait TAB -->
-                <TabItem Name="GaitTab" Visibility="Hidden" IsEnabled="False" Header="Gait" Style="{StaticResource TabItemStyle}">
+                <TabItem Name="GaitTab" Visibility="Collapsed" IsEnabled="False" Header="Gait" Style="{StaticResource TabItemStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -305,15 +305,21 @@
 
 
                 <!-- Post Analysis TAB -->
-                <TabItem Name="PostAnalysisTab" Visibility="Hidden" IsEnabled="False" Header="Post Analysis" Style="{StaticResource TabItemStyle}">
+                <TabItem Name="PostAnalysisTab" IsEnabled="False" Header="Post Analysis"  Style="{StaticResource TabItemStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                        <ListBox Name="ScriptListBox" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="ScriptListBox_SelectionChanged" SelectionMode="Extended">
+                        <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="ScriptListBox_SelectionChanged" SelectionMode="Extended">
 
                             <!-- List Box Settings -->
                             <ListBox.Resources>
@@ -344,7 +350,7 @@
                         </ListBox>
 
                         <!-- Tab's Bottom Part-->
-                        <DockPanel Grid.Row="1" Margin="5" Cursor="Hand">
+                        <DockPanel Grid.Row="1" Grid.Column="0" Margin="5" Cursor="Hand">
                             <Image Source="/Images/add.png" Height="20" Width="20" HorizontalAlignment="Left" />
                             <Button Click="NewScriptClicked">
                                 <Button.Template>
@@ -355,8 +361,9 @@
                             </Button>
                         </DockPanel>
 
-                        <Button Name="RunScriptButton" Grid.Row="2" IsEnabled="False" Content="Run Script(s)" HorizontalAlignment="Right" Margin="5" Click="RunScriptButton_Click" Style="{StaticResource PositiveButton}"/>
-                    
+                        <Button Name="RunScriptButton" Grid.Row="2" Grid.Column="2" IsEnabled="False" Content="Run Script(s)" HorizontalAlignment="Right" Margin="5" Click="RunScriptButton_Click" Style="{StaticResource PositiveButton}"/>
+                        <Button Name="RefreshScriptsButton" Grid.Row="2" Grid.Column="3" IsEnabled="True" Content="Refresh" HorizontalAlignment="Right" Margin="5" Click="RefreshScriptsButton_Click" Style="{StaticResource PositiveButton}"/>
+                        
                     </Grid>
                 </TabItem>
             </TabControl>

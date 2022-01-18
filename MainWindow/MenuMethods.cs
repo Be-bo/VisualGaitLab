@@ -231,12 +231,6 @@ namespace VisualGaitLab {
                     //Load VDLC Config
                     ReadVGLConfig();
                 }
-                else {
-
-                }
-            }
-            else {
-
             }
         }
 
