@@ -319,7 +319,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionMode="Extended">
+                        <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="ScriptBox_SelectionChanged" SelectionMode="Extended">
 
                             <!-- List Box Settings -->
                             <ListBox.Resources>
@@ -328,9 +328,7 @@
                                     <Setter Property="Background" Value="White"/>
                                 </Style>
                                 <ContextMenu x:Key="TrainingListBoxItemCM">
-                                    <MenuItem Header="Play" Click="PlayAnalyzedVideoClicked"/>
-                                    <MenuItem Header="Open Results Folder" Click="ResultsClicked"/>
-                                    <MenuItem Header="Delete" Click="AnalyzeDeleteClicked"/>
+                                    <MenuItem Header="Remove" Click="RemoveScriptClicked"/>
                                 </ContextMenu>
                             </ListBox.Resources>
 

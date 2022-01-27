@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System;
 using Microsoft.Win32;
 using System.Linq;
+using VisualGaitLab.PostAnalysis;
+using System.Windows.Controls;
 
 namespace VisualGaitLab
 {
@@ -47,7 +49,7 @@ namespace VisualGaitLab
                 scriptPaths.Add(Path.Combine(ScriptsFolder, s));
             }
 
-            // Create scripts
+            // Create script objects
             List<string> notfound = new List<string>();
             foreach (string s in scriptPaths)
             {
@@ -70,19 +72,11 @@ namespace VisualGaitLab
 
                 if (result == MessageBoxResult.Yes)
                 { // Remove from scriptList
-                    using (StreamWriter sw = new StreamWriter(scriptsListFilePath, false))
-                    {
-                        foreach (CustomScript s in PAScripts)
-                        {
-                            sw.WriteLine(s.Path);
-                        }
-                    }
+                    RewriteScriptsList();
                 }
             }
-
             ScriptListBox.ItemsSource = null;
             ScriptListBox.ItemsSource = PAScripts;
-
         }
 
 
@@ -99,10 +93,7 @@ namespace VisualGaitLab
 
             if (openFileDialog.ShowDialog() == true)
             {
-
                 // Create a list of current script paths
-
-
                 foreach (var fullPath in openFileDialog.FileNames)
                 {
                     if (PAScripts.Any(s => s.Path == fullPath))
@@ -115,13 +106,8 @@ namespace VisualGaitLab
                     }
                 }
 
-                using (StreamWriter sw = new StreamWriter(Path.Combine(ScriptsFolder, ScriptsListFile), false))
-                {
-                    foreach (CustomScript s in PAScripts)
-                    {
-                        sw.WriteLine(s.Path);
-                    }
-                }
+                // Add path to scripts list
+                RewriteScriptsList();
             }
             ScriptListBox.Items.Refresh();
             EnableInteraction();
@@ -129,8 +115,46 @@ namespace VisualGaitLab
 
 
 
-        private void RefreshScriptsButton_Click(object sender, RoutedEventArgs e)
+        private void RemoveScriptClicked(object sender, RoutedEventArgs e)
         {
+            CustomScript selectedScript = (CustomScript)ScriptListBox.SelectedItem;
+            if (selectedScript.Path.Contains(ScriptsFolder))
+            { // Scripts in the script folder are permanent and shouldn't be removed
+                MessageBox.Show("VGL's built-in post analysis scripts cannot be removed. \n\n" + selectedScript.Path, "Script Cannot Be Removed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            int selectedIndex = ScriptListBox.SelectedIndex;
+            PAScripts.RemoveAt(selectedIndex);
+            ScriptListBox.Items.Refresh();
+            RewriteScriptsList();
+        }
+
+
+
+
+        private void RewriteScriptsList()
+        {
+            using (StreamWriter sw = new StreamWriter(Path.Combine(ScriptsFolder, ScriptsListFile), false))
+            {
+                foreach (CustomScript s in PAScripts)
+                {
+                    sw.WriteLine(s.Path);
+                }
+            }
+        }
+
+
+
+        private void ScriptBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RunScriptButton.IsEnabled = true;
+        }
+
+
+
+        private void RefreshScriptsButton_Click(object sender, RoutedEventArgs e)
+        { // Reload scripts list
             PreparePostAnalysisTab();
         }
 
@@ -138,7 +162,18 @@ namespace VisualGaitLab
 
         private void RunScriptButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: right click on a script list item
+            //TODO: multiple selection
+            CustomScript script = (CustomScript)ScriptListBox.SelectedItem;
+            if (script != null)
+            {
+                BarInteraction();
+                PostAnalysisWindow paWindow = new PostAnalysisWindow(script.Path, script.Name);
+                if (paWindow.ShowDialog() == true)
+                {
+                    //SyncUI(); //TODO: is it needed?
+                }
+                EnableInteraction();
+            }
         }
     }
 }

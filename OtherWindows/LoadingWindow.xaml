@@ -6,7 +6,7 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="Action in Progress" Height="120" Width="300"
-        Icon="logo.png"
+        Icon="/Images/logo.png"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}">
     <StackPanel>

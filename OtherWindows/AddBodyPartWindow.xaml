@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VisualGaitLab.OtherWindows"
         mc:Ignorable="d"
         Title="Add Bodypart" Height="130" Width="355"
-        Icon="logo.png"
+        Icon="/Images/logo.png"
         Style="{StaticResource WindowStyle}"
         WindowStartupLocation="CenterScreen">
 

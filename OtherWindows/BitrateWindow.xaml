@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VisualGaitLab.OtherWindows"
         mc:Ignorable="d"
         Title="Resolution Reduction" Height="380" Width="400"
-        Icon="logo.png"
+        Icon="/Images/logo.png"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}">
     <StackPanel>

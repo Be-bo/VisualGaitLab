@@ -160,6 +160,9 @@
     <Compile Include="OtherWindows\TrainingSettings.xaml.cs">
       <DependentUpon>TrainingSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PostAnalysis\PostAnalysisWindow.xaml.cs">
+      <DependentUpon>PostAnalysisWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SupportingClasses\AnalysisVideo.cs" />
     <Compile Include="SupportingClasses\CustomScript.cs" />
     <Compile Include="SupportingClasses\FileSystemUtils.cs" />
@@ -237,6 +240,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PostAnalysis\PostAnalysisWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -269,19 +276,10 @@
     <Resource Include="Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="OtherWindows\add.png" />
-    <Resource Include="OtherWindows\dir.png" />
-    <Resource Include="OtherWindows\example.png" />
-    <Resource Include="OtherWindows\help.png" />
-    <Resource Include="OtherWindows\hint.png" />
-    <Resource Include="OtherWindows\logo.png" />
-    <Resource Include="OtherWindows\mouse.png" />
+    <Resource Include="Images\dot.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="OtherWindows\dot.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="OtherWindows\selectwindow.png" />
+    <Resource Include="Images\selectwindow.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\add.png" />

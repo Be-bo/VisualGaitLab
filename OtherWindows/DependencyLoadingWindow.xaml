@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VisualGaitLab.OtherWindows" xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Icon="logo.png"
+        Icon="/Images/logo.png"
         Title="Dependency Installation" Height="100" Width="350"
         WindowStartupLocation="CenterScreen">
     <Grid>

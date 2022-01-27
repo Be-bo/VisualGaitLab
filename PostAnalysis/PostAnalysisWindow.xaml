@@ -1,0 +1,103 @@
+﻿<Window x:Class="VisualGaitLab.PostAnalysis.PostAnalysisWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VisualGaitLab.PostAnalysis"
+        mc:Ignorable="d"
+        Title="PostAnalysisWindow" Height="500" Width="800"
+        Style="{StaticResource WindowStyle}"
+        Icon="..\Images\logo.png"
+        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <!-- margins of 10 px -->
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <!-- margin of 10 px -->
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <!--INFO Window-->
+        <Grid Grid.Row="1" Grid.Column="1" Background="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Margin="5" Text="Info:"/>
+            <ScrollViewer Background="White" Grid.Row="1" Margin="5 0 5 5">
+                <TextBlock Name="InfoBlock" Background="White" Foreground="DimGray" Margin="5"
+                               TextWrapping="Wrap" FontStyle="Italic" Text="No Information available."
+                               />
+            </ScrollViewer>
+        </Grid>
+
+        <!--PARAMS Window-->
+        <Grid Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Background="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Margin="5" Name="ParamTitle" Text="Parameters:"/>
+
+            <ListBox Grid.Row="1" Name="ParamListBox" Margin="5 0 5 5" Style="{StaticResource ListBoxStyle}">
+
+                <!-- List Box Settings -->
+                <ListBox.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="3"/>
+                        <Setter Property="Background" Value="White"/>
+                    </Style>
+                </ListBox.Resources>
+
+                <!-- Item Template -->
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!--PARAM-BUTTONS-->
+            <Grid Grid.Row="1" Grid.Column="1" Background="LightGray">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Name="AddFileParam" Grid.Row="0" Margin="5" Content="+File" Click="AddFileParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="AddStrParam" Grid.Row="1" Margin="5" Content="+String" Click="AddStrParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="MoveUpParam" Grid.Row="3" Content="∧" Margin="5" Click="MoveUpParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="MoveDownParam" Grid.Row="4" Content="∨" Margin="5" Click="MoveDownParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="RemoveParam" Grid.Row="5" Content="—" Margin="5" Click="RemoveParam_Click" Style="{StaticResource PositiveButton}"/>
+            </Grid>
+        </Grid>
+
+        <!--Bottom Buttons-->
+        <Button Name="RunButton" Grid.Row="3" Grid.Column="4" IsEnabled="False" Content="Run" HorizontalAlignment="Right" Margin="5" Click="RunButton_Click" Style="{StaticResource PositiveButton}"/>
+
+    </Grid>
+</Window>

@@ -214,7 +214,5 @@ namespace VisualGaitLab
                 UpdateSettings(false);
             }
         }
-
-
     }
 }

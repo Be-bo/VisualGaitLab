@@ -6,7 +6,7 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
          Title="Edit Video" Height="500" Width="800"
-        Icon="logo.png"
+        Icon="/Images/logo.png"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}"
         SizeChanged="Window_SizeChanged"
