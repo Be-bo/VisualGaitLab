@@ -167,10 +167,13 @@ namespace VisualGaitLab
             if (script != null)
             {
                 BarInteraction();
-                PostAnalysisWindow paWindow = new PostAnalysisWindow(script.Path, script.Name);
+                PostAnalysisWindow paWindow = new PostAnalysisWindow(script.Path, script.Name, WorkingDirectory);
                 if (paWindow.ShowDialog() == true)
                 {
-                    //SyncUI(); //TODO: is it needed?
+                    foreach (Parameter p in paWindow.ParamList)
+                    {
+                        Console.WriteLine(p.Txt);
+                    }
                 }
                 EnableInteraction();
             }

@@ -160,8 +160,9 @@
     <Compile Include="OtherWindows\TrainingSettings.xaml.cs">
       <DependentUpon>TrainingSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PostAnalysis\PostAnalysisWindow.xaml.cs">
-      <DependentUpon>PostAnalysisWindow.xaml</DependentUpon>
+    <Compile Include="PostAnalysis\Parameter.cs" />
+    <Compile Include="PostAnalysis\SelectParamWindow.xaml.cs">
+      <DependentUpon>SelectParamWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\AnalysisVideo.cs" />
     <Compile Include="SupportingClasses\CustomScript.cs" />
@@ -240,7 +241,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PostAnalysis\PostAnalysisWindow.xaml">
+    <Page Include="PostAnalysis\SelectParamWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -303,19 +304,22 @@
     <Resource Include="logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CustomScripts\scriptsList.txt">
+    <Content Include="CustomScripts\interlimbCoordA\info.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <Content Include="CustomScripts\scriptsList.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CustomScripts\interlimbCoord_script.py">
+    <Content Include="CustomScripts\circPlots.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CustomScripts\circPlots.py">
+    <Content Include="CustomScripts\interlimbCoordA.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

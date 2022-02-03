@@ -1,0 +1,22 @@
+Interlimb Coordination Part A
+
+@author: Zahra Ghavasieh
+@original MATLAB script author: Linda Kim
+
+
+Limb Order:
+    	0. HindIpsi
+    	1. ForeIpsi
+    	2. ForeContra
+    	3. HindContra
+
+Parameters (4):
+	1. HindIpsi InStance.txt
+	2. ForeIpsi InStance.txt
+	3. ForeContra InStance.txt
+	4. HindContra InStance.txt
+
+Tips:
+	* "InStance.txt" files can be found in the video folder of your project directory.
+	* Select the [+File] Button to choose these files and order them accordingly.
+	* Select [Run] once all parameters are ready.

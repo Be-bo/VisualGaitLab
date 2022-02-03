@@ -3,13 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VisualGaitLab.PostAnalysis"
         mc:Ignorable="d"
         Title="PostAnalysisWindow" Height="500" Width="800"
         Style="{StaticResource WindowStyle}"
         Icon="..\Images\logo.png"
-        WindowStartupLocation="CenterScreen"
-        Closing="Window_Closing">
+        WindowStartupLocation="CenterScreen">
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -72,7 +70,14 @@
                 <!-- Item Template -->
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding}"/>
+                        <Grid Margin="5" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock MouseDown="Param_MouseDown" Text="{Binding Txt}" Visibility="{Binding BlockVisible}"/>
+                            <TextBox Background="Transparent" BorderThickness="1" KeyDown="Param_txtBox_Enter" Text="{Binding Path=Txt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding BoxVisible}"/>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -82,17 +87,19 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Button Name="AddFileParam" Grid.Row="0" Margin="5" Content="+File" Click="AddFileParam_Click" Style="{StaticResource PositiveButton}"/>
-                <Button Name="AddStrParam" Grid.Row="1" Margin="5" Content="+String" Click="AddStrParam_Click" Style="{StaticResource PositiveButton}"/>
-                <Button Name="MoveUpParam" Grid.Row="3" Content="∧" Margin="5" Click="MoveUpParam_Click" Style="{StaticResource PositiveButton}"/>
-                <Button Name="MoveDownParam" Grid.Row="4" Content="∨" Margin="5" Click="MoveDownParam_Click" Style="{StaticResource PositiveButton}"/>
-                <Button Name="RemoveParam" Grid.Row="5" Content="—" Margin="5" Click="RemoveParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="AddStrParam" Grid.Row="0" Margin="5" Content="New String" Click="AddStrParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="AddFileParam" Grid.Row="1" Margin="5" Content="Browse File(s)" Click="AddFileParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="AddDirParam" Grid.Row="2" Margin="5" Content="Browse Folder" Click="AddDirParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="MoveUpParam" Grid.Row="4" Content="∧" Margin="5" Click="MoveUpParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="MoveDownParam" Grid.Row="5" Content="∨" Margin="5" Click="MoveDownParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="RemoveParam" Grid.Row="6" Content="—" Margin="5" Click="RemoveParam_Click" Style="{StaticResource PositiveButton}"/>
             </Grid>
         </Grid>
 

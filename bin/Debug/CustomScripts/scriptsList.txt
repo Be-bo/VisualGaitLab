@@ -1,2 +1,2 @@
 C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\circPlots.py
-C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoord_script.py
+C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordA.py
