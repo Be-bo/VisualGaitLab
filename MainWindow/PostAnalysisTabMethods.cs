@@ -7,6 +7,8 @@ using Microsoft.Win32;
 using System.Linq;
 using VisualGaitLab.PostAnalysis;
 using System.Windows.Controls;
+using System.Diagnostics;
+using VisualGaitLab.OtherWindows;
 
 namespace VisualGaitLab
 {
@@ -162,7 +164,8 @@ namespace VisualGaitLab
 
         private void RunScriptButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: multiple selection
+            //TODO: multiple selection (run them all after selecting params)
+            // TODO: use same params for all following scripts
             CustomScript script = (CustomScript)ScriptListBox.SelectedItem;
             if (script != null)
             {
@@ -170,13 +173,95 @@ namespace VisualGaitLab
                 PostAnalysisWindow paWindow = new PostAnalysisWindow(script.Path, script.Name, WorkingDirectory);
                 if (paWindow.ShowDialog() == true)
                 {
+                    // Build parameters
+                    string parameters = "";
                     foreach (Parameter p in paWindow.ParamList)
                     {
-                        Console.WriteLine(p.Txt);
+                        parameters += " \"" + p.Txt + '\"';
                     }
+                    RunScript(script, parameters);
                 }
                 EnableInteraction();
             }
+        }
+
+
+
+
+        // TODO: Change to RunScripts (multiple)
+        private void RunScript(CustomScript script, string args)
+        {
+            Console.WriteLine("Running \"" + script.Name + "\"...");
+
+            // Prepare cmd process
+            Process process = new Process(); //prepare a cmd process to run the script
+            ProcessStartInfo info = new ProcessStartInfo();
+            info.FileName = "cmd.exe";
+            info.RedirectStandardInput = true;
+            info.RedirectStandardOutput = !ReadShowDebugConsole();
+            info.UseShellExecute = false;
+            info.Verb = "runas";
+            info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
+
+            Dispatcher.Invoke(() => //once done close the loading window
+            {
+                LoadingWindow = new LoadingWindow();
+                LoadingWindow.Title = "Running \"" + script.Name + "\"";
+                LoadingWindow.Show();
+                LoadingWindow.Closed += LoadingClosed;
+            });
+
+            bool errorDuringAnalysis = false;
+            string errorMessage = "No Error";
+            string progressValue = "0";
+            string progressMax = "0";
+            int scriptProgValue = 0;
+
+            //NONDEBUG -----------------------------------------------------------------------------------------------
+            if (info.CreateNoWindow)
+            {
+                //TODO
+            }
+            //NONDEBUG -----------------------------------------------------------------------------------------------
+
+            process.EnableRaisingEvents = true;
+            process.Exited += (sender1, e1) =>
+            {
+                if (errorDuringAnalysis)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        LoadingWindow.Close();
+                        EnableInteraction();
+                    });
+                    MessageBox.Show(errorMessage, "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            };
+
+            process.StartInfo = info;
+            process.Start();
+
+            using (StreamWriter sw = process.StandardInput)
+            {
+                if (sw.BaseStream.CanWrite)
+                {
+                    sw.WriteLine(Drive);
+                    sw.WriteLine("cd " + EnvDirectory);
+                    sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
+                    sw.WriteLine("conda activate " + EnvName);
+                    sw.WriteLine("ipython " + script.Path + args);
+
+                    if (!info.CreateNoWindow)
+                    { //for debug purposes
+                        sw.WriteLine("\n\n\nECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        process.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
+                    }
+                }
+            }
+            //only redirect output if debug enabled
+            if (info.CreateNoWindow)
+                process.BeginOutputReadLine();
         }
     }
 }

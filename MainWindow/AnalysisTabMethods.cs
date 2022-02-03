@@ -233,7 +233,7 @@ namespace VisualGaitLab {
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
             info.RedirectStandardInput = true;
-            info.RedirectStandardOutput = true; //!ReadShowDebugConsole(); 
+            info.RedirectStandardOutput = !ReadShowDebugConsole();
             info.UseShellExecute = false;
             info.Verb = "runas";
             info.CreateNoWindow = !ReadShowDebugConsole(); //if show debug console = true, then create no window has to be false
@@ -306,7 +306,7 @@ namespace VisualGaitLab {
             p.Exited += (sender1, e1) => {
                 if (errorDuringAnalysis)
                 {
-                    this.Dispatcher.Invoke(() => {
+                    Dispatcher.Invoke(() => {
                         LoadingWindow.Close();
                         EnableInteraction();
                     });
@@ -315,7 +315,7 @@ namespace VisualGaitLab {
                 }
 
                 // If done analyzing, start creating labelled videos
-                this.Dispatcher.Invoke(() => {
+                Dispatcher.Invoke(() => {
                     LoadingWindow.ProgressLabel.Content = "Creating labeled videos (will take a while)...";
                     LoadingWindow.ProgressLabel2.Content = "";
                 });

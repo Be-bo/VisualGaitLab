@@ -158,10 +158,7 @@ namespace VisualGaitLab.PostAnalysis
         // Start editting
         private void Param_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (ParamListBox.SelectedItem == edittingParam)
-            {
-                return;
-            }
+            if (ParamListBox.SelectedItem == edittingParam) return;
 
             EndEdit();
 
