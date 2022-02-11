@@ -32,10 +32,11 @@ namespace VisualGaitLab.PostAnalysis
         // Read info.txt if it exists and fill in appropriate params
         private void ReadInfo()
         {
-            string infoDir = ScriptPath.Replace(".py", "");
-            string infoFile = Path.Combine(infoDir, "info.txt");
+            string infoPath = ScriptPath.Replace(Title + ".py", "");
+            string infoFile = Path.Combine(infoPath, Title + "_info.txt");
+            Console.WriteLine(infoFile);
 
-            if (Directory.Exists(infoDir) & File.Exists(infoFile))
+            if (File.Exists(infoFile))
             {
                 // Read all info
                 string info = File.ReadAllText(infoFile);

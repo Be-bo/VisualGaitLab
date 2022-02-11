@@ -304,15 +304,17 @@
     <Resource Include="logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CustomScripts\interlimbCoordA\info.txt">
+    <Content Include="CustomScripts\dependencies\circPlots.py" />
+    <Content Include="CustomScripts\interlimbCoordA_info.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordB.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordB_info.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CustomScripts\scriptsList.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CustomScripts\circPlots.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -166,9 +166,13 @@ namespace VisualGaitLab
         {
             //TODO: multiple selection (run them all after selecting params)
             // TODO: use same params for all following scripts
-            CustomScript script = (CustomScript)ScriptListBox.SelectedItem;
-            if (script != null)
+            List<CustomScript> scripts = new List<CustomScript>();
+            List<string> args = new List<string>();
+
+            foreach (var item in ScriptListBox.SelectedItems)
             {
+                var script = (CustomScript)item;
+
                 BarInteraction();
                 PostAnalysisWindow paWindow = new PostAnalysisWindow(script.Path, script.Name, WorkingDirectory);
                 if (paWindow.ShowDialog() == true)
@@ -179,20 +183,24 @@ namespace VisualGaitLab
                     {
                         parameters += " \"" + p.Txt + '\"';
                     }
-                    RunScript(script, parameters);
+
+                    // Only run this script if parameters were found
+                    scripts.Add(script);
+                    args.Add(parameters);
                 }
-                EnableInteraction();
+                // TODO: Cancel function
             }
+
+            RunScripts(scripts, args);  //TODO > out.txt ?
+            EnableInteraction();
         }
 
 
 
 
         // TODO: Change to RunScripts (multiple)
-        private void RunScript(CustomScript script, string args)
+        private void RunScripts(List<CustomScript> scripts, List<string> args)
         {
-            Console.WriteLine("Running \"" + script.Name + "\"...");
-
             // Prepare cmd process
             Process process = new Process(); //prepare a cmd process to run the script
             ProcessStartInfo info = new ProcessStartInfo();
@@ -206,21 +214,44 @@ namespace VisualGaitLab
             Dispatcher.Invoke(() => //once done close the loading window
             {
                 LoadingWindow = new LoadingWindow();
-                LoadingWindow.Title = "Running \"" + script.Name + "\"";
+                LoadingWindow.Title = "Running Scripts";
                 LoadingWindow.Show();
                 LoadingWindow.Closed += LoadingClosed;
+                LoadingWindow.ProgressBar.Maximum = scripts.Count;
             });
 
             bool errorDuringAnalysis = false;
             string errorMessage = "No Error";
-            string progressValue = "0";
-            string progressMax = "0";
             int scriptProgValue = 0;
 
             //NONDEBUG -----------------------------------------------------------------------------------------------
             if (info.CreateNoWindow)
             {
-                //TODO
+                process.OutputDataReceived += new DataReceivedEventHandler((sender, e) => //feed cmd output to the loading window so the user knows the progress of the analysis
+                {
+                    if (!string.IsNullOrEmpty(e.Data))
+                    {
+                        string line = e.Data;
+                        Console.WriteLine(line);
+
+                        if (line.Contains("ERROR"))
+                        {
+                            errorMessage = line;
+                            errorDuringAnalysis = true;
+                            FileSystemUtils.MurderPython();
+                        }
+
+                        if (line.Contains("python"))
+                        {
+                            scriptProgValue++;
+                            string scriptName = scripts[scriptProgValue].ToString();
+                            Dispatcher.Invoke(() => {
+                                LoadingWindow.ProgressLabel.Content = "Running " + scriptName + " (" + scriptProgValue + "/" + scripts.Count + ")";
+                                LoadingWindow.ProgressBar.Value = scriptProgValue;
+                            });
+                        }
+                    }
+                });
             }
             //NONDEBUG -----------------------------------------------------------------------------------------------
 
@@ -249,7 +280,13 @@ namespace VisualGaitLab
                     sw.WriteLine("cd " + EnvDirectory);
                     sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.WriteLine("ipython " + script.Path + args);
+
+
+                    // Multiple Scripts
+                    for (int i = 0; i < scripts.Count; i++)
+                    {
+                        sw.WriteLine("python " + scripts[i].Path + args[i]);
+                    }
 
                     if (!info.CreateNoWindow)
                     { //for debug purposes

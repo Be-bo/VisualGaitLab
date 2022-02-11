@@ -98,7 +98,7 @@ def calculateCircStat(onsets1, onsets2):
 # Theta is a list of angles (in radians) that determines the angle of each bin from the origin.
 # The length of each bin reflects the number of elements in theta that fall within a group, 
 # which ranges from 0 to the greatest number of elements deposited in any one bin.
-def windRosePlot(theta, binNum,title='', scatter=False):
+def windRosePlot(theta, binNum, outDir, title='', scatter=False):
     
     # Calculate items in each bin
     width = np.pi * 2 / binNum
@@ -134,8 +134,8 @@ def windRosePlot(theta, binNum,title='', scatter=False):
 
     # Save and Show Plot
     ax.set_title(title)
-    plt.savefig('out/'+title+".png", bbox_inches='tight')
-    plt.show()
+    plt.savefig(outDir+title+".png", bbox_inches='tight')
+    plt.draw()
     
     return
 

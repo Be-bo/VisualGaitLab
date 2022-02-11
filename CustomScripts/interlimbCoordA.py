@@ -5,8 +5,12 @@ Created on Wed Dec 15 14:55:02 2021
 @author: Zahra Ghavasieh
 @original MATLAB script author: Linda Kim
 
+Interlimb Coordination Part A
+
 To Run:
-    - runfile('C:/Users/Judgy/OneDrive/Documents/WorkStuff/interlimbCoord_script.py', args='test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
+    - runfile('C:/Users/Judgy/OneDrive/Documents/WorkStuff/interlimbCoordA_script.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
+    - python [scriptname].py > output.txt
+    - What is the animal ID? (Eg. 6-OHDAM#Pre or SalineM#Post etc.)
 
 Limb Order:
     0. HindIpsi
@@ -20,12 +24,14 @@ Limb Order:
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-from circPlots import regIndex, calculateCircStat, windRosePlot
+import pandas as pd
+from dependencies.circPlots import regIndex, calculateCircStat, windRosePlot
 
 
 # Global Values
 paw_labels = ['HindIpsi', 'ForeIpsi', 'ForeContra', 'HindContra']
-
+coupling_labels = ['Forelimbs','Hindlimbs','Ipsilesionals','Contralesionals',
+                       'ContraFore-IpsiHind','IpsiFore-ContraHind']
 
 
 
@@ -48,7 +54,7 @@ def processInput(fileNames):
 
 
 # Fig1: Draw the footfall pattern of all four limbs
-def drawFootfallPattern(inStanceValues, animalID):
+def drawFootfallPattern(inStanceValues, animalID, outDir):
     
     fig, axs = plt.subplots(len(inStanceValues),sharex=True)
     fig.suptitle('Figure 1: Footfall Pattern Bar')
@@ -78,14 +84,14 @@ def drawFootfallPattern(inStanceValues, animalID):
         axs[i].broken_barh(bars, (0, 1), facecolors='tab:blue')
         axs[i].set_yticks([0.5], labels=[paw_labels[i]])
 
-    plt.savefig("out/"+animalID+"-footfallpatternbar-fig1.png", bbox_inches='tight')
-    plt.show()
+    plt.savefig(outDir+animalID+"-footfallpatternbar-fig1.png", bbox_inches='tight')
+    plt.draw()
 
 
 
 
 # Fig2: Calculate and Graph Footfall by onset
-def getFootfallOnset(inStanceValues, animalID):
+def getFootfallOnset(inStanceValues, animalID, outDir):
     
     colors = ['yellow', 'green', 'red', 'blue']
     pawNums = len(inStanceValues)
@@ -111,8 +117,8 @@ def getFootfallOnset(inStanceValues, animalID):
     plt.plot(footfallOnsets[0], footfallOnsets[1], '-', color='black', linewidth=1)
     plt.yticks([pawNums-i for i in range(pawNums)], labels=paw_labels)
     plt.title('Figure 2: Footfall Pattern Onsets')
-    plt.savefig("out/"+animalID+"-footfallpatternline-fig2.png", bbox_inches='tight')
-    plt.show()
+    plt.savefig(outDir+animalID+"-footfallpatternline-fig2.png", bbox_inches='tight')
+    plt.draw()
     
     return (footfallOnsets, onsets)
 
@@ -131,7 +137,7 @@ def circStats(onsets):
     phaseval_rad.append(calculateCircStat(onsets[1], onsets[0])) # ForeIpsi, HindIpsi
     phaseval_rad.append(calculateCircStat(onsets[2], onsets[3])) # ForeContra, HindContra
     phaseval_rad.append(calculateCircStat(onsets[2], onsets[0])) # ForeContra, HindIpsi
-    phaseval_rad.append(calculateCircStat(onsets[1], onsets[3])) # ForeIpsi, HindContra
+    phaseval_rad.append(calculateCircStat(onsets[1], onsets[3])) # ForeIpsi, HindContra    
     
     print('\n','Phaseval in radians = \n', phaseval_rad,'\n')
     return phaseval_rad
@@ -140,11 +146,7 @@ def circStats(onsets):
 
 
 # Circular Plots
-def circ_plots(phaseval_rad, animalID):
-    
-    # Plot Labels
-    coupling_labels = ['Forelimbs','Hindlimbs','Ipsilesionals','Contralesionals',
-                       'ContraFore-IpsiHind','IpsiFore-ContraHind']
+def circ_plots(phaseval_rad, animalID, outDir):
     
     for i in range(len(coupling_labels)):
         
@@ -153,8 +155,8 @@ def circ_plots(phaseval_rad, animalID):
         dens_title = animalID + '-densityplot-' + coupling_labels[i]
         
         # Plots
-        windRosePlot(phaseval_rad[i], 20, hist_title, False)
-        windRosePlot(phaseval_rad[i], 20, dens_title, True)
+        windRosePlot(phaseval_rad[i], 20, outDir, hist_title, False)
+        windRosePlot(phaseval_rad[i], 20, outDir, dens_title, True)
   
     
   
@@ -168,23 +170,35 @@ def main():
         return -1
     
     # Process Input
-    inStanceValues = processInput(sys.argv[1:])
+    animalID = sys.argv[1]
+    inStanceValues = processInput(sys.argv[2:])
     if len(inStanceValues) < 4:
+        print('ERROR: Not enough arguments for in-stance-values!')
         return -1
     
+    outDir = "out/"
+    if len(inStanceValues) > 5:
+        outDir = inStanceValues[-1] + '/'
+        inStanceValues = inStanceValues[:4]
+    
+    
     # Figure 1
-    animalID = input("What is the animal ID? (Eg. 6-OHDAM#Pre or SalineM#Post etc: ")
-    drawFootfallPattern(inStanceValues, animalID)
+    drawFootfallPattern(inStanceValues, animalID, outDir)
     
     # Figure 2
-    footfallOnsets, onsets = getFootfallOnset(inStanceValues, animalID)
+    footfallOnsets, onsets = getFootfallOnset(inStanceValues, animalID, outDir)
     
     # Regularity Index
     regIndex(footfallOnsets[1])
     
     # Plot Circular Stats
     phaseval_rad = circStats(onsets)
-    circ_plots(phaseval_rad, animalID)
+    circ_plots(phaseval_rad, animalID, outDir)
+    
+    # Save Phaseval for Part B
+    out_file = outDir + animalID + "-phaseval.csv"
+    df = pd.DataFrame(phaseval_rad, index=coupling_labels)
+    df.to_csv(out_file, index=True, header=False)
     
     
 
