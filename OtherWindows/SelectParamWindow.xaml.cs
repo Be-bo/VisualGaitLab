@@ -3,6 +3,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -116,10 +117,11 @@ namespace VisualGaitLab.PostAnalysis
         // Add a directory path to params
         private void AddDirParam_Click(object sender, RoutedEventArgs e)
         {
+            var window = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
             CommonOpenFileDialog dialog = new CommonOpenFileDialog();
             dialog.InitialDirectory = WorkingDirectory;
             dialog.IsFolderPicker = true;
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            if (dialog.ShowDialog(window) == CommonFileDialogResult.Ok)
             {
                 ParamList.Add(new Parameter(dialog.FileName));
                 ParamListBox.Items.Refresh();

@@ -190,10 +190,9 @@ namespace VisualGaitLab
                     args.Add(parameters);
                     runScript = true;
                 }
-                // TODO: Cancel function
             }
 
-            if (runScript) RunScripts(scripts, args);  //TODO > out.txt ?
+            if (runScript) RunScripts(scripts, args); 
             EnableInteraction();
         }
 

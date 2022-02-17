@@ -160,8 +160,8 @@
     <Compile Include="OtherWindows\TrainingSettings.xaml.cs">
       <DependentUpon>TrainingSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PostAnalysis\Parameter.cs" />
-    <Compile Include="PostAnalysis\SelectParamWindow.xaml.cs">
+    <Compile Include="SupportingClasses\Parameter.cs" />
+    <Compile Include="OtherWindows\SelectParamWindow.xaml.cs">
       <DependentUpon>SelectParamWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\AnalysisVideo.cs" />
@@ -241,7 +241,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PostAnalysis\SelectParamWindow.xaml">
+    <Page Include="OtherWindows\SelectParamWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

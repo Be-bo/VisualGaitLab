@@ -11,6 +11,8 @@ To be used by the InterlimbCoord_script.py
 # Import modules
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import csv
 
 
 
@@ -40,7 +42,7 @@ IF start(AA)3421 (AB)3124 (CA)3241 (CB)3142 (RA)3214 (RB)3412
 IH start(AA)4213 (AB)4312 (CA)4132 (CB)4231 (RA)4321 (RB)4123
 '''
 # footfallOnsets = paw number (1-4)
-def regIndex(footfallOnsets):
+def regIndex(footfallOnsets, prefix):
     
     steppattern = ''.join([str(i) for i in footfallOnsets])
     
@@ -65,9 +67,17 @@ def regIndex(footfallOnsets):
     regularityindex = (sum(stepseq_count)*4/len(steppattern)) * 100
     stepseq_percent = [i/sum(stepseq_count) * 100 for i in stepseq_count]
     
-    # Print results
-    print('\n','Regularity Index =', regularityindex)
-    print('Stepsequence Percentage =', stepseq_percent)
+    # Save results in a csv
+    out_file = prefix + "-regIndex.csv"
+    df = pd.DataFrame(stepseq_percent, index=stepseq[firstLimb-1], columns=['StepSequence Percentage'])
+    df.to_csv(out_file, index=True, header=True)
+    
+    with open(out_file, 'a') as fd:
+        writer = csv.writer(fd)
+        writer.writerow([])
+        writer.writerow(['Regularity Index', regularityindex])
+
+    
 
 
 
