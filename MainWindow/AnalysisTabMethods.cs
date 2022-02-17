@@ -370,7 +370,7 @@ namespace VisualGaitLab {
         // Create a labeled video for the corresponding analysis video using DLC's built in create_labeled_video function
         private void CreateLabeledVideos(Dictionary<int, AnalysisVideo> videos) 
         {
-            // Preapare Script
+            // Prepare Script
             string filePath = EnvDirectory + "\\vdlc_create_labeled_video.py";
             FileSystemUtils.MurderPython();
             FileSystemUtils.RenewScript(filePath, AllScripts.CreateLabeledVideo);

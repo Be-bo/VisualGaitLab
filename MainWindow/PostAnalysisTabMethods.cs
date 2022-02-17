@@ -168,6 +168,7 @@ namespace VisualGaitLab
             // TODO: use same params for all following scripts
             List<CustomScript> scripts = new List<CustomScript>();
             List<string> args = new List<string>();
+            bool runScript = false;
 
             foreach (var item in ScriptListBox.SelectedItems)
             {
@@ -187,11 +188,12 @@ namespace VisualGaitLab
                     // Only run this script if parameters were found
                     scripts.Add(script);
                     args.Add(parameters);
+                    runScript = true;
                 }
                 // TODO: Cancel function
             }
 
-            RunScripts(scripts, args);  //TODO > out.txt ?
+            if (runScript) RunScripts(scripts, args);  //TODO > out.txt ?
             EnableInteraction();
         }
 
@@ -234,7 +236,7 @@ namespace VisualGaitLab
                         string line = e.Data;
                         Console.WriteLine(line);
 
-                        if (line.Contains("ERROR"))
+                        if (line.IndexOf("error", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             errorMessage = line;
                             errorDuringAnalysis = true;
@@ -243,8 +245,8 @@ namespace VisualGaitLab
 
                         if (line.Contains("python"))
                         {
+                            string scriptName = scripts[scriptProgValue].Name;
                             scriptProgValue++;
-                            string scriptName = scripts[scriptProgValue].ToString();
                             Dispatcher.Invoke(() => {
                                 LoadingWindow.ProgressLabel.Content = "Running " + scriptName + " (" + scriptProgValue + "/" + scripts.Count + ")";
                                 LoadingWindow.ProgressBar.Value = scriptProgValue;
@@ -260,13 +262,14 @@ namespace VisualGaitLab
             {
                 if (errorDuringAnalysis)
                 {
-                    Dispatcher.Invoke(() =>
-                    {
-                        LoadingWindow.Close();
-                        EnableInteraction();
-                    });
                     MessageBox.Show(errorMessage, "Error Occurred", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
+                Dispatcher.Invoke(() =>
+                {
+                    LoadingWindow.Close();
+                    EnableInteraction();
+                });
             };
 
             process.StartInfo = info;

@@ -82,7 +82,8 @@ def drawFootfallPattern(inStanceValues, animalID, outDir):
                 
         # Draw plot
         axs[i].broken_barh(bars, (0, 1), facecolors='tab:blue')
-        axs[i].set_yticks([0.5], labels=[paw_labels[i]])
+        axs[i].set_yticks([0.5])
+        axs[i].set_yticklabels([paw_labels[i]])
 
     plt.savefig(outDir+animalID+"-footfallpatternbar-fig1.png", bbox_inches='tight')
     plt.draw()
@@ -165,21 +166,20 @@ def circ_plots(phaseval_rad, animalID, outDir):
 def main():
     
     # Input length
-    if len(sys.argv) < 5:
+    if len(sys.argv) < 6:
         print('ERROR: Not enough arguments!')
         return -1
     
     # Process Input
     animalID = sys.argv[1]
-    inStanceValues = processInput(sys.argv[2:])
+    inStanceValues = processInput(sys.argv[2:6])
     if len(inStanceValues) < 4:
         print('ERROR: Not enough arguments for in-stance-values!')
         return -1
     
     outDir = "out/"
-    if len(inStanceValues) > 5:
-        outDir = inStanceValues[-1] + '/'
-        inStanceValues = inStanceValues[:4]
+    if len(sys.argv) > 6:
+        outDir = sys.argv[-1] + '/'
     
     
     # Figure 1
