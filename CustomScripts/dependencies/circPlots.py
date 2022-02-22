@@ -146,6 +146,4 @@ def windRosePlot(theta, binNum, outDir, title='', scatter=False):
     ax.set_title(title)
     plt.savefig(outDir+title+".png", bbox_inches='tight')
     plt.draw()
-    
-    return
 
