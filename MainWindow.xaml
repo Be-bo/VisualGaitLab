@@ -317,7 +317,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Margin="5, 10, 5, 5" MinHeight="350" Style="{StaticResource ListBoxStyle}" SelectionChanged="ScriptBox_SelectionChanged" SelectionMode="Extended" PreviewMouseLeftButtonDown="DragStarted">
+                        <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Margin="5, 10, 5, 5" Style="{StaticResource ListBoxStyle}" SelectionMode="Extended" PreviewMouseLeftButtonDown="DragStarted">
 
                             <!-- List Box Settings -->
                             <ListBox.Resources>
@@ -348,7 +348,7 @@
                         
                         <!-- Drag and Drop Scripts Listbox-->
 
-                        <ListBox Name="DragScriptsListBox" Grid.Row="0" Grid.Column="1" Margin="5, 10, 5, 5" MinHeight="150" Drop="DragScriptsListBox_Drop" Style="{StaticResource ListBoxStyle}" AlternationCount="{Binding Path=DragScriptsListBox.Items}">
+                        <ListBox Name="DragScriptsListBox" Grid.Row="0" Grid.Column="1" Margin="5, 10, 5, 5" AllowDrop="True" Drop="DragScriptsListBox_Drop" Style="{StaticResource ListBoxStyle}">
 
                             <!-- List Box Settings -->
                             <ListBox.Resources>
@@ -366,26 +366,23 @@
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="40" />
+                                            <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
                                         <!-- Items -->
-                                        <Label Grid.Column="0" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex)}"/>
-                                        <TextBlock Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
-                                    </Grid>
+                                        <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
+                                        <!--<Label Grid.Column="2" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex)}" Foreground="Gray" />
+                                        -->
+                                        </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
 
-
                         <TextBlock Name="ScriptDragNDropLabel" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" TextWrapping="WrapWithOverflow" TextAlignment="Center" FontSize="25" Foreground="{StaticResource DefaultGreyBrush}">
                             Drag and Drop Here To Run Multiple Scripts
                         </TextBlock>
-
-
-
-
 
 
 
@@ -408,9 +405,8 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Name="RunScriptButton" Grid.Column="1" IsEnabled="False" Content="Run Script(s)" HorizontalAlignment="Right" Margin="5" Click="RunScriptButton_Click" Style="{StaticResource PositiveButton}"/>
-                            <Button Name="RefreshScriptsButton" Grid.Column="2" IsEnabled="True" Content="Refresh" HorizontalAlignment="Right" Margin="5" Click="RefreshScriptsButton_Click" Style="{StaticResource PositiveButton}"/>
-
+                            <Button Name="RefreshScriptsButton" Grid.Column="1" IsEnabled="True" Content="Refresh" HorizontalAlignment="Right" Margin="5" Click="RefreshScriptsButton_Click" Style="{StaticResource PositiveButton}"/>
+                            <Button Name="RunScriptButton" Grid.Column="2" IsEnabled="True" Content="Run Script(s)" HorizontalAlignment="Right" Margin="5" Click="RunScriptButton_Click" Style="{StaticResource PositiveButton}"/>
                         </Grid>
                         
                     </Grid>

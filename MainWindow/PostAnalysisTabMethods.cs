@@ -19,6 +19,7 @@ namespace VisualGaitLab
         private void PreparePostAnalysisTab()
         { //set up the Post Analysis tab = grab the list of python scripts from the scripts folder and make them show up here
             PAScripts = new List<CustomScript>();
+            DraggedScripts = new List<CustomScript>();
             string scriptsListFilePath = Path.Combine(ScriptsFolder, ScriptsListFile);
 
             if (!Directory.Exists(ScriptsFolder))
@@ -79,6 +80,9 @@ namespace VisualGaitLab
             }
             ScriptListBox.ItemsSource = null;
             ScriptListBox.ItemsSource = PAScripts;
+
+            DragScriptsListBox.ItemsSource = null;
+            DragScriptsListBox.ItemsSource = DraggedScripts;
         }
 
 
@@ -117,12 +121,6 @@ namespace VisualGaitLab
         }
 
 
-        private void ScriptBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            RunScriptButton.IsEnabled = true;
-        }
-
-
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Drag And Drop List Box Functions
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,11 +142,11 @@ namespace VisualGaitLab
         private void DragScriptsListBox_Drop(object sender, DragEventArgs e)
         {
             DragTarget = (ListBox)sender;
-            CustomScript draggedData = (CustomScript)DragSource.SelectedItem;
-
+            CustomScript draggedData = (CustomScript)(DragSource.SelectedItem);
             DraggedScripts.Add(draggedData);
             DragScriptsListBox.ItemsSource = null;
             DragScriptsListBox.ItemsSource = DraggedScripts;
+            DragScriptsListBox.AlternationCount = DragScriptsListBox.Items.Count;
             ScriptDragNDropLabel.Visibility = Visibility.Collapsed;
         }
 
