@@ -82,39 +82,9 @@ namespace VisualGaitLab
         }
 
 
-
-        private void NewScriptClicked(object sender, RoutedEventArgs e)
-        { // Add script path to scriptList.txt
-            BarInteraction();
-            //open a file dialog to let the user choose which video to add
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Python Script | *.py";
-            openFileDialog.InitialDirectory = ScriptsFolder;
-            openFileDialog.Multiselect = true;
-            openFileDialog.Title = "Select Custom Script(s)";
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                // Create a list of current script paths
-                foreach (var fullPath in openFileDialog.FileNames)
-                {
-                    if (PAScripts.Any(s => s.Path == fullPath))
-                    {
-                        MessageBox.Show("The script file, \"" + fullPath + "\" has already been added.", "Script Already Added", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    else
-                    {
-                        PAScripts.Add(new CustomScript(fullPath));
-                    }
-                }
-
-                // Add path to scripts list
-                RewriteScriptsList();
-            }
-            ScriptListBox.Items.Refresh();
-            EnableInteraction();
-        }
-
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Script List Box Functions
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         private void RemoveScriptClicked(object sender, RoutedEventArgs e)
@@ -147,10 +117,87 @@ namespace VisualGaitLab
         }
 
 
-
         private void ScriptBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             RunScriptButton.IsEnabled = true;
+        }
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Drag And Drop List Box Functions
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // TODO needed??
+        private void ScriptDragStarted(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        { //started dragging an item in the Gait Listbox
+            DragSource = sender as ListBox;
+            object data = DragSource.SelectedItem;
+
+            if (data != null)
+            {
+                DragDrop.DoDragDrop(DragSource, data, DragDropEffects.Move);
+            }
+        }
+
+
+        private void DragScriptsListBox_Drop(object sender, DragEventArgs e)
+        {
+            DragTarget = (ListBox)sender;
+            CustomScript draggedData = (CustomScript)DragSource.SelectedItem;
+
+            DraggedScripts.Add(draggedData);
+            DragScriptsListBox.ItemsSource = null;
+            DragScriptsListBox.ItemsSource = DraggedScripts;
+            ScriptDragNDropLabel.Visibility = Visibility.Collapsed;
+        }
+
+
+        private void RemoveFromScriptDropClicked(object sender, RoutedEventArgs e)
+        {
+            int selectedIndex = DragScriptsListBox.SelectedIndex;
+            DraggedScripts.RemoveAt(selectedIndex);
+            DragScriptsListBox.Items.Refresh();
+
+            if (DraggedScripts.Count == 0) 
+                ScriptDragNDropLabel.Visibility = Visibility.Visible;
+        }
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Buttons Functions
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void NewScriptClicked(object sender, RoutedEventArgs e)
+        { // Add script path to scriptList.txt
+            BarInteraction();
+            //open a file dialog to let the user choose which video to add
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Python Script | *.py";
+            openFileDialog.InitialDirectory = ScriptsFolder;
+            openFileDialog.Multiselect = true;
+            openFileDialog.Title = "Select Custom Script(s)";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                // Create a list of current script paths
+                foreach (var fullPath in openFileDialog.FileNames)
+                {
+                    if (PAScripts.Any(s => s.Path == fullPath))
+                    {
+                        MessageBox.Show("The script file, \"" + fullPath + "\" has already been added.", "Script Already Added", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        PAScripts.Add(new CustomScript(fullPath));
+                    }
+                }
+
+                // Add path to scripts list
+                RewriteScriptsList();
+            }
+            ScriptListBox.Items.Refresh();
+            EnableInteraction();
         }
 
 

@@ -139,8 +139,7 @@ def circStats(onsets):
     phaseval_rad.append(calculateCircStat(onsets[2], onsets[3])) # ForeContra, HindContra
     phaseval_rad.append(calculateCircStat(onsets[2], onsets[0])) # ForeContra, HindIpsi
     phaseval_rad.append(calculateCircStat(onsets[1], onsets[3])) # ForeIpsi, HindContra    
-    
-    print('\n','Phaseval in radians = \n', phaseval_rad,'\n')
+
     return phaseval_rad
 
 
@@ -188,8 +187,8 @@ def main():
     # Figure 2
     footfallOnsets, onsets = getFootfallOnset(inStanceValues, animalID, outDir)
     
-    # Regularity Index
-    regIndex(footfallOnsets[1])
+    # Regularity Index (starting limb)
+    regIndex(footfallOnsets[1], outDir + animalID) 
     
     # Plot Circular Stats
     phaseval_rad = circStats(onsets)

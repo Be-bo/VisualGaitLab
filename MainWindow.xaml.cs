@@ -35,6 +35,7 @@ namespace VisualGaitLab
         ListBox DragTarget = null;
         Stopwatch globalStopWatch = new Stopwatch();
         List<CustomScript> PAScripts;
+        List<CustomScript> DraggedScripts;
         bool PAScriptsPrepared = false;
 
 
