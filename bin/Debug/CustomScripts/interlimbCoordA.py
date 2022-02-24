@@ -8,7 +8,7 @@ Created on Wed Dec 15 14:55:02 2021
 Interlimb Coordination Part A
 
 To Run:
-    - runfile('C:/Users/Judgy/OneDrive/Documents/WorkStuff/interlimbCoordA_script.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
+    - runfile('C:/AaaallMiinne/Whelan/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
     - python [scriptname].py > output.txt
     - What is the animal ID? (Eg. 6-OHDAM#Pre or SalineM#Post etc.)
 
@@ -22,10 +22,11 @@ Limb Order:
 
 # imports
 import sys
+import os
+import csv
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import csv
 from dependencies.rosePlot import windRosePlot
 
 
@@ -52,6 +53,12 @@ def processInput(fileNames):
     return contents
 
 
+
+def flushPlot():
+    plt.draw()
+    plt.clf()
+    plt.cla()
+    plt.close()
 
 
 # Fig1: Draw the footfall pattern of all four limbs
@@ -87,7 +94,7 @@ def drawFootfallPattern(inStanceValues, animalID, outDir):
         axs[i].set_yticklabels([paw_labels[i]])
 
     plt.savefig(outDir+animalID+"-footfallpatternbar-fig1.png", bbox_inches='tight')
-    plt.draw()
+    flushPlot()
 
 
 
@@ -120,7 +127,7 @@ def getFootfallOnset(inStanceValues, animalID, outDir):
     plt.yticks([pawNums-i for i in range(pawNums)], labels=paw_labels)
     plt.title('Figure 2: Footfall Pattern Onsets')
     plt.savefig(outDir+animalID+"-footfallpatternline-fig2.png", bbox_inches='tight')
-    plt.draw()
+    flushPlot()
     
     return (footfallOnsets, onsets)
 
@@ -265,7 +272,9 @@ def main():
     outDir = "out/"
     if len(sys.argv) > 6:
         outDir = sys.argv[-1] + '/'
-    
+        
+    if not os.path.exists(outDir):
+       os.makedirs(outDir)
     
     # Figure 1
     drawFootfallPattern(inStanceValues, animalID, outDir)

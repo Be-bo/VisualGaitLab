@@ -51,6 +51,9 @@ def savePlot(title, outDir='', ext='.svg'):
     
     plt.savefig(outDir+title+ext, bbox_inches='tight')
     plt.draw()
+    plt.clf()
+    plt.cla()
+    plt.close()
 
 
 
