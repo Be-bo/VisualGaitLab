@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls" 
+        xmlns:local="clr-namespace:VisualGaitLab"
         mc:Ignorable="d"
         Title="VisualGaitLab" Height="530" Width="700"
         Icon="logo.png"
@@ -11,6 +12,11 @@
         Closing="Window_Closing"
         Visibility="Hidden"
         Style="{StaticResource WindowStyle}">
+
+    <Window.Resources>
+        <local:AddOneConverter x:Key="AddOneConverter"/>
+    </Window.Resources>
+    
     <Grid>
 
         <Grid Name="PrimaryGrid">
@@ -373,9 +379,8 @@
 
                                         <!-- Items -->
                                         <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
-                                        <!--<Label Grid.Column="2" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex)}" Foreground="Gray" />
-                                        -->
-                                        </Grid>
+                                        <Label Grid.Column="2" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex), Converter={StaticResource AddOneConverter}}" Foreground="Gray" />
+                                    </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

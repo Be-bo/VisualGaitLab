@@ -1,2 +1,2 @@
-C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordA.py
-C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordB.py
+C:\AaaallMiinne\Whelan\vgl\bin\Debug\CustomScripts\interlimbCoordA.py
+C:\AaaallMiinne\Whelan\vgl\bin\Debug\CustomScripts\interlimbCoordB.py

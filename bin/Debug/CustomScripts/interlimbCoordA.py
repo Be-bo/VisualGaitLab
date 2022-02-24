@@ -127,11 +127,6 @@ def getFootfallOnset(inStanceValues, animalID, outDir):
 
 
 
-
-
-
-
-
 # Regularity Index Calculation
 
 ''' 
@@ -216,8 +211,6 @@ def calculateCircStat(onsets1, onsets2):
     
     # Convert to radians
     return [deg*(np.pi/180) for deg in phaseval_deg]
-
-
 
 
 

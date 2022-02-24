@@ -14,15 +14,17 @@ namespace VisualGaitLab.PostAnalysis
         public List<Parameter> ParamList = new List<Parameter>();
 
         private string WorkingDirectory;
+        private string ScriptName;
         private string ScriptPath;
         private int ParamNum = 0;
         private Parameter edittingParam = null;
 
 
-        public PostAnalysisWindow(string scriptPath, string scriptName, string workingDir)
+        public PostAnalysisWindow(string scriptPath, string scriptName, string workingDir, string addon = "")
         {
             InitializeComponent();
-            Title = scriptName;
+            Title = scriptName + ' ' + addon;
+            ScriptName = scriptName;
             ScriptPath = scriptPath;
             WorkingDirectory = workingDir;
             ParamListBox.ItemsSource = ParamList;
@@ -33,8 +35,8 @@ namespace VisualGaitLab.PostAnalysis
         // Read info.txt if it exists and fill in appropriate params
         private void ReadInfo()
         {
-            string infoPath = ScriptPath.Replace(Title + ".py", "");
-            string infoFile = Path.Combine(infoPath, Title + "_info.txt");
+            string infoPath = ScriptPath.Replace(ScriptName + ".py", "");
+            string infoFile = Path.Combine(infoPath, ScriptName + "_info.txt");
             Console.WriteLine(infoFile);
 
             if (File.Exists(infoFile))
