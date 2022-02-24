@@ -179,7 +179,7 @@ namespace VisualGaitLab
 
         private void BarAnalysisPart() { //disable analysis tabs
             AnalyzeTab.IsEnabled = false;
-            PostAnalysisTab.IsEnabled = false;
+            //PostAnalysisTab.IsEnabled = false;
         }
 
         private void EnableGait()
