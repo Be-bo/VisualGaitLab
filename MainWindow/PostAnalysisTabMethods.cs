@@ -135,19 +135,6 @@ namespace VisualGaitLab
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        // TODO needed??
-        private void ScriptDragStarted(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        { //started dragging an item in the Gait Listbox
-            DragSource = sender as ListBox;
-            object data = DragSource.SelectedItem;
-
-            if (data != null)
-            {
-                DragDrop.DoDragDrop(DragSource, data, DragDropEffects.Move);
-            }
-        }
-
-
         private void DragScriptsListBox_Drop(object sender, DragEventArgs e)
         {
             DragTarget = (ListBox)sender;

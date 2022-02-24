@@ -323,6 +323,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
+                        <!-- Main Scripts Listbox -->
                         <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Margin="5, 10, 5, 5" Style="{StaticResource ListBoxStyle}" SelectionMode="Extended" PreviewMouseLeftButtonDown="DragStarted">
 
                             <!-- List Box Settings -->
@@ -338,8 +339,7 @@
 
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
-                                    <Setter Property="ContextMenu" Value="{StaticResource TrainingListBoxItemCM}">
-                                    </Setter>
+                                    <Setter Property="ContextMenu" Value="{StaticResource TrainingListBoxItemCM}"/>
                                 </Style>
                             </ListBox.ItemContainerStyle>
 
@@ -353,7 +353,6 @@
 
                         
                         <!-- Drag and Drop Scripts Listbox-->
-
                         <ListBox Name="DragScriptsListBox" Grid.Row="0" Grid.Column="1" Margin="5, 10, 5, 5" AllowDrop="True" Drop="DragScriptsListBox_Drop" Style="{StaticResource ListBoxStyle}">
 
                             <!-- List Box Settings -->
@@ -366,6 +365,12 @@
                                     <MenuItem Header="Remove" Click="RemoveFromScriptDropClicked"/>
                                 </ContextMenu>
                             </ListBox.Resources>
+
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="ContextMenu" Value="{StaticResource TrainingListBoxItemCM}"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
 
                             <!-- Item Template -->
                             <ListBox.ItemTemplate>
@@ -402,6 +407,14 @@
                                 </Button.Template>
                             </Button>
                         </DockPanel>
+
+                        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Click="ClearScriptsClicked">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Label Content="Clear" Height="26" Foreground="#0d89ff" FontSize="15"/>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
 
                         <Grid Grid.Row="2" Grid.Column="1">
                             <Grid.ColumnDefinitions>
