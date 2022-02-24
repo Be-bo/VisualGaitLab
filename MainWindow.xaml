@@ -408,14 +408,6 @@
                             </Button>
                         </DockPanel>
 
-                        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Click="ClearScriptsClicked">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Label Content="Clear" Height="26" Foreground="#0d89ff" FontSize="15"/>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-
                         <Grid Grid.Row="2" Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
