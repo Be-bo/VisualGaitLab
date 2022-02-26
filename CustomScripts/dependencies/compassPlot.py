@@ -4,6 +4,9 @@ Created on Tue Feb 22 11:22:06 2022
 
 @author: Zahra Ghavasieh
 
+References: 
+    - https://ocefpaf.github.io/python4oceanographers/blog/2015/02/09/compass/
+
 An Implementation of the Compass Plot From MATLAB
 """
 
@@ -21,7 +24,7 @@ def polarCompass(X, Y, outDir='', title='compass', ext='.svg', Colors=['r','b','
     drawCompass(X, Y, title=title, Colors=Colors)
 
     # Save and Show Plot
-    savePlot(title,outDir=outDir,ext=ext)
+    savePlot(title, outDir=outDir, ext=ext)
 
 
 
@@ -37,7 +40,7 @@ def northCompass(X, Y, outDir='', title='compass', ext='.svg', Colors=['r','b','
     ax.set_theta_offset(np.pi/2.0)
     
     # Save and Show Plot
-    savePlot(title,outDir=outDir,ext=ext)
+    savePlot(title, outDir=outDir, ext=ext)
 
 
 
@@ -48,12 +51,14 @@ def savePlot(title, outDir='', ext='.svg'):
     
     plt.savefig(outDir+title+ext, bbox_inches='tight')
     plt.draw()
+    plt.clf()
+    plt.cla()
+    plt.close()
 
 
 
 
 # Draw a Compass graph
-# Ref: https://ocefpaf.github.io/python4oceanographers/blog/2015/02/09/compass/
 # Params:
     ## (X,Y)    - list of float coordinates
     ## title    - Plot Title

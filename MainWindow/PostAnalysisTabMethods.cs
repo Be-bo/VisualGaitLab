@@ -9,9 +9,18 @@ using VisualGaitLab.PostAnalysis;
 using System.Windows.Controls;
 using System.Diagnostics;
 using VisualGaitLab.OtherWindows;
+using System.Globalization;
+using System.Windows.Data;
 
 namespace VisualGaitLab
 {
+    public class AddOneConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (int)value + 1;
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+    }
+
+
     public partial class MainWindow : Window
     {
 
@@ -126,26 +135,12 @@ namespace VisualGaitLab
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        // TODO needed??
-        private void ScriptDragStarted(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        { //started dragging an item in the Gait Listbox
-            DragSource = sender as ListBox;
-            object data = DragSource.SelectedItem;
-
-            if (data != null)
-            {
-                DragDrop.DoDragDrop(DragSource, data, DragDropEffects.Move);
-            }
-        }
-
-
         private void DragScriptsListBox_Drop(object sender, DragEventArgs e)
         {
             DragTarget = (ListBox)sender;
             CustomScript draggedData = (CustomScript)(DragSource.SelectedItem);
             DraggedScripts.Add(draggedData);
-            DragScriptsListBox.ItemsSource = null;
-            DragScriptsListBox.ItemsSource = DraggedScripts;
+            DragScriptsListBox.Items.Refresh();
             DragScriptsListBox.AlternationCount = DragScriptsListBox.Items.Count;
             ScriptDragNDropLabel.Visibility = Visibility.Collapsed;
         }
@@ -209,18 +204,18 @@ namespace VisualGaitLab
 
         private void RunScriptButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: multiple selection (run them all after selecting params)
-            // TODO: use same params for all following scripts
+            var items = DragScriptsListBox.Items.Count > 0 ? DragScriptsListBox.Items : ScriptListBox.SelectedItems;
             List<CustomScript> scripts = new List<CustomScript>();
             List<string> args = new List<string>();
             bool runScript = false;
 
-            foreach (var item in ScriptListBox.SelectedItems)
+            for (int i = 0; i < items.Count; i++)
             {
-                var script = (CustomScript)item;
+                var script = (CustomScript)items[i];
 
                 BarInteraction();
-                PostAnalysisWindow paWindow = new PostAnalysisWindow(script.Path, script.Name, WorkingDirectory);
+                string addon = '(' + (i+1).ToString() + " / " + items.Count + ')';
+                PostAnalysisWindow paWindow = new PostAnalysisWindow(script.Path, script.Name, WorkingDirectory, addon);
                 if (paWindow.ShowDialog() == true)
                 {
                     // Build parameters

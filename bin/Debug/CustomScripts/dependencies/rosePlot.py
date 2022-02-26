@@ -9,7 +9,7 @@ An Implementation of the Rose Plot From MATLAB
 
 
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 
 
@@ -54,5 +54,12 @@ def windRosePlot(theta, binNum, outDir, title='', scatter=False):
     # Save and Show Plot
     ax.set_title(title)
     plt.savefig(outDir+title+".png", bbox_inches='tight')
+    flushPlot()
+
+
+def flushPlot():
     plt.draw()
+    plt.clf()
+    plt.cla()
+    plt.close()
 

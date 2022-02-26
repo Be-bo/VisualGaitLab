@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls" 
+        xmlns:local="clr-namespace:VisualGaitLab"
         mc:Ignorable="d"
         Title="VisualGaitLab" Height="530" Width="700"
         Icon="logo.png"
@@ -11,6 +12,11 @@
         Closing="Window_Closing"
         Visibility="Hidden"
         Style="{StaticResource WindowStyle}">
+
+    <Window.Resources>
+        <local:AddOneConverter x:Key="AddOneConverter"/>
+    </Window.Resources>
+    
     <Grid>
 
         <Grid Name="PrimaryGrid">
@@ -305,7 +311,7 @@
 
 
                 <!-- Post Analysis TAB -->
-                <TabItem Name="PostAnalysisTab" IsEnabled="False" Header="Post Analysis"  Style="{StaticResource TabItemStyle}">
+                <TabItem Name="PostAnalysisTab" IsEnabled="True" Header="Post Analysis"  Style="{StaticResource TabItemStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -317,6 +323,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
+                        <!-- Main Scripts Listbox -->
                         <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Margin="5, 10, 5, 5" Style="{StaticResource ListBoxStyle}" SelectionMode="Extended" PreviewMouseLeftButtonDown="DragStarted">
 
                             <!-- List Box Settings -->
@@ -332,8 +339,7 @@
 
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="ListBoxItem">
-                                    <Setter Property="ContextMenu" Value="{StaticResource TrainingListBoxItemCM}">
-                                    </Setter>
+                                    <Setter Property="ContextMenu" Value="{StaticResource TrainingListBoxItemCM}"/>
                                 </Style>
                             </ListBox.ItemContainerStyle>
 
@@ -347,7 +353,6 @@
 
                         
                         <!-- Drag and Drop Scripts Listbox-->
-
                         <ListBox Name="DragScriptsListBox" Grid.Row="0" Grid.Column="1" Margin="5, 10, 5, 5" AllowDrop="True" Drop="DragScriptsListBox_Drop" Style="{StaticResource ListBoxStyle}">
 
                             <!-- List Box Settings -->
@@ -356,10 +361,16 @@
                                     <Setter Property="CornerRadius" Value="3"/>
                                     <Setter Property="Background" Value="White"/>
                                 </Style>
-                                <ContextMenu x:Key="ListBoxItemCM">
+                                <ContextMenu x:Key="TrainingListBoxItemCM">
                                     <MenuItem Header="Remove" Click="RemoveFromScriptDropClicked"/>
                                 </ContextMenu>
                             </ListBox.Resources>
+
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="ContextMenu" Value="{StaticResource TrainingListBoxItemCM}"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
 
                             <!-- Item Template -->
                             <ListBox.ItemTemplate>
@@ -373,8 +384,8 @@
 
                                         <!-- Items -->
                                         <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
-                                        <Label Grid.Column="2" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex)}" Foreground="Gray" />
-                                        </Grid>
+                                        <Label Grid.Column="2" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex), Converter={StaticResource AddOneConverter}}" Foreground="Gray" />
+                                    </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
