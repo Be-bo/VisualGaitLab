@@ -356,7 +356,7 @@
                                     <Setter Property="CornerRadius" Value="3"/>
                                     <Setter Property="Background" Value="White"/>
                                 </Style>
-                                <ContextMenu x:Key="TrainingListBoxItemCM">
+                                <ContextMenu x:Key="ListBoxItemCM">
                                     <MenuItem Header="Remove" Click="RemoveFromScriptDropClicked"/>
                                 </ContextMenu>
                             </ListBox.Resources>
@@ -373,8 +373,7 @@
 
                                         <!-- Items -->
                                         <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
-                                        <!--<Label Grid.Column="2" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex)}" Foreground="Gray" />
-                                        -->
+                                        <Label Grid.Column="2" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex)}" Foreground="Gray" />
                                         </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
