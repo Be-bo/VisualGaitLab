@@ -1,2 +1,1 @@
-C:\AaaallMiinne\Whelan\vgl\bin\Debug\CustomScripts\interlimbCoordA.py
-C:\AaaallMiinne\Whelan\vgl\bin\Debug\CustomScripts\interlimbCoordB.py
+\CustomScripts\interlimbCoord_script.py
