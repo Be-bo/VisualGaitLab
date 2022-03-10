@@ -1,1 +1,2 @@
-\CustomScripts\interlimbCoord_script.py
+C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordA.py
+C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordB.py

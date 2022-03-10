@@ -327,7 +327,7 @@ namespace VisualGaitLab
                     // Multiple Scripts
                     for (int i = 0; i < scripts.Count; i++)
                     {
-                        sw.WriteLine("python " + scripts[i].Path + args[i]);
+                        sw.WriteLine("python \"" + scripts[i].Path +  "\"" + args[i]);
                     }
 
                     if (!info.CreateNoWindow)
