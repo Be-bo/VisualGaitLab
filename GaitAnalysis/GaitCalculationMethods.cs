@@ -37,7 +37,7 @@ namespace VisualGaitLab.GaitAnalysis {
             for (int i = 1; i < switches.Count; i++)
             {
                 slopeSum = 0;
-                for (int j = switches[i - 1] + 1; j < switches[i]; j++) slopeSum += CalculateSlope(allX[j], allX[j - 1], j, (j - 1));
+                for (int j = switches[i - 1] + 1; j < switches[i]; j++) slopeSum += CalculateSlopef(allX[j], allX[j - 1], j, (j - 1));
                 switchSlopes.Add(slopeSum); // each slopeSum[a-1] starting at a+1 corresponds to series between switches[a-1] AND switches[a]
             }
 
@@ -245,44 +245,41 @@ namespace VisualGaitLab.GaitAnalysis {
         // MARK: Dynamic Data (everything that changes from frame to frame)
 
         private void CalculatePawAnglesAndStanceWidths() {
-            HindStanceWidths = new List<double>();
-            ForeStanceWidths = new List<double>();
+            // Clear lists
+            foreach (var list in new List<double>[] { HindStanceWidths, ForeStanceWidths, HindLeftStanceWidths, 
+                                                      HindRightStanceWidths, FrontLeftStanceWidths, FrontRightStanceWidths,
+                                                      HindLeftPawAngles, HindRightPawAngles, FrontLeftPawAngles, FrontRightPawAngles})
+            {
+                list.Clear();
+            }
 
-            HindLeftPawAngles = new List<double>();
-            HindRightPawAngles = new List<double>();
-            FrontLeftPawAngles = new List<double>();
-            FrontRightPawAngles = new List<double>();
 
             for (int i = 0; i < GaitNumberOfFrames; i++) {
-                //Paw Angles
-                CalculateCenterOfMass(i); //center of mass is necessary for paw angles
                 
+                // Center of Mass and Central Lines
+                CalculateCenterOfMass(i);       // center of mass is necessary for paw angles
+                double FrontCentralLine = CalculateSlope(NoseYs[i], CenterOfMassY, NoseXs[i], CenterOfMassX);           // slope of the line between nose and center of mass
+                double BackCentralLine = CalculateSlope(CenterOfMassY, SuperButtYs[i], CenterOfMassX, SuperButtXs[i]);  // slope of the line between the butt and center of mass
+
+                //Paw Angles
                 double angle = GetPawAngle(HindLeftYs[i], HindLeftHeelYs[i], HindLeftXs[i], HindLeftHeelXs[i],
-                   CenterOfMassY, SuperButtYs[i], CenterOfMassX, SuperButtXs[i]);
+                   CenterOfMassY, SuperButtYs[i], CenterOfMassX, SuperButtXs[i], BackCentralLine);
                 HindLeftPawAngles.Add(angle);
 
                 angle = GetPawAngle(HindRightYs[i], HindRightHeelYs[i], HindRightXs[i], HindRightHeelXs[i],
-                   CenterOfMassY, SuperButtYs[i], CenterOfMassX, SuperButtXs[i]);
+                   CenterOfMassY, SuperButtYs[i], CenterOfMassX, SuperButtXs[i], BackCentralLine);
                 HindRightPawAngles.Add(angle);
 
                 angle = GetPawAngle(FrontLeftYs[i], FrontLeftHeelYs[i], FrontLeftXs[i], FrontLeftHeelXs[i],
-                   NoseYs[i], CenterOfMassY, NoseXs[i], CenterOfMassX);
+                   NoseYs[i], CenterOfMassY, NoseXs[i], CenterOfMassX, FrontCentralLine);
                 FrontLeftPawAngles.Add(angle);
 
                 angle = GetPawAngle(FrontRightYs[i], FrontRightHeelYs[i], FrontRightXs[i], FrontRightHeelXs[i],
-                   NoseYs[i], CenterOfMassY, NoseXs[i], CenterOfMassX);
+                   NoseYs[i], CenterOfMassY, NoseXs[i], CenterOfMassX, FrontCentralLine);
                 FrontRightPawAngles.Add(angle);
 
-
-                //Stance Width
-                // right y - left y (midpoints of each paw)
-                float midPointTop = (HindRightHeelYs[i] + HindRightYs[i]) / 2;
-                float midPointBottom = (HindLeftHeelYs[i] + HindLeftYs[i]) / 2;
-                HindStanceWidths.Add((midPointTop - midPointBottom) * RealWorldMultiplier);
-
-                midPointTop = (FrontRightHeelYs[i] + FrontRightYs[i]) / 2;
-                midPointBottom = (FrontLeftHeelYs[i] + FrontLeftYs[i]) / 2;
-                ForeStanceWidths.Add((midPointTop - midPointBottom) * RealWorldMultiplier);
+                // Stance Widths
+                CalculateStanceWidths(i, FrontCentralLine, BackCentralLine);
             }
         }
 
@@ -294,80 +291,61 @@ namespace VisualGaitLab.GaitAnalysis {
             }
         }
 
-        private double GetPawAngle(float y2, float y1, float x2, float x1, float yb, float ya, float xb, float xa) { //get an angle between two lines (for hind paws its between their respective points and the "butt-center of mass" line)
-            //(for fore paws it's between their respective points and the "center of mass-nose" line) -> we have these two cases because mouse's body can curve and simply running a midline through it's body results in big inaccuracies
-            double m2 = (y2 - y1) / (x2 - x1);
-            double m1 = (yb - ya) / (xb - xa);
 
-            double angle2 = GetAngleFromSlope(m2, y2, y1, x2, x1);
-            double angle1 = GetAngleFromSlope(m1, yb, ya, xb, xa);
-            return Math.Abs(angle1 - angle2);
-        }
 
-        private double GetAngleFromSlope(double m, float y2, float y1, float x2, float x1) {
-            double atanAngle = Math.Atan(m) * (180 / Math.PI);
-            double toSubtractFrom = 180; //case Q3
+        private void CalculateStanceWidths(int i, double FrontCentralLine, double BackCentralLine)
+        {
+            // Stance Width (old method - Front and Hind, new method - Per Paw)
 
-            if (y2 >= y1) toSubtractFrom = -(toSubtractFrom); //case Q2
+            // Hind Stance Widths
+            float midPointRightX = MidPoint(HindRightHeelXs[i], HindRightXs[i]);
+            float midPointRightY = MidPoint(HindRightHeelYs[i], HindRightYs[i]);
+            float midPointLeftX = MidPoint(HindLeftHeelXs[i], HindLeftXs[i]);
+            float midPointLeftY = MidPoint(HindLeftHeelYs[i], HindLeftYs[i]);
+            double distToCenterlineRight = CalculateDistanceBetweenPointLine(midPointRightX, midPointRightY, CenterOfMassX, CenterOfMassY, BackCentralLine);
+            double distToCenterlineLeft = CalculateDistanceBetweenPointLine(midPointLeftX, midPointLeftY, CenterOfMassX, CenterOfMassY, BackCentralLine);
 
-            if (x2 < x1) { //case Q3 or Q2
-                return -(toSubtractFrom - atanAngle);
-            }
-            else { //case Q1 or Q4, for those atan returns the result as expected
-                return atanAngle;
-            }
+            HindStanceWidths.Add((midPointRightY - midPointLeftY) * RealWorldMultiplier);
+            HindRightStanceWidths.Add(distToCenterlineRight * RealWorldMultiplier);
+            HindLeftStanceWidths.Add(distToCenterlineLeft * RealWorldMultiplier);
+
+            // Fore Stance Widths
+            midPointRightX = MidPoint(FrontRightHeelXs[i], FrontRightXs[i]);
+            midPointRightY = MidPoint(FrontRightHeelYs[i], FrontRightYs[i]);
+            midPointLeftX = MidPoint(FrontLeftHeelXs[i], FrontLeftXs[i]);
+            midPointLeftY = MidPoint(FrontLeftHeelYs[i], FrontLeftYs[i]);
+            distToCenterlineRight = CalculateDistanceBetweenPointLine(midPointRightX, midPointRightY, CenterOfMassX, CenterOfMassY, FrontCentralLine);
+            distToCenterlineLeft = CalculateDistanceBetweenPointLine(midPointLeftX, midPointLeftY, CenterOfMassX, CenterOfMassY, FrontCentralLine);
+
+            ForeStanceWidths.Add((midPointRightY - midPointLeftY) * RealWorldMultiplier);
+            FrontRightStanceWidths.Add(distToCenterlineRight * RealWorldMultiplier);
+            FrontLeftStanceWidths.Add(distToCenterlineLeft * RealWorldMultiplier);
         }
 
         private void CalculateDynamicDataAverages() {
-            //paw angles
+            // Paw angles
             GetAdjustedPawAngles(); //need to account for the paw angle values being disregarded in swing frames for each individual paw (see the declaration of the adjusted arrays in GaitVariables.cs)
-            double hlSum = 0;
-            double hrSum = 0;
-            double flSum = 0;
-            double frSum = 0;
-            for (int i = 0; i < HindLeftPawAnglesAdjusted.Count; i++) { //getting the sum of all relevant angle values
-                hlSum += HindLeftPawAnglesAdjusted[i];
-            }
-            for (int i = 0; i < HindRightPawAnglesAdjusted.Count; i++) {
-                hrSum += HindRightPawAnglesAdjusted[i];
-            }
-            for (int i = 0; i < FrontLeftPawAnglesAdjusted.Count; i++) {
-                flSum += FrontLeftPawAnglesAdjusted[i];
-            }
-            for (int i = 0; i < FrontRightPawAnglesAdjusted.Count; i++) {
-                frSum += FrontRightPawAnglesAdjusted[i];
-            }
-            HindLeftPawAngleAvg = hlSum / HindLeftPawAnglesAdjusted.Count; //getting the average
-            HindRightPawAngleAvg = hrSum / HindRightPawAnglesAdjusted.Count;
-            FrontLeftPawAngleAvg = flSum / FrontLeftPawAnglesAdjusted.Count;
-            FrontRightPawAngleAvg = frSum / FrontRightPawAnglesAdjusted.Count;
 
-            //stance widths
-            hlSum = 0;
-            flSum = 0;
-            for (int i = 0; i < HindStanceWidths.Count; i++) {
-                hlSum += HindStanceWidths[i];
-                flSum += ForeStanceWidths[i];
-            }
-            HindStanceWidthAvg = hlSum / HindStanceWidths.Count;
-            ForeStanceWidthAvg = flSum / ForeStanceWidths.Count;
+            HindLeftPawAngleAvg = HindLeftPawAnglesAdjusted.Sum() / HindLeftPawAnglesAdjusted.Count;
+            HindRightPawAngleAvg = HindRightPawAnglesAdjusted.Sum() / HindRightPawAnglesAdjusted.Count;
+            FrontLeftPawAngleAvg = FrontLeftPawAnglesAdjusted.Sum() / FrontLeftPawAnglesAdjusted.Count;
+            FrontRightPawAngleAvg = FrontRightPawAnglesAdjusted.Sum() / FrontRightPawAnglesAdjusted.Count;
 
-            //stride lengths, same approach
-            double sum = 0;
-            for (int i = 0; i < HindLeftStrides.Count; i++) sum += HindLeftStrides[i];
-            HindLeftStrideLenAvg = sum / HindLeftStrides.Count;
+            // Stance widths (old - fore and back)
+            HindStanceWidthAvg = HindStanceWidths.Sum() / HindStanceWidths.Count;
+            ForeStanceWidthAvg = ForeStanceWidths.Sum() / ForeStanceWidths.Count;
 
-            sum = 0;
-            for (int i = 0; i < HindRightStrides.Count; i++) sum += HindRightStrides[i];
-            HindRightStrideLenAvg = sum / HindRightStrides.Count;
+            // Stance widths (new - individual paws)
+            HindLeftStanceWidthAvg = HindLeftStanceWidths.Sum() / HindLeftStanceWidths.Count;
+            HindRightStanceWidthAvg = HindRightStanceWidths.Sum() / HindRightStanceWidths.Count;
+            FrontLeftStanceWidthAvg = FrontLeftStanceWidths.Sum() / FrontLeftStanceWidths.Count;
+            FrontRightStanceWidthAvg = FrontRightStanceWidths.Sum() / FrontRightStanceWidths.Count;
 
-            sum = 0;
-            for (int i = 0; i < FrontLeftStrides.Count; i++) sum += FrontLeftStrides[i];
-            FrontLeftStrideLenAvg = sum / FrontLeftStrides.Count;
-
-            sum = 0;
-            for (int i = 0; i < FrontRightStrides.Count; i++) sum += FrontRightStrides[i];
-            FrontRightStrideLenAvg = sum / FrontRightStrides.Count;
+            // Stride lengths
+            HindLeftStrideLenAvg = HindLeftStrides.Sum() / HindLeftStrides.Count;
+            HindRightStrideLenAvg = HindRightStrides.Sum() / HindRightStrides.Count;
+            FrontLeftStrideLenAvg = FrontLeftStrides.Sum() / FrontLeftStrides.Count;
+            FrontRightStrideLenAvg = FrontRightStrides.Sum() / FrontRightStrides.Count;
         }
 
         private void GetAdjustedPawAngles() {

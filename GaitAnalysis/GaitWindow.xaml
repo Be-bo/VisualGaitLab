@@ -111,6 +111,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- Column 0 = LABELS -->
@@ -127,8 +128,9 @@
 
                         <Separator Grid.Row="12"/>
                         <Label Content="Paw Angle Avg (deg):" Grid.Row="13" HorizontalContentAlignment="Right"/>
-                        <Label Content="Stance Width Avg (mm):" Grid.Row="14" HorizontalContentAlignment="Right"/>
-                        <Label Content="Stride Length Avg (mm):" Grid.Row="15" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Label Content="Back/Fore Stance Width Avg (mm):" Grid.Row="14" HorizontalContentAlignment="Right"/>
+                        <Label Content="Individual Stance Width Avg (mm):" Grid.Row="15" HorizontalContentAlignment="Right"/>
+                        <Label Content="Stride Length Avg (mm):" Grid.Row="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 
                         <!-- Column 1 = Left Hind -->
                         <TextBlock Grid.Column="1" Grid.Row="0"/>
@@ -146,8 +148,9 @@
 
                         <Separator Grid.Row="12" Grid.Column="1"/>
                         <TextBlock Name="LHPawAngleAvg"  Grid.Column="1" Grid.Row="13" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="LHStanceWidthAvg"  Grid.Column="1" Grid.Row="14" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="LHStrideLengthAvg"  Grid.Column="1" Grid.Row="15" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="H1StanceWidthAvg"  Grid.Column="1" Grid.Row="14" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="LHStanceWidthAvg"  Grid.Column="1" Grid.Row="15" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="LHStrideLengthAvg"  Grid.Column="1" Grid.Row="16" Style="{StaticResource GaitTextBox}"/>
 
                         <!-- Column 2 = Right Hind -->
                         <TextBlock Grid.Column="2" Grid.Row="0"/>
@@ -165,8 +168,9 @@
 
                         <Separator Grid.Row="12" Grid.Column="2"/>
                         <TextBlock Name="RHPawAngleAvg"  Grid.Column="2" Grid.Row="13" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="RHStanceWidthAvg"  Grid.Column="2" Grid.Row="14" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="RHStrideLengthAvg"  Grid.Column="2" Grid.Row="15" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="H2StanceWidthAvg"  Grid.Column="2" Grid.Row="14" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="RHStanceWidthAvg"  Grid.Column="2" Grid.Row="15" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="RHStrideLengthAvg"  Grid.Column="2" Grid.Row="16" Style="{StaticResource GaitTextBox}"/>
 
                         <!-- Column 3 = Left Fore -->
                         <TextBlock Grid.Column="3" Grid.Row="0"/>
@@ -184,8 +188,9 @@
 
                         <Separator Grid.Row="12" Grid.Column="3"/>
                         <TextBlock Name="LFPawAngleAvg"  Grid.Column="3" Grid.Row="13" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="LFStanceWidthAvg"  Grid.Column="3" Grid.Row="14" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="LFStrideLengthAvg"  Grid.Column="3" Grid.Row="15" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="F1StanceWidthAvg"  Grid.Column="3" Grid.Row="14" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="LFStanceWidthAvg"  Grid.Column="3" Grid.Row="15" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="LFStrideLengthAvg"  Grid.Column="3" Grid.Row="16" Style="{StaticResource GaitTextBox}"/>
 
 
                         <!-- Column 4 = Right Fore -->
@@ -204,8 +209,9 @@
 
                         <Separator Grid.Row="12" Grid.Column="4"/>
                         <TextBlock Name="RFPawAngleAvg"  Grid.Column="4" Grid.Row="13" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="RFStanceWidthAvg"  Grid.Column="4" Grid.Row="14" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="RFStrideLengthAvg"  Grid.Column="4" Grid.Row="15" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="F2StanceWidthAvg"  Grid.Column="4" Grid.Row="14" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="RFStanceWidthAvg"  Grid.Column="4" Grid.Row="15" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="RFStrideLengthAvg"  Grid.Column="4" Grid.Row="16" Style="{StaticResource GaitTextBox}"/>
 
                     </Grid>
 
@@ -231,12 +237,14 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- Column 0 = LABELS -->
                         <Label Content="Paw Angle (deg):" Grid.Row="2" HorizontalContentAlignment="Right" VerticalAlignment="Center"/>
-                        <Label Content="Stance Width (mm):" Grid.Row="3" HorizontalContentAlignment="Right" VerticalAlignment="Center"/>
-                        <Label Content="Current Stride Length (mm):" Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Label Content="Back/Fore Stance Width (mm):" Grid.Row="3" HorizontalContentAlignment="Right" VerticalAlignment="Center"/>
+                        <Label Content="Individual Stance Width (mm):" Grid.Row="4" HorizontalContentAlignment="Right" VerticalAlignment="Center"/>
+                        <Label Content="Current Stride Length (mm):" Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 
 
 
@@ -245,8 +253,9 @@
                         <TextBlock Grid.Column="1" Grid.Row="0"/>
                         <TextBlock Text="Left Hind" Grid.Column="1" Grid.Row="1" MinWidth="80" Style="{StaticResource GaitTextBox}"/>
                         <TextBlock Name="LHPawAngleLabel"  Grid.Column="1" Grid.Row="2" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="LHStanceWidthLabel"  Grid.Column="1" Grid.Row="3" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="LHStrideLengthLabel"  Grid.Column="1" Grid.Row="4" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="H1StanceWidthLabel"  Grid.Column="1" Grid.Row="3" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="LHStanceWidthLabel"  Grid.Column="1" Grid.Row="4" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="LHStrideLengthLabel"  Grid.Column="1" Grid.Row="5" Style="{StaticResource GaitTextBox}"/>
 
 
 
@@ -254,24 +263,27 @@
                         <TextBlock Grid.Column="2" Grid.Row="0"/>
                         <TextBlock Text="Right Hind" Grid.Column="2" Grid.Row="1" MinWidth="80" Style="{StaticResource GaitTextBox}"/>
                         <TextBlock Name="RHPawAngleLabel"  Grid.Column="2" Grid.Row="2" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="RHStanceWidthLabel"  Grid.Column="2" Grid.Row="3" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="RHStrideLengthLabel"  Grid.Column="2" Grid.Row="4" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="H2StanceWidthLabel"  Grid.Column="2" Grid.Row="3" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="RHStanceWidthLabel"  Grid.Column="2" Grid.Row="4" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="RHStrideLengthLabel"  Grid.Column="2" Grid.Row="5" Style="{StaticResource GaitTextBox}"/>
 
 
                         <!-- Column 3 = Left Fore -->
                         <TextBlock Grid.Column="3" Grid.Row="0"/>
                         <TextBlock Text="Left Fore" Grid.Column="3" Grid.Row="1" MinWidth="80" Style="{StaticResource GaitTextBox}"/>
                         <TextBlock Name="LFPawAngleLabel"  Grid.Column="3" Grid.Row="2" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="LFStanceWidthLabel"  Grid.Column="3" Grid.Row="3" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="LFStrideLengthLabel"  Grid.Column="3" Grid.Row="4" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="F1StanceWidthLabel"  Grid.Column="3" Grid.Row="3" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="LFStanceWidthLabel"  Grid.Column="3" Grid.Row="4" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="LFStrideLengthLabel"  Grid.Column="3" Grid.Row="5" Style="{StaticResource GaitTextBox}"/>
 
 
                         <!-- Column 4 = Right Fore -->
                         <TextBlock Grid.Column="4" Grid.Row="0"/>
                         <TextBlock Text="Right Fore" Grid.Column="4" Grid.Row="1" MinWidth="80" Style="{StaticResource GaitTextBox}"/>
                         <TextBlock Name="RFPawAngleLabel" Grid.Column="4" Grid.Row="2" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="RFStanceWidthLabel"  Grid.Column="4" Grid.Row="3" Style="{StaticResource GaitTextBox}"/>
-                        <TextBlock Name="RFStrideLengthLabel"  Grid.Column="4" Grid.Row="4" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="F2StanceWidthLabel"  Grid.Column="4" Grid.Row="3" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="RFStanceWidthLabel"  Grid.Column="4" Grid.Row="4" Style="{StaticResource GaitTextBox}"/>
+                        <TextBlock Name="RFStrideLengthLabel"  Grid.Column="4" Grid.Row="5" Style="{StaticResource GaitTextBox}"/>
 
 
                     </Grid>

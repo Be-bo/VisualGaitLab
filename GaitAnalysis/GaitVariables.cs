@@ -1,11 +1,7 @@
 ﻿using LiveCharts;
 using LiveCharts.Defaults;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace VisualGaitLab.GaitAnalysis {
@@ -130,18 +126,19 @@ namespace VisualGaitLab.GaitAnalysis {
 
         // MARK: Dynamic Metrics
 
-        float CenterOfMassX = 0;
+        float CenterOfMassX = 0;        // Centroid point (midpoint between midpointLeft & midpointRight)
         float CenterOfMassY = 0;
-
-        private List<double> HindLeftStrideLengths; //stride lengths for each paw corresponding to frames (i.e. if a stride is happening between frames 100-200, HindLeftSL[100]-HindLeftSL[200] will all be filled with the stride len corresponding to that stride)
-        private List<double> HindRightStrideLengths;
-        private List<double> FrontLeftStrideLengths;
-        private List<double> FrontRightStrideLengths;
 
         private List<int> HindLeftSwitchPositions;
         private List<int> HindRightSwitchPositions;
         private List<int> FrontLeftSwitchPositions;
         private List<int> FrontRightSwitchPositions;
+
+
+        private List<double> HindLeftStrideLengths; //stride lengths for each paw corresponding to frames (i.e. if a stride is happening between frames 100-200, HindLeftSL[100]-HindLeftSL[200] will all be filled with the stride len corresponding to that stride)
+        private List<double> HindRightStrideLengths;
+        private List<double> FrontLeftStrideLengths;
+        private List<double> FrontRightStrideLengths;
 
         private double HindLeftStrideLengthVariablity;
         private double HindRightStrideLengthVariability;
@@ -157,6 +154,7 @@ namespace VisualGaitLab.GaitAnalysis {
         private double HindRightStrideLenAvg;
         private double FrontLeftStrideLenAvg;
         private double FrontRightStrideLenAvg;
+
 
         private List<double> HindLeftPawAngles = new List<double>(); //all of these are for UI purposes (want to have the given index correspond to the current frame)
         private List<double> HindRightPawAngles = new List<double>();
@@ -174,12 +172,23 @@ namespace VisualGaitLab.GaitAnalysis {
         private double FrontLeftPawAngleAvg;
         private double FrontRightPawAngleAvg;
 
+
         private List<double> HindStanceWidths = new List<double>(); //same as <paw>StrideLengths except without any duplicates, i.e. the len of these is the number of strides for a that particular paw
         private List<double> ForeStanceWidths = new List<double>();
+
+        private List<double> HindLeftStanceWidths = new List<double>();
+        private List<double> HindRightStanceWidths = new List<double>();
+        private List<double> FrontLeftStanceWidths = new List<double>();
+        private List<double> FrontRightStanceWidths = new List<double>();
+
 
         private double HindStanceWidthAvg;
         private double ForeStanceWidthAvg;
 
+        private double HindLeftStanceWidthAvg;
+        private double HindRightStanceWidthAvg;
+        private double FrontLeftStanceWidthAvg;
+        private double FrontRightStanceWidthAvg;
 
 
 
