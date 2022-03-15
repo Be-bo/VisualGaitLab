@@ -8,7 +8,8 @@ Created on Wed Dec 15 14:55:02 2021
 Interlimb Coordination Part A
 
 To Run:
-    - runfile('C:/AaaallMiinne/Whelan/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/test1/HindLeftInStance.txt test_data/test1/FrontLeftInStance.txt test_data/test1/FrontRightInStance.txt test_data/test1/HindRightInStance.txt')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
     - python [scriptname].py > output.txt
     - What is the animal ID? (Eg. 6-OHDAM#Pre or SalineM#Post etc.)
 

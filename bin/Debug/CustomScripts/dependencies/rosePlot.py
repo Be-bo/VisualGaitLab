@@ -27,6 +27,7 @@ def windRosePlot(theta, binNum, outDir, title='', scatter=False):
 
     # Compute pie slices
     radii = [len(b)/len(theta) for b in bins if len(b)!=0]
+    print(radii, bins)
     bars = [(i*width) + width/2 for i in range(binNum) if len(bins[i])!=0]
     tick_step = max(radii) / 4
     max_bar = max(radii) + tick_step
