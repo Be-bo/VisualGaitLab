@@ -8,7 +8,7 @@ Created on Wed Dec 15 14:55:02 2021
 Interlimb Coordination Part B
 
 To Run:
-    - runfile('C:/AaaallMiinne/Whelan/vgl/CustomScripts/interlimbCoordB.py', wdir='C:/AaaallMiinne/Whelan/vgl/CustomScripts', args='outB out/test-phaseval.csv out/test2-phaseval.csv')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordB.py', wdir='C:/Aaallmine/git_repos/vgl/CustomScripts', args='outB out_mouse/test1/test_mouse-phaseval.csv out_mouse/test2/test_mouse-phaseval.csv out_mouse/test3/test_mouse-phaseval.csv')
     - python [scriptname].py > output.txt
 
 Limb Order:

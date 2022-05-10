@@ -8,7 +8,7 @@ Created on Wed Dec 15 14:55:02 2021
 Interlimb Coordination Part A
 
 To Run:
-    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/test1/HindLeftInStance.txt test_data/test1/FrontLeftInStance.txt test_data/test1/FrontRightInStance.txt test_data/test1/HindRightInStance.txt')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/test2/HindLeftInStance.txt test_data/test2/FrontLeftInStance.txt test_data/test2/FrontRightInStance.txt test_data/test2/HindRightInStance.txt')
     - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
     - python [scriptname].py > output.txt
     - What is the animal ID? (Eg. 6-OHDAM#Pre or SalineM#Post etc.)
@@ -183,8 +183,11 @@ def regIndex(footfallOnsets, prefix):
             
         
     # Regularity Index
+    print(stepseq_count)
     regularityindex = (sum(stepseq_count)*4/len(steppattern)) * 100
-    stepseq_percent = [i/sum(stepseq_count) * 100 for i in stepseq_count]
+    stepseq_percent = stepseq_count
+    if (sum(stepseq_count) != 0):
+        stepseq_percent = [i/sum(stepseq_count) * 100 for i in stepseq_count]
     
     # Save results in a csv
     out_file = prefix + "-regIndex.csv"
@@ -257,6 +260,14 @@ def circ_plots(phaseval_rad, animalID, outDir):
   
     
   
+# Save PhaseVal
+def save_phaseval(outDir, animalID, phaseval_rad):
+    # Save Phaseval for Part B
+    out_file = outDir + animalID + "-phaseval.csv"
+    df = pd.DataFrame(phaseval_rad, index=coupling_labels)
+    df.to_csv(out_file, index=True, header=False)
+  
+  
 
 # MAIN
 def main():
@@ -286,15 +297,10 @@ def main():
     # Regularity Index (starting limb)
     regIndex(footfallOnsets[1], outDir + animalID) 
     
-    # Plot Circular Stats
+    # Plot Circular Stats and Save Phaseval for Part B
     phaseval_rad = circStats(onsets)
     circ_plots(phaseval_rad, animalID, outDir)
-    
-    # Save Phaseval for Part B
-    out_file = outDir + animalID + "-phaseval.csv"
-    df = pd.DataFrame(phaseval_rad, index=coupling_labels)
-    df.to_csv(out_file, index=True, header=False)
-    
+    save_phaseval(outDir, animalID, phaseval_rad)
     
 
 

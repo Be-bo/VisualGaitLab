@@ -238,8 +238,6 @@ namespace VisualGaitLab
 
 
 
-
-        // TODO: Change to RunScripts (multiple)
         private void RunScripts(List<CustomScript> scripts, List<string> args)
         {
             // Prepare cmd process
