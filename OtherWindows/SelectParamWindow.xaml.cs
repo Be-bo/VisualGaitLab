@@ -6,10 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using VisualGaitLab.OtherWindows;
+using VisualGaitLab.SupportingClasses;
 
 namespace VisualGaitLab.PostAnalysis
 {
-    public partial class PostAnalysisWindow : Window
+    public partial class SelectParamWindow : Window
     {
         public List<Parameter> ParamList = new List<Parameter>();
 
@@ -18,9 +20,10 @@ namespace VisualGaitLab.PostAnalysis
         private string ScriptPath;
         private int ParamNum = 0;
         private Parameter edittingParam = null;
+        private List<AnalysisVideo> gaitAnalyzedVideos;
 
 
-        public PostAnalysisWindow(string scriptPath, string scriptName, string workingDir, string addon = "")
+        public SelectParamWindow(string scriptPath, string scriptName, List<AnalysisVideo> gaitVideos, string workingDir, string addon = "")
         {
             InitializeComponent();
             Title = scriptName + ' ' + addon;
@@ -28,6 +31,15 @@ namespace VisualGaitLab.PostAnalysis
             ScriptPath = scriptPath;
             WorkingDirectory = workingDir;
             ParamListBox.ItemsSource = ParamList;
+            gaitAnalyzedVideos = new List<AnalysisVideo>();
+
+            if (gaitVideos != null && gaitVideos.Count > 0)
+            {
+                AddVideoParam.IsEnabled = true;
+                foreach (AnalysisVideo video in gaitVideos)
+                    if (video.IsGaitAnalyzed) gaitAnalyzedVideos.Add(video);
+            }
+
             ReadInfo();
         }
 
@@ -37,7 +49,6 @@ namespace VisualGaitLab.PostAnalysis
         {
             string infoPath = ScriptPath.Replace(ScriptName + ".py", "");
             string infoFile = Path.Combine(infoPath, ScriptName + "_info.txt");
-            Console.WriteLine(infoFile);
 
             if (File.Exists(infoFile))
             {
@@ -71,6 +82,10 @@ namespace VisualGaitLab.PostAnalysis
                 InfoBlock.Text = info;
 
                 CheckParams();
+            }
+            else
+            {
+                Console.WriteLine("Couldn't find \"" + infoFile + "\"");
             }
         }
 
@@ -142,6 +157,17 @@ namespace VisualGaitLab.PostAnalysis
             ParamListBox.SelectedItem = edittingParam;
             edittingParam.StartEdit();
             CheckParams();
+        }
+
+        // Add the path to the new analyzed video
+        private void AddVideoParam_Click(object sender, RoutedEventArgs e)
+        {
+            SelectVideoWindow vidWindow = new SelectVideoWindow(gaitAnalyzedVideos);// (script.Path, script.Name, GaitVideos, WorkingDirectory, addon);
+            if (vidWindow.ShowDialog() == true)
+            {
+                Console.WriteLine("YAYA!");
+            }
+            //TODO
         }
 
 

@@ -108,10 +108,18 @@ namespace VisualGaitLab
                         if ((bool)window.AnalysisTypeRadioFreeWalking.IsChecked) isFreeRun = true;
 
                         GaitWindow gaitWindow = new GaitWindow(realWorldMultiplier, treadmillSpeed, gaitVideoPath, gaitVideoName, gaitTempPath, isFreeRun);
-                        if (gaitWindow.ShowDialog() == true)
+                        try
+                        { // In case there's an error during setup and window is already closed. (eg. short/invalid video)
+                            if (gaitWindow.ShowDialog() == true)
+                            {
+                                SyncUI();
+                            }
+                        } 
+                        catch (Exception)
                         {
-                            SyncUI();
+                            Console.WriteLine("An error occured while Setting up Gait Window.");
                         }
+                        
                         EnableInteraction();
                     }
                     else EnableInteraction();

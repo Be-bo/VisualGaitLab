@@ -52,10 +52,18 @@ namespace VisualGaitLab.GaitAnalysis {
                 ReadCurrentState(true);
                 SetUpPawCharts();
                 SetStaticData();
+
+                if (setup_error) {
+                    MessageBox.Show("Video cannot be added because it's too short.", "Video Too Short", MessageBoxButton.OK);
+                    this.Close();
+                    return;
+                }
+
                 SetUpCrossCorrelationCharts();
                 UpdateFrame(false);
             }
             else {
+                setup_error = true;
                 MessageBox.Show("Failed to load the video.", "Error", MessageBoxButton.OK); //quit the program otherwise
                 this.Close();
             }

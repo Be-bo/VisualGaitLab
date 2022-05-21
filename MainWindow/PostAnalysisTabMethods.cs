@@ -215,7 +215,7 @@ namespace VisualGaitLab
 
                 BarInteraction();
                 string addon = '(' + (i+1).ToString() + " / " + items.Count + ')';
-                PostAnalysisWindow paWindow = new PostAnalysisWindow(script.Path, script.Name, WorkingDirectory, addon);
+                SelectParamWindow paWindow = new SelectParamWindow(script.Path, script.Name, GaitVideos, WorkingDirectory, addon);
                 if (paWindow.ShowDialog() == true)
                 {
                     // Build parameters

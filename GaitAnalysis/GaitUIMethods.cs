@@ -198,6 +198,7 @@ namespace VisualGaitLab.GaitAnalysis {
             CalculateStrideData(HindRightInStance.Count, ref HindRightStrideLengths, ref HindRightStrides, ref HindRightSwitchPositions, ref HindRightMidPointXs, ref HindRightMidPointYs);
             CalculateStrideData(FrontLeftInStance.Count, ref FrontLeftStrideLengths, ref FrontLeftStrides, ref FrontLeftSwitchPositions, ref FrontLeftMidPointXs, ref FrontLeftMidPointYs);
             CalculateStrideData(FrontRightInStance.Count, ref FrontRightStrideLengths, ref FrontRightStrides, ref FrontRightSwitchPositions, ref FrontRightMidPointXs, ref FrontRightMidPointYs);
+            if (setup_error) return;
 
             CalculateStrideLengthVariability(ref HindLeftStrides, ref HindLeftStrideLengthVariablity);
             CalculateStrideLengthVariability(ref HindRightStrides, ref HindRightStrideLengthVariability);

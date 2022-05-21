@@ -1,10 +1,10 @@
-﻿<Window x:Class="VisualGaitLab.PostAnalysis.PostAnalysisWindow"
+﻿<Window x:Class="VisualGaitLab.PostAnalysis.SelectParamWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="PostAnalysisWindow" Height="700" Width="1000"
+        Title="Select Parameters" Height="700" Width="1000"
         Style="{StaticResource WindowStyle}"
         Icon="..\Images\logo.png"
         WindowStartupLocation="CenterScreen">
@@ -88,6 +88,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -97,9 +98,11 @@
                 <Button Name="AddStrParam" Grid.Row="0" Margin="5" Content="New String" Click="AddStrParam_Click" Style="{StaticResource PositiveButton}"/>
                 <Button Name="AddFileParam" Grid.Row="1" Margin="5" Content="Browse File(s)" Click="AddFileParam_Click" Style="{StaticResource PositiveButton}"/>
                 <Button Name="AddDirParam" Grid.Row="2" Margin="5" Content="Browse Folder" Click="AddDirParam_Click" Style="{StaticResource PositiveButton}"/>
-                <Button Name="MoveUpParam" Grid.Row="4" Content="∧" Margin="5" Click="MoveUpParam_Click" Style="{StaticResource PositiveButton}"/>
-                <Button Name="MoveDownParam" Grid.Row="5" Content="∨" Margin="5" Click="MoveDownParam_Click" Style="{StaticResource PositiveButton}"/>
-                <Button Name="RemoveParam" Grid.Row="6" Content="—" Margin="5" Click="RemoveParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="AddVideoParam" Grid.Row="3" Margin="5" Content="Select Video(s)" Click="AddVideoParam_Click" Style="{StaticResource PositiveButton}" IsEnabled="False"/>
+                
+                <Button Name="MoveUpParam" Grid.Row="5" Content="∧" Margin="5" Click="MoveUpParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="MoveDownParam" Grid.Row="6" Content="∨" Margin="5" Click="MoveDownParam_Click" Style="{StaticResource PositiveButton}"/>
+                <Button Name="RemoveParam" Grid.Row="7" Content="—" Margin="5" Click="RemoveParam_Click" Style="{StaticResource PositiveButton}"/>
             </Grid>
         </Grid>
 

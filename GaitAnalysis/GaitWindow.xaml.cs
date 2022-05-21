@@ -12,6 +12,10 @@ namespace VisualGaitLab.GaitAnalysis {
     /// Interaction logic for GaitWindow.xaml.
     /// </summary>
     public partial class GaitWindow : Window {
+
+        private bool setup_error = false;
+
+
         public GaitWindow(string gaitVideoPath, string gaitVideoName, string gaitTempPath) {
             InitializeComponent();
             CommonConstr(gaitVideoPath, gaitVideoName, gaitTempPath);
@@ -49,6 +53,8 @@ namespace VisualGaitLab.GaitAnalysis {
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+
+            if (setup_error) return;
 
             if (MessageBox.Show("Do you want to save your data?", "Save Data", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes) {
                 Console.WriteLine("SAVING...");
