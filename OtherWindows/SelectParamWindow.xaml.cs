@@ -162,12 +162,14 @@ namespace VisualGaitLab.PostAnalysis
         // Add the path to the new analyzed video
         private void AddVideoParam_Click(object sender, RoutedEventArgs e)
         {
-            SelectVideoWindow vidWindow = new SelectVideoWindow(gaitAnalyzedVideos);// (script.Path, script.Name, GaitVideos, WorkingDirectory, addon);
+            SelectVideoWindow vidWindow = new SelectVideoWindow(gaitAnalyzedVideos);
             if (vidWindow.ShowDialog() == true)
             {
                 foreach (AnalysisVideo video in vidWindow.selectedVideos)
                 {
-                    ParamList.Add(new Parameter(video.Path.Replace("\\" + video.Name + ".avi", "")));
+                    string[] vsplit = video.Path.Split('\\');
+
+                    ParamList.Add(new Parameter(video.Path.Replace("\\" + vsplit[vsplit.Length-1], ""))); // Get video folder only (without the video itself)
                 }
                 ParamListBox.Items.Refresh();
                 CheckParams();
