@@ -165,9 +165,13 @@ namespace VisualGaitLab.PostAnalysis
             SelectVideoWindow vidWindow = new SelectVideoWindow(gaitAnalyzedVideos);// (script.Path, script.Name, GaitVideos, WorkingDirectory, addon);
             if (vidWindow.ShowDialog() == true)
             {
-                Console.WriteLine("YAYA!");
+                foreach (AnalysisVideo video in vidWindow.selectedVideos)
+                {
+                    ParamList.Add(new Parameter(video.Path.Replace("\\" + video.Name + ".avi", "")));
+                }
+                ParamListBox.Items.Refresh();
+                CheckParams();
             }
-            //TODO
         }
 
 

@@ -7,6 +7,7 @@ namespace VisualGaitLab.OtherWindows
     public partial class SelectVideoWindow : Window
     {
         private List<AnalysisVideo> videos;
+        public List<AnalysisVideo> selectedVideos;
 
         public SelectVideoWindow(List<AnalysisVideo> analysisVideos)
         {
@@ -14,7 +15,6 @@ namespace VisualGaitLab.OtherWindows
             videos = analysisVideos;
             if (videos != null && videos.Count > 0)
             {
-                System.Console.WriteLine(videos[0].Name);
                 VideoListBox.ItemsSource = null;
                 VideoListBox.ItemsSource = videos;
             }
@@ -30,6 +30,11 @@ namespace VisualGaitLab.OtherWindows
         // Done selection
         private void SelectButton_Click(object sender, RoutedEventArgs e)
         {
+            selectedVideos = new List<AnalysisVideo>();
+            foreach (var item in VideoListBox.SelectedItems)
+            {
+                selectedVideos.Add((AnalysisVideo)item);
+            }
             DialogResult = true;
         }
     }

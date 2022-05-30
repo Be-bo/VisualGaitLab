@@ -30,7 +30,7 @@
 
         <!-- Gait Listbox -->
 
-        <ListBox Name="VideoListBox" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource ListBoxStyle}">
+        <ListBox Name="VideoListBox" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource ListBoxStyle}" SelectionMode="Multiple">
 
             <!-- List Box Settings -->
             <ListBox.Resources>
@@ -38,7 +38,19 @@
                     <Setter Property="CornerRadius" Value="3"/>
                     <Setter Property="Background" Value="White"/>
                 </Style>
+                <!-- This removes selection highlights:
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                -->
             </ListBox.Resources>
+            
 
             <!-- Item Template -->
             <ListBox.ItemTemplate>
@@ -59,7 +71,7 @@
                             </Border>
                         </Grid>
                         <TextBlock Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
-                        <CheckBox Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5"/>
+                        <CheckBox Grid.Column="2" VerticalAlignment="Center" IsChecked="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=IsSelected, Mode=TwoWay}"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

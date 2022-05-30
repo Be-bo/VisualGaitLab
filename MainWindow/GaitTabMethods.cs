@@ -115,7 +115,7 @@ namespace VisualGaitLab
                                 SyncUI();
                             }
                         } 
-                        catch (Exception)
+                        catch (System.InvalidOperationException)
                         {
                             Console.WriteLine("An error occured while Setting up Gait Window.");
                         }
