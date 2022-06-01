@@ -33,7 +33,7 @@ def windRosePlot(theta, binNum, outDir, title='', scatter=False):
         print("WARNING: all bins were empty!")
         return;
         
-    print(radii, bins)
+    #print(radii, bins)
     bars = [(i*width) + width/2 for i in range(binNum) if len(bins[i])!=0]
     tick_step = max(radii) / 4
     max_bar = max(radii) + tick_step

@@ -13,15 +13,15 @@ An Implementation of the Compass Plot From MATLAB
 
 import numpy as np
 import matplotlib.pyplot as plt
-
+from matplotlib.lines import Line2D
 
 
 
 
 # Regular polar compass
-def polarCompass(X, Y, outDir='', title='compass', ext='.svg', Colors=['r','b','y','m','c','g']):
+def polarCompass(X, Y, outDir='', title='compass', ext='.png', Colors=['r','b','y','m','c','g'], leg=[]):
     
-    drawCompass(X, Y, title=title, Colors=Colors)
+    drawCompass(X, Y, title=title, Colors=Colors, leg=leg)
 
     # Save and Show Plot
     savePlot(title, outDir=outDir, ext=ext)
@@ -31,9 +31,9 @@ def polarCompass(X, Y, outDir='', title='compass', ext='.svg', Colors=['r','b','
 
 
 # Compass Plot with a clockwise orientation and 0 at the top
-def northCompass(X, Y, outDir='', title='compass', ext='.svg', Colors=['r','b','y','m','c','g']):
+def northCompass(X, Y, outDir='', title='compass', ext='.png', Colors=['r','b','y','m','c','g'], leg=[]):
 
-    ax = drawCompass(X, Y, title=title, Colors=Colors)    
+    ax = drawCompass(X, Y, title=title, Colors=Colors, leg=leg)
 
     # Make graph clockwise and move 0 to the top
     ax.set_theta_direction(-1)
@@ -47,7 +47,7 @@ def northCompass(X, Y, outDir='', title='compass', ext='.svg', Colors=['r','b','
 
 
 # Save and Show Plot
-def savePlot(title, outDir='', ext='.svg'):
+def savePlot(title, outDir='', ext='.png'):
     
     plt.savefig(outDir+title+ext, bbox_inches='tight')
     plt.draw()
@@ -63,7 +63,7 @@ def savePlot(title, outDir='', ext='.svg'):
     ## (X,Y)    - list of float coordinates
     ## title    - Plot Title
     ## Colors   - List of matplotlib colors to use per compass arrow
-def drawCompass(X, Y, title='compass', Colors=['r','b','y','m','c','g']):
+def drawCompass(X, Y, title='compass', Colors=['r','b','y','m','c','g'], leg=[]):
     
     # Convert from Cartesian to Polar Coordinates
     radii = np.hypot(X, Y)
@@ -91,6 +91,21 @@ def drawCompass(X, Y, title='compass', Colors=['r','b','y','m','c','g']):
     # Ticks
     ax.set_xticks(np.arange(0, 2.0*np.pi, np.pi/6))
     ax.set_rticks(np.arange(.2,1,.2))
+    
+    # Legend
+    if len(leg) != 0:
+        # Shrink current axis by 20%
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+        
+        custom_lines = []
+        for i in range(len(angles)):
+            custom_lines.append(Line2D([0],[0],color=Colors[i % len(Colors)], lw=2))
+        
+        ax.legend(custom_lines,
+                  [leg[i % len(leg)] for i in range(len(angles))],
+                  loc='upper left',
+                  bbox_to_anchor=(0.9, 0.15))    # loc is anchored to bbox (x,y)
     
     
     ax.set_title(title)

@@ -3,12 +3,12 @@
 Created on Wed Dec 15 14:55:02 2021
 
 @author: Zahra Ghavasieh
-@original MATLAB script author: Linda Kim
 
-Interlimb Coordination Part B
+Interlimb Coordination Part B - Combines multiple part A results to achieve results of interlimbCoordMouse.py
 
 To Run:
     - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordB.py', wdir='C:/Aaallmine/git_repos/vgl/CustomScripts', args='outB out_mouse/test1/test_mouse-phaseval.csv out_mouse/test2/test_mouse-phaseval.csv out_mouse/test3/test_mouse-phaseval.csv')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordB.py', wdir='C:/Aaallmine/git_repos/vgl/CustomScripts', args='outB out_mouse/test1/test_mouse-phaseval.csv')
     - python [scriptname].py > output.txt
 
 Limb Order:
@@ -25,82 +25,32 @@ References:
 # imports
 import sys
 import os
-import numpy as np
-import pandas as pd
-import math
-from dependencies.compassPlot import northCompass
+import csv
+from interlimbCoordA import (circ_plots, save_phaseval)
 
-
-# Global Values
-paw_labels = ['HindIpsi', 'ForeIpsi', 'ForeContra', 'HindContra']
-coupling_labels = ['Forelimbs','Hindlimbs','Ipsilesionals','Contralesionals',
-                       'ContraFore-IpsiHind','IpsiFore-ContraHind']
 
 
 
 # 1. Read text files into list of integers
 def processInput(fileNames):
     
-    contents = []
+    # [Forelimbs,Hindlimbs,Ipsilesionals,Contralesionals,ContraFore-IpsiHind,IpsiFore-ContraHind]
+    phasevals = [[],[],[],[],[],[]]
     
     for fileName in fileNames:
+        
         try:
-            df = pd.read_csv(fileName, index_col=0, header=None)
-            contents.append(df)
+            with open(fileName, 'r') as csvfile:
+                reader = csv.reader(csvfile, delimiter=',')
+                i = 0
+                for row in reader:
+                    phasevals[i].extend(float(value) for value in row[1:] if value)    # ignore row index and empty values
+                    i += 1
             
         except IOError:
             print('ERROR: File "' + fileName + '" does not exist')
     
-    return contents
-
-
-
-
-# Average Calculator
-def calcCoordAverage(lis):
-    
-    # Filter NANs
-    trueList = [x for x in lis if not math.isnan(x)]
-    
-    x = sum([math.cos(x) for x in trueList]) / len(trueList)
-    y = sum([math.sin(x) for x in trueList]) / len(trueList)
-
-    return (x, y)
-
-
-
-# 2. Calculate Averages per limb pair
-def calcAverages(outDir, phasevals):
-    
-    #averages = pd.Dataframe(columns=coupling_labels)
-    averages = dict(zip(coupling_labels, [[] for _ in coupling_labels]))
-    
-    for fileDF in phasevals:
-        for limbPair in fileDF.index:
-            averages[limbPair].append(calcCoordAverage(fileDF.loc[limbPair, :]))
-    
-    
-    return averages
-
-
-
-# Write Averages to a csv file
-def averageToCsv(outDir, fileNames, averages):
-    
-    # Flatten Averages Dictionary of list of Tuples
-    flattened_ave = []
-    columns = []
-    for key in averages.keys():
-        columns.append(key)
-        flattened_ave.append(list(sum(averages[key], ())))
-
-    # Create DataFrame and write to csv
-    index = pd.MultiIndex.from_product([fileNames, ['X','Y']], names=["File", "Coordinate"])
-    pd.DataFrame(
-        np.array(flattened_ave).T.tolist(), 
-        index=index, 
-        columns=columns
-        ).to_csv(outDir + "averages.csv")
+    return phasevals
     
 
 
@@ -112,8 +62,8 @@ def main():
         print('ERROR: Not enough arguments!')
         return -1
     
-    # Process Input
-    outDir = "out2/"
+    # Configure output Directory
+    outDir = "outB/"
     i = 1
     
     if len(sys.argv) > 2:
@@ -123,18 +73,14 @@ def main():
     if not os.path.exists(outDir):
        os.makedirs(outDir)
        
+    # Extract animal ID and phasevals from clips
     phasevals = processInput(sys.argv[i:])
+    animalID = sys.argv[i].split('/')[-1].replace('-phaseval.csv', '')
     
-
-    # Calculate averages per limb pair
-    averages = calcAverages(outDir, phasevals)
-    averageToCsv(outDir, sys.argv[i:], averages)
     
-    # Draw Compass Graphs
-    for key in averages:
-        xs, ys = zip(*averages[key])
-        northCompass(xs, ys, outDir=outDir, title=key)
-    
+    # Plot Phaseval in radians on a circualr graph
+    circ_plots(phasevals, animalID, outDir)
+    save_phaseval(outDir, animalID, phasevals)
 
 
 if __name__ == "__main__":

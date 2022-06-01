@@ -16,8 +16,8 @@ INPUT:
 
 To Run:
     - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordMouse.py', args='out_mouse test_mouse 2013 "test_data/test1" "test_data/test2" "test_data/test3"')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordMouse.py', args='out_sep test_sep 2013 "test_data/test1sep" "test_data/test2sep" "test_data/test3sep"')
     
-    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
 
 
 Limb Order:
@@ -130,6 +130,9 @@ def main():
     for rads in range(1, len(phaseval_rads)):
         for pair in range(len(phaseval_rads[rads])):
             phaseval_rad[pair].extend(phaseval_rads[rads][pair])
+    
+    print(phaseval_rad)
+    return
     
     # Plot Phaseval in radians on a circualr graph
     circ_plots(phaseval_rad, animalID, outDir)

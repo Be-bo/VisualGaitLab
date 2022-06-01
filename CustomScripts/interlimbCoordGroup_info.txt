@@ -1,0 +1,21 @@
+Interlimb Coordination Group
+(Last Updated June 2022)
+
+AUTHORS:
+ - Original MATLAB script by Linda Kim
+ - Python Adaptation by Zahra Ghavasieh
+
+-- WIP --
+
+PARAMETERS (minimum 5):
+ 1. Animal ID (Eg. 6-OHDAM#Pre or SalineM#Post etc.)
+ 2. HindIpsi InStance Text File
+ 3. ForeIpsi InStance Text File
+ 4. ForeContra InStance Text File
+ 5. HindContra InStance Text File
+ 6. [opt.] Output Folder (optional. "out" by default)
+
+NOTES:
+ - Make sure the parameters are in order.
+ - Output will go in the "CustomScripts/out/" folder by default if output folder isn't provided.
+ - You can run part B right after by specifying "[2]/[1]-phaseval.csv" as the parameter, where [2] is the output folder and [1] is the Animal ID. For example, "out/testID-phaseval.csv".

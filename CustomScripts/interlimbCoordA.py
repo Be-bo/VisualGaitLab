@@ -5,7 +5,7 @@ Created on Wed Dec 15 14:55:02 2021
 @author: Zahra Ghavasieh
 @original MATLAB script author: Linda Kim
 
-Interlimb Coordination Part A
+Interlimb Coordination Part A - Single Clip
 
 To Run:
     - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/test2/HindLeftInStance.txt test_data/test2/FrontLeftInStance.txt test_data/test2/FrontRightInStance.txt test_data/test2/HindRightInStance.txt')
