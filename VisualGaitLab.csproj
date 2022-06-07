@@ -311,33 +311,37 @@
     <Resource Include="logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CustomScripts\dependencies\circPlots.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="CustomScripts\dependencies\compassPlot.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CustomScripts\dependencies\rosePlot.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CustomScripts\interlimbCoordA_info.txt">
+    <Content Include="CustomScripts\interlimbCoordAnimal.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CustomScripts\interlimbCoordB.py">
+    <Content Include="CustomScripts\interlimbCoordAnimal_info.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CustomScripts\interlimbCoordB_info.txt">
+    <Content Include="CustomScripts\interlimbCoordClip.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CustomScripts\interlimbCoordMouse.py">
+    <Content Include="CustomScripts\interlimbCoordClip_info.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordGroup.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordGroup_info.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordJoinClips.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordJoinClips_info.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CustomScripts\scriptsList.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CustomScripts\interlimbCoordA.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

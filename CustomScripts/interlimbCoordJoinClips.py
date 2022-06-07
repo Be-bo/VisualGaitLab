@@ -4,11 +4,15 @@ Created on Wed Dec 15 14:55:02 2021
 
 @author: Zahra Ghavasieh
 
-Interlimb Coordination Part B - Combines multiple part A results to achieve results of interlimbCoordMouse.py
+Interlimb Coordination - Join Clips 
+Combines multiple clip results to achieve results of interlimbCoordMouse.py
+Joins the phasevalues obtained in individual clips and plots the circular density plots per limb pair.
+(More info: https://osf.io/2ydzn/wiki/Custom%20Scripts/)
+
 
 To Run:
-    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordB.py', wdir='C:/Aaallmine/git_repos/vgl/CustomScripts', args='outB out_mouse/test1/test_mouse-phaseval.csv out_mouse/test2/test_mouse-phaseval.csv out_mouse/test3/test_mouse-phaseval.csv')
-    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordB.py', wdir='C:/Aaallmine/git_repos/vgl/CustomScripts', args='outB out_mouse/test1/test_mouse-phaseval.csv')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordJoinClips.py', wdir='C:/Aaallmine/git_repos/vgl/CustomScripts', args='outB out_mouse/test1/test_mouse-phaseval.csv out_mouse/test2/test_mouse-phaseval.csv out_mouse/test3/test_mouse-phaseval.csv')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordJoinClips.py', wdir='C:/Aaallmine/git_repos/vgl/CustomScripts', args='outB out_mouse/test1/test_mouse-phaseval.csv')
     - python [scriptname].py > output.txt
 
 Limb Order:

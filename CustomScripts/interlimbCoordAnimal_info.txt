@@ -1,0 +1,32 @@
+Interlimb Coordination - Animal
+(Last Updated June 2022)
+
+Uses gait results from multiple clips (of the same test subject) to compute the gait regularity index, step sequence percent, and phase coupling.
+It first calculates these parameters per clip, and then combines them similarly to the "JoinClips" script.
+
+AUTHORS:
+ - Original MATLAB script by Linda Kim
+ - Python Adaptation by Zahra Ghavasieh
+
+PARAMETERS (minimum 4):
+ 1. Output Folder
+ 2. Animal ID
+ 3. Limb order for [HindIpsi, ForeIpsi, ForeContra, HindContra] as a 4-digit integer. (FrontLeft = 0, FrontRight = 1, HindLeft = 2, HindRight = 3)
+ 4. Gait-analyzed video folder.
+ 5. [opt.] add as many more clips as desired.
+ ...
+
+EXAMPLE PARAMS:
+ - out_mouse 
+ - testID
+ - 2013 
+ - test_data/test1 
+ - test_data/test2 
+ - test_data/test3
+
+NOTES:
+ - Make sure the parameters are in order.
+ - For the third parameter, the first digit dictates the limb corresponding to the "HindIpsi" limb. If this is the "HindLeft" limb, then the first digit is "2". Use the same method for the remaining digits.
+ - You can use the "Select Video(s)" button to efficiently select gait-analyzed videos.
+ - You can run the "Group" right after by specifying "[2]/[1]-phaseval.csv" as the parameter, where [2] is the output folder and [1] is the Animal ID. For example, "out/testID-phaseval.csv".
+ - For more info, check our documentation at https://osf.io/2ydzn/wiki/Custom%20Scripts/

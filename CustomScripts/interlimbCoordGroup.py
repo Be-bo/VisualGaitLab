@@ -5,7 +5,7 @@ Created on Wed Dec 15 14:55:02 2021
 @author: Zahra Ghavasieh
 @original MATLAB script author: Linda Kim
 
-Interlimb Coordination Group (previously called "Part B")
+Interlimb Coordination - Group (previously called "Part B")
 
 To Run:
     - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordGroup.py', wdir='C:/Aaallmine/git_repos/vgl/CustomScripts', args='outB out_mouse/test1/test_mouse-phaseval.csv out_mouse/test2/test_mouse-phaseval.csv out_mouse/test3/test_mouse-phaseval.csv')

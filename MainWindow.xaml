@@ -37,6 +37,10 @@
                     <MenuItem Header="View" Foreground="{StaticResource DefaultBlueBrush}">
                         <MenuItem Header="_Debug Console" Click="DebugConsoleClicked" Foreground="Black"/>
                     </MenuItem>
+                    <MenuItem Header="Help" Foreground="{StaticResource DefaultBlueBrush}">
+                        <MenuItem Header="_OSF Page" Click="OsfClicked" Foreground="Black"/>
+                        <MenuItem Header="_GitHub Page" Click="GithubClicked" Foreground="Black"/>
+                    </MenuItem>
                 </Menu>
             </DockPanel>
 

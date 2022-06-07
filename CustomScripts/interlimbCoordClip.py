@@ -5,11 +5,14 @@ Created on Wed Dec 15 14:55:02 2021
 @author: Zahra Ghavasieh
 @original MATLAB script author: Linda Kim
 
-Interlimb Coordination Part A - Single Clip
+Interlimb Coordination - Single Clip
+Calculates gait regularity index, step sequence percent, and phase coupling.
+(More info: https://osf.io/2ydzn/wiki/Custom%20Scripts/)
 
 To Run:
-    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/test2/HindLeftInStance.txt test_data/test2/FrontLeftInStance.txt test_data/test2/FrontRightInStance.txt test_data/test2/HindRightInStance.txt')
-    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordA.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
+    - Arguments order: animal ID, HindIpsi file, ForeIpsi file, ForeContra file, HindContra file, output folder
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordClip.py', args='test test_data/test2/HindLeftInStance.txt test_data/test2/FrontLeftInStance.txt test_data/test2/FrontRightInStance.txt test_data/test2/HindRightInStance.txt')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordClip.py', args='test test_data/HindLeftInStance.txt test_data/FrontLeftInStance.txt test_data/FrontRightInStance.txt test_data/HindRightInStance.txt')
     - python [scriptname].py > output.txt
     - What is the animal ID? (Eg. 6-OHDAM#Pre or SalineM#Post etc.)
 

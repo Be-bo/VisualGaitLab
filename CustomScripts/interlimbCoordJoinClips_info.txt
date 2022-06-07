@@ -1,0 +1,26 @@
+Interlimb Coordination - Join Clips
+(Last Updated June 2022)
+
+Combines multiple clip results to achieve results of interlimbCoordAnimal.py
+Joins the phasevalues obtained in individual clips and plots the circular density plots per limb pair.
+
+AUTHORS:
+ - Original MATLAB script by Linda Kim
+ - Python Adaptation by Zahra Ghavasieh
+
+PARAMETERS (minimum 2):
+ 1. Output Folder
+ 2. CSV file output from the "Clip" script. ([ID]-phaseval.csv)
+ 3. [opt.] add as many more CSV file outputs from the "Clip" script as desired.
+ ...
+
+EXAMPLE PARAMS:
+ - out_testID 
+ - out/test1/testID-phaseval.csv 
+ - out/test2/testID-phaseval.csv 
+ - out/test3/testID-phaseval.csv
+
+NOTES:
+ - Make sure the parameters are in order.
+ - You can run this script right after the "Clip" script by specifying "[outputFolder]/[animalID]-phaseval.csv" as a parameter. For example, "out/testID-phaseval.csv".
+ - For more info, check our documentation at https://osf.io/2ydzn/wiki/Custom%20Scripts/

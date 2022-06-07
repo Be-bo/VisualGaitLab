@@ -1,0 +1,30 @@
+Interlimb Coordination - Single Clip
+(Last Updated June 2022)
+
+Calculates gait regularity index, step sequence percent, and phase coupling for a single video only.
+
+AUTHORS:
+ - Original MATLAB script by Linda Kim
+ - Python Adaptation by Zahra Ghavasieh
+
+PARAMETERS (minimum 5):
+ 1. Animal ID (Eg. 6-OHDAM#Pre or SalineM#Post etc.)
+ 2. HindIpsi InStance Text File
+ 3. ForeIpsi InStance Text File
+ 4. ForeContra InStance Text File
+ 5. HindContra InStance Text File
+ 6. [opt.] Output Folder (optional. "out" by default)
+
+EXAMPLE PARAMS:
+ - testID
+ - test_data/test2/HindLeftInStance.txt 
+ - test_data/test2/FrontLeftInStance.txt 
+ - test_data/test2/FrontRightInStance.txt 
+ - test_data/test2/HindRightInStance.txt
+ - C:/Users/Judgy/OneDrive/Desktop/output
+
+NOTES:
+ - Make sure the parameters are in order.
+ - Output will go in the "CustomScripts/out/" folder by default if output folder isn't provided.
+ - You can run either the "Group" or "JoinClips" scripts right after by specifying "[2]/[1]-phaseval.csv" as the parameter, where [2] is the output folder and [1] is the Animal ID. For example, "out/testID-phaseval.csv".
+ - For more info, check our documentation at https://osf.io/2ydzn/wiki/Custom%20Scripts/

@@ -1,21 +1,27 @@
-Interlimb Coordination Group
+Interlimb Coordination - Group
 (Last Updated June 2022)
+
+In this script, phase coupling is averaged within one condition/group. 
+You can take the Regularity Indices calculated in part A ("Animal"/"Clip" scripts) to compare with other outputs (possibly those in the same project) on a compass graph. 
+This will result in six compass graphs for each paw couple.
 
 AUTHORS:
  - Original MATLAB script by Linda Kim
  - Python Adaptation by Zahra Ghavasieh
 
--- WIP --
+PARAMETERS (minimum 2):
+ 1. Output Folder
+ 2. CSV file output from part A. ([ID]-phaseval.csv)
+ 3. [opt.] add as many more CSV file outputs from part A as desired.
+ ...
 
-PARAMETERS (minimum 5):
- 1. Animal ID (Eg. 6-OHDAM#Pre or SalineM#Post etc.)
- 2. HindIpsi InStance Text File
- 3. ForeIpsi InStance Text File
- 4. ForeContra InStance Text File
- 5. HindContra InStance Text File
- 6. [opt.] Output Folder (optional. "out" by default)
+EXAMPLE PARAMS:
+ - outB 
+ - out_test1/test_mouse1-phaseval.csv 
+ - out_test2/test_mouse2-phaseval.csv 
+ - out_test3/test_mouse3-phaseval.csv
 
 NOTES:
  - Make sure the parameters are in order.
- - Output will go in the "CustomScripts/out/" folder by default if output folder isn't provided.
- - You can run part B right after by specifying "[2]/[1]-phaseval.csv" as the parameter, where [2] is the output folder and [1] is the Animal ID. For example, "out/testID-phaseval.csv".
+ - You can run this script right after part A by specifying "[outputFolder]/[animalID]-phaseval.csv" as a parameter. For example, "out/testID-phaseval.csv".
+ - For more info, check our documentation at https://osf.io/2ydzn/wiki/Custom%20Scripts/

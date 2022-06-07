@@ -215,5 +215,15 @@ namespace VisualGaitLab
                 UpdateSettings(false);
             }
         }
+
+        private void OsfClicked(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://osf.io/2ydzn/");
+        }
+
+        private void GithubClicked(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/Be-bo/VisualGaitLab");
+        }
     }
 }

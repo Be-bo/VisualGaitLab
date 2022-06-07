@@ -5,7 +5,8 @@ Created on Wed May  4 12:37:11 2022
 @author: Zahra Ghavasieh
 @original MATLAB script author: Linda Kim
 
-Interlimb Coordination part A but fusing multiple clips instead
+Interlimb Coordination - Animal
+Same as Interlimb Coordination for a clip, but joins multiple clips.
 
 INPUT:
     - output folder
@@ -15,8 +16,8 @@ INPUT:
     - list of analyzed videos' paths
 
 To Run:
-    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordMouse.py', args='out_mouse test_mouse 2013 "test_data/test1" "test_data/test2" "test_data/test3"')
-    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordMouse.py', args='out_sep test_sep 2013 "test_data/test1sep" "test_data/test2sep" "test_data/test3sep"')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordAnimal.py', args='out_mouse test_mouse 2013 "test_data/test1" "test_data/test2" "test_data/test3"')
+    - runfile('C:/Aaallmine/git_repos/vgl/CustomScripts/interlimbCoordAnimal.py', args='out_sep test_sep 2013 "test_data/test1sep" "test_data/test2sep" "test_data/test3sep"')
     
 
 
