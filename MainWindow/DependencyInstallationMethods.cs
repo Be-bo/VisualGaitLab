@@ -25,7 +25,7 @@ namespace VisualGaitLab {
         }
 
         private void FinishInstallation() { //finish the installation by running the installation script
-            if (MessageBox.Show("We recommend installing the latest GPU drivers. Keep in mind that only Nvidia GPUs are supported. By Clicking \"OK\" you're agreeing with Miniconda 3 and FFmpeg being installed onto your computer (into the VGL's installation folder).",
+            if (MessageBox.Show("We recommend installing the latest GPU drivers. Keep in mind that only Nvidia GPUs are supported. By Clicking \"OK\" you're agreeing with Miniconda 3 and FFmpeg being installed onto your computer (into the VGL's installation folder).", //TODO ffmpeg?
                "Information", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) == MessageBoxResult.Cancel) {
                 this.Close();
             }
@@ -90,6 +90,7 @@ namespace VisualGaitLab {
                         sw.WriteLine("@\"" + batPath + "\"");
                         sw.WriteLine(DriveCommand);
                         sw.WriteLine("cd " + PFPath);
+                        sw.WriteLine("conda update conda");
                         sw.WriteLine("conda env create -f dlc-windowsGPU.yaml");
                         sw.WriteLine("conda activate dlc-windowsGPU");
 
