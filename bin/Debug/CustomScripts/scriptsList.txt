@@ -1,4 +1,1 @@
-C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordAnimal.py
-C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordClip.py
-C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordGroup.py
-C:\Aaallmine\git_repos\vgl\bin\Debug\CustomScripts\interlimbCoordJoinClips.py
+\CustomScripts\interlimbCoord_script.py

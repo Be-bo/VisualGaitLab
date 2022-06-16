@@ -222,7 +222,7 @@ namespace VisualGaitLab {
                         sw.WriteLine("cd " + EnvDirectory);
                         sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                         sw.WriteLine("conda activate " + EnvName);
-                        sw.WriteLine("ipython vdlc_extract_frames.py");
+                        sw.WriteLine("python3 vdlc_extract_frames.py");
 
                         if (info.CreateNoWindow == false) { //for debug purposes
                             sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
@@ -299,7 +299,7 @@ namespace VisualGaitLab {
                     sw.WriteLine("cd " + EnvDirectory);
                     sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.WriteLine("ipython vdlc_label_frames.py");
+                    sw.WriteLine("python3 vdlc_label_frames.py");
 
                     if (info.CreateNoWindow == false) { //for debug purposes
                         sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
@@ -380,7 +380,7 @@ namespace VisualGaitLab {
                     sw.WriteLine("cd " + EnvDirectory);
                     sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.WriteLine("ipython vdlc_create_dataset.py");
+                    sw.WriteLine("python3 vdlc_create_dataset.py");
 
                     if (info.CreateNoWindow == false) { //for debug purposes
                         sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
@@ -489,7 +489,7 @@ namespace VisualGaitLab {
                     sw.WriteLine("cd " + EnvDirectory);
                     sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.WriteLine("ipython vdlc_train_network.py");
+                    sw.WriteLine("python3 vdlc_train_network.py");
 
                     if (info.CreateNoWindow == false) { //for debug purposes
                         sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
@@ -562,7 +562,7 @@ namespace VisualGaitLab {
                     sw.WriteLine("cd " + EnvDirectory);
                     sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.WriteLine("ipython vdlc_eval_network.py");
+                    sw.WriteLine("python3 vdlc_eval_network.py");
 
                     if (info.CreateNoWindow == false) { //for debug purposes
                         sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");

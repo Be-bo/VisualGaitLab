@@ -815,7 +815,7 @@ namespace VisualGaitLab.OtherWindows {
                     sw.WriteLine("cd " + EnvDirectory);
                     sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.WriteLine("ipython vdlc_add_video.py");
+                    sw.WriteLine("python3 vdlc_add_video.py");
 
                     if (info.CreateNoWindow == false) { //for debug purposes
                         sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
@@ -874,7 +874,11 @@ namespace VisualGaitLab.OtherWindows {
 
                 for (int i = 0; i < listRows.Count; i++) {
                     string currentLine = listRows[i];
-                    if (currentLine.Contains("showdebugconsole: ") && currentLine.Contains("True")) retVal = true;
+                    if (currentLine.Contains("showdebugconsole: "))
+                    {
+                        if (currentLine.Contains("True")) retVal = true;
+                        break;
+                    }
                 }
             }
             return retVal;

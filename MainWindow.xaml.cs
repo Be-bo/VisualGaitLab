@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using VisualGaitLab.OtherWindows;
@@ -22,7 +23,8 @@ namespace VisualGaitLab
         Project CurrentProject;
         string ProgramFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab";
         string WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Projects";
-        string EnvDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
+        string CondaDirectory = ""; // Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab";
+        string EnvDirectory = ""; // Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
         string ScriptsFolder = Directory.GetCurrentDirectory() + "\\CustomScripts";
         string ScriptsListFile = "scriptsList.txt";
         string EnvName = "dlc-windowsGPU";
@@ -56,16 +58,13 @@ namespace VisualGaitLab
                 return;
             }
 
-            /*
-            if (!Directory.Exists(EnvDirectory)) { //condition code that was stripped down, if the Miniconda env does not exist, we close the program
-                EnvDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
-                EnvName = "dlc-windowsGPU";
-                if (!Directory.Exists(EnvDirectory)) this.Close();
-            }*/
+            ReadCondaPath(); // Update Conda directory
 
             InitializeComponent();
             CheckInstallation();
             ShowDisclaimer();
+
+            EnvDirectory = CondaDirectory + "\\Miniconda3\\envs\\dlc-windowsGPU";
         }
 
         private static bool IsAdministrator() { //check if the Windows user is running the program as administrator
@@ -80,6 +79,30 @@ namespace VisualGaitLab
                 "\n\n" +
                 "Please check the OSF link: https://osf.io/2ydzn/ for documentation. \n\n" +
                 "version 2.5.0", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        // Read where miniconda was installed on
+        private void ReadCondaPath()
+        {
+            string settingsPath = FileSystemUtils.ExtendPath(ProgramFolder, "settings.txt");
+            if (File.Exists(settingsPath))
+            {
+                StreamReader sr = new StreamReader(settingsPath);
+                String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
+                List<string> listRows = new List<string>(rows);
+                sr.Close();
+
+                for (int i = 0; i < listRows.Count; i++)
+                {
+                    string currentLine = listRows[i];
+                    if (currentLine.Contains("miniconda: "))
+                    {
+                        CondaDirectory = currentLine.Replace("miniconda: ", "");
+                        break;
+                    }
+                }
+            }
+        
         }
 
 

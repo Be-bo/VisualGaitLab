@@ -157,6 +157,9 @@
     <Compile Include="OtherWindows\MeasureWindow.xaml.cs">
       <DependentUpon>MeasureWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OtherWindows\PickFolderWindow.xaml.cs">
+      <DependentUpon>PickFolderWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OtherWindows\SelectVideoWindow.xaml.cs">
       <DependentUpon>SelectVideoWindow.xaml</DependentUpon>
     </Compile>
@@ -237,6 +240,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="OtherWindows\MeasureWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OtherWindows\PickFolderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

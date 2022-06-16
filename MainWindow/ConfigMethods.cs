@@ -319,6 +319,7 @@ namespace VisualGaitLab {
             StreamWriter sw = new StreamWriter(settingsPath);
             List<string> listRows = new List<string>(); //for later, now we only have one option
             sw.WriteLine("showdebugconsole: " + showDebugConsole.ToString());
+            sw.WriteLine("miniconda: " + CondaDirectory);
             sw.Close();
         }
     }

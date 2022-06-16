@@ -333,7 +333,7 @@ namespace VisualGaitLab {
                     sw.WriteLine("cd " + EnvDirectory);
                     sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.Write("ipython vdlc_analyze_video.py");
+                    sw.Write("python3 vdlc_analyze_video.py");
 
                     // Arguments
                     foreach (var video in videos.Values) sw.Write(" \"" + video.Path + "\"");
@@ -403,7 +403,7 @@ namespace VisualGaitLab {
                     sw.WriteLine("cd " + EnvDirectory);
                     sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.Write("ipython vdlc_create_labeled_video.py");
+                    sw.Write("python3 vdlc_create_labeled_video.py");
 
                     // Arguments
                     foreach (var video in videos.Values) sw.Write(" \"" + video.Path + "\"");

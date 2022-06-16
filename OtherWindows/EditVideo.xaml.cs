@@ -469,7 +469,7 @@ namespace VisualGaitLab.OtherWindows {
                         sw.WriteLine("cd " + EnvDirectory);
                         sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
                         sw.WriteLine("conda activate " + EnvName);
-                        sw.WriteLine("ipython vdlc_add_video.py");
+                        sw.WriteLine("python3 vdlc_add_video.py");
                     }
                 }
             }
