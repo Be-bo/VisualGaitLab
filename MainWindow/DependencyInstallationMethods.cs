@@ -8,19 +8,22 @@ using VisualGaitLab.SupportingClasses;
 namespace VisualGaitLab {
     public partial class MainWindow : Window {
 
-        private void CheckInstallation() { //check whether the installation has been finished
+        private bool CheckInstallation() { //check whether the installation has been finished
+            bool dependeciesInstalled;
             BarInteraction();
             string testGPUPath = CondaDirectory + @"\Miniconda3\envs\dlc-windowsGPU\Lib\site-packages\deeplabcut\pose_estimation_tensorflow\models\pretrained\resnet_v1_50.ckpt";
             if (File.Exists(testGPUPath))
             {
                 EnableInteraction();
-                this.Visibility = Visibility.Visible;
+                Visibility = Visibility.Visible;
+                dependeciesInstalled = true;
             }
             else
             {
-                
                 FinishInstallation();
+                dependeciesInstalled = false;
             }
+            return dependeciesInstalled;
         }
 
         
@@ -30,7 +33,7 @@ namespace VisualGaitLab {
         { 
             if (MessageBox.Show("We recommend installing the latest GPU drivers. Keep in mind that only Nvidia GPUs are supported. By Clicking \"OK\" you're agreeing with Miniconda 3 being installed onto your computer.",
                "Information", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation) == MessageBoxResult.Cancel) {
-                this.Close();
+                Close();
                 return;
             }
 
@@ -71,11 +74,12 @@ namespace VisualGaitLab {
             }
 
             // Miniconda not installed yet
-            if (CondaDirectory == "" || CondaDirectory == null)
+            if (CondaDirectory == "" || CondaDirectory == null || !File.Exists(Path.Combine(CondaDirectory, "Miniconda3")))
             {
+                depWindow.ProgressLabel.Content = "Installing Miniconda3...";
                 InstallMiniconda(debugmode);
             }
-
+            depWindow.ProgressLabel.Content = "Installing additional dependencies (this will take a while)...";
             InstallDependencies(depWindow, debugmode);
         }
 
@@ -95,45 +99,42 @@ namespace VisualGaitLab {
 
             ProcessStartInfo info = new ProcessStartInfo();
 
-            // Miniconda not installed yet
-            if (CondaDirectory == "" || CondaDirectory == null)
+            // Update conda directory
+            CondaDirectory = minicondaDir;
+            UpdateSettings(false);
+
+            string batPath = Path.Combine(CondaDirectory, @"Miniconda3\Scripts\activate.bat"); //activate Miniconda
+
+            info.FileName = "cmd.exe";
+            info.RedirectStandardInput = true;
+            info.UseShellExecute = false;
+            info.Verb = "runas";
+            info.CreateNoWindow = !debugmode;
+            Process p1 = new Process();
+            p1.EnableRaisingEvents = true;
+
+            // Install Miniconda
+            p1.StartInfo = info;
+            p1.Start();
+
+            using (StreamWriter sw = p1.StandardInput)
             {
-                // Update conda directory
-                CondaDirectory = minicondaDir;
-                UpdateSettings(false);
-
-                string batPath = Path.Combine(CondaDirectory, @"Miniconda3\Scripts\activate.bat"); //activate Miniconda
-
-                info.FileName = "cmd.exe";
-                info.RedirectStandardInput = true;
-                info.UseShellExecute = false;
-                info.Verb = "runas";
-                info.CreateNoWindow = !debugmode;
-                Process p1 = new Process();
-                p1.EnableRaisingEvents = true;
-
-                // Install Miniconda
-                p1.StartInfo = info;
-                p1.Start();
-
-                using (StreamWriter sw = p1.StandardInput)
+                if (sw.BaseStream.CanWrite) // Update Conda
                 {
-                    if (sw.BaseStream.CanWrite) // Update Conda
-                    {
-                        sw.WriteLine("start /wait \"\" \"" + ProgramFolder + @"\m3.exe" + "\" /InstallationType=JustMe /RegisterPython=0 /S /D=" + CondaDirectory + "\\Miniconda3"); //install it into the VDLC's folder
-                        sw.WriteLine("@\"" + batPath + "\""); // TODO conda problems with spaces in path (https://stackoverflow.com/questions/42152589/anaconda-failed-to-create-process)
-                        sw.WriteLine("cd " + ProgramFolder);
-                        sw.WriteLine("conda update conda"); // these two must be separate processes because of this line
-                        sw.WriteLine("y");
+                    sw.WriteLine("start /wait \"\" \"" + ProgramFolder + @"\m3.exe" + "\" /InstallationType=JustMe /RegisterPython=0 /S /D=" + CondaDirectory + "\\Miniconda3"); //install it into the VDLC's folder
+                    sw.WriteLine("@\"" + batPath + "\""); // TODO conda problems with spaces in path (https://stackoverflow.com/questions/42152589/anaconda-failed-to-create-process)
+                    sw.WriteLine("cd " + ProgramFolder);
+                    sw.WriteLine("conda update conda"); // these two must be separate processes because of this line
+                    sw.WriteLine("y");
 
-                        if (debugmode)
-                        { //for debug purposes
-                            sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
-                            p1.WaitForExit();
-                            sw.WriteLine("Done, exiting.");
-                        }
+                    if (debugmode)
+                    { //for debug purposes
+                        sw.WriteLine("ECHO WHEN YOU'RE DONE, CLOSE THIS WINDOW");
+                        p1.WaitForExit();
+                        sw.WriteLine("Done, exiting.");
                     }
                 }
+                
             }
         }
 
@@ -154,6 +155,7 @@ namespace VisualGaitLab {
             p2.EnableRaisingEvents = true;
             p2.StartInfo = info;
             p2.Exited += (sender1, e1) => {
+                depWindow.ProgressLabel.Content = "Installing DeepLabCut...";
                 MoveVDLCFiles();
                 //InstallFFMPEG(debugmode);
                 Dispatcher.Invoke(() => {
