@@ -132,7 +132,7 @@ namespace VisualGaitLab {
                         {
                             if (FileSystemUtils.FileNameOk(fullPath))
                             {
-                                ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, isAnalysisVid, EnvDirectory, EnvName, Drive, ProgramFolder);
+                                ImportWindow window = new ImportWindow(fullPath, CurrentProject.ConfigPath, isAnalysisVid, EnvDirectory, EnvName, Drive, ProgramFolder, CondaDirectory);
                                 if (window.ShowDialog() == true) syncUI = true;
                             }
                             else

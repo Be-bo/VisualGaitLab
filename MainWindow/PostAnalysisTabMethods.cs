@@ -318,7 +318,7 @@ namespace VisualGaitLab
                 {
                     sw.WriteLine(Drive);
                     sw.WriteLine("cd " + EnvDirectory);
-                    sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
+                    sw.WriteLine(FileSystemUtils.GetCondaActivatePath(CondaDirectory));
                     sw.WriteLine("conda activate " + EnvName);
 
 

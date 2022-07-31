@@ -40,7 +40,7 @@ namespace VisualGaitLab {
             var selectedVideo = (AnalysisVideo)AnalyzedListBox.SelectedItem;
             if (selectedVideo != null) {
                 BarInteraction();
-                EditVideo window = new EditVideo(selectedVideo.Path, selectedVideo.Name, true, CurrentProject, EnvDirectory, Drive, EnvName);
+                EditVideo window = new EditVideo(selectedVideo.Path, selectedVideo.Name, true, CurrentProject, EnvDirectory, Drive, EnvName, CondaDirectory);
                 if (window.ShowDialog() == true) {
                     SyncUI();
                     EnableInteraction();
@@ -331,9 +331,9 @@ namespace VisualGaitLab {
                 {
                     sw.WriteLine(Drive);
                     sw.WriteLine("cd " + EnvDirectory);
-                    sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
+                    sw.WriteLine(FileSystemUtils.GetCondaActivatePath(CondaDirectory));
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.Write("python3 vdlc_analyze_video.py");
+                    sw.Write("ipython vdlc_analyze_video.py");
 
                     // Arguments
                     foreach (var video in videos.Values) sw.Write(" \"" + video.Path + "\"");
@@ -401,9 +401,9 @@ namespace VisualGaitLab {
                 if (sw.BaseStream.CanWrite) {
                     sw.WriteLine(Drive);
                     sw.WriteLine("cd " + EnvDirectory);
-                    sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
+                    sw.WriteLine(FileSystemUtils.GetCondaActivatePath(CondaDirectory));
                     sw.WriteLine("conda activate " + EnvName);
-                    sw.Write("python3 vdlc_create_labeled_video.py");
+                    sw.Write("ipython vdlc_create_labeled_video.py");
 
                     // Arguments
                     foreach (var video in videos.Values) sw.Write(" \"" + video.Path + "\"");

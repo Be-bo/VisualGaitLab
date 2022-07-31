@@ -19,7 +19,7 @@ namespace VisualGaitLab.SupportingClasses {
         public PythonScripts() {
             CreateProject = new List<string>();
             CreateProject.Add("import deeplabcut");
-            CreateProject.Add("deeplabcut.create_new_project('project_name_identifier', 'scorer_identifier', [], working_directory='working_directory_identifier',copy_videos=copy_videos_identifier)");
+            CreateProject.Add("deeplabcut.create_new_project('project_name_identifier', 'scorer_identifier', [], working_directory=r'working_directory_identifier',copy_videos=copy_videos_identifier)");
 
             ExtractFrames = new List<string>();
             ExtractFrames.Add("import deeplabcut");

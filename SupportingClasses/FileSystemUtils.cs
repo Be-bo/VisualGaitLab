@@ -8,8 +8,10 @@ using System.Text.RegularExpressions;
 namespace VisualGaitLab.SupportingClasses {
     static class FileSystemUtils {
 
-        public const string CONDA_ACTIVATE_PATH = "\"C:\\Program Files (x86)\\VisualGaitLab\\Miniconda3\\Scripts\\activate.bat\"";
-
+        public static string GetCondaActivatePath(string condaDirectory)
+        {
+            return "\"" + condaDirectory + "\\Miniconda3\\Scripts\\activate.bat" + "\"";
+        }
 
         public static string GetFileName(string inputPath) {
             var withExtension = inputPath.Substring(inputPath.LastIndexOf("\\")+1);

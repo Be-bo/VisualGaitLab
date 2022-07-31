@@ -33,6 +33,7 @@ namespace VisualGaitLab.OtherWindows {
         string VideoPath;
         string VideoName;
         string EnvName;
+        string CondaDirectory;
         double VideoDuration = 0; //in seconds
         bool SliderInsideSegment = false;
         bool IsAnalysisVideo = false;
@@ -51,7 +52,7 @@ namespace VisualGaitLab.OtherWindows {
 
         // MARK: Base Functions
 
-        public EditVideo(string vidPath, string vidName, bool isAnalysisVideo, Project curProj, string envDir, string drive, string envNam) { //passing in the vid's name and location and whether we're cropping a training video or an analysis video
+        public EditVideo(string vidPath, string vidName, bool isAnalysisVideo, Project curProj, string envDir, string drive, string envNam, string condaDirectory) { //passing in the vid's name and location and whether we're cropping a training video or an analysis video
             InitializeComponent();
             VideoPath = vidPath;
             VideoName = vidName;
@@ -60,6 +61,7 @@ namespace VisualGaitLab.OtherWindows {
             Drive = drive;
             EnvDirectory = envDir;
             EnvName = envNam;
+            CondaDirectory = condaDirectory;
             AddSliderLine();
             SetUpVideo();
             SetTimelineImages();
@@ -467,9 +469,9 @@ namespace VisualGaitLab.OtherWindows {
                     if (sw.BaseStream.CanWrite) {
                         sw.WriteLine(Drive);
                         sw.WriteLine("cd " + EnvDirectory);
-                        sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
+                        sw.WriteLine(FileSystemUtils.GetCondaActivatePath(CondaDirectory));
                         sw.WriteLine("conda activate " + EnvName);
-                        sw.WriteLine("python3 vdlc_add_video.py");
+                        sw.WriteLine("ipython vdlc_add_video.py");
                     }
                 }
             }

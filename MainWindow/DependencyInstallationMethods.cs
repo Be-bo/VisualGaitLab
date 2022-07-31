@@ -74,13 +74,23 @@ namespace VisualGaitLab {
             }
 
             // Miniconda not installed yet
+            if (debugmode) MessageBox.Show("Conda Directory is: \"" + CondaDirectory + "\"");
             if (CondaDirectory == "" || CondaDirectory == null || !File.Exists(Path.Combine(CondaDirectory, "Miniconda3")))
             {
                 depWindow.ProgressLabel.Content = "Installing Miniconda3...";
                 InstallMiniconda(debugmode);
             }
-            depWindow.ProgressLabel.Content = "Installing additional dependencies (this will take a while)...";
-            InstallDependencies(depWindow, debugmode);
+            // Dependencies not installed yet
+            if (!File.Exists(Path.Combine(CondaDirectory, "Miniconda3\\envs\\dlc-windowsGPU\\python.exe")))
+            {
+                depWindow.ProgressLabel.Content = "Installing additional dependencies (this will take a while)...";
+                InstallDependencies(debugmode);
+            }
+            // Move DeepLabCut files to conda environment
+            depWindow.ProgressLabel.Content = "Installing DeepLabCut...";
+            MoveVDLCFiles();
+            InstallFFMPEG(debugmode, depWindow);
+
         }
 
 
@@ -103,7 +113,7 @@ namespace VisualGaitLab {
             CondaDirectory = minicondaDir;
             UpdateSettings(false);
 
-            string batPath = Path.Combine(CondaDirectory, @"Miniconda3\Scripts\activate.bat"); //activate Miniconda
+            string activateConda = FileSystemUtils.GetCondaActivatePath(CondaDirectory); //activate Miniconda
 
             info.FileName = "cmd.exe";
             info.RedirectStandardInput = true;
@@ -122,7 +132,7 @@ namespace VisualGaitLab {
                 if (sw.BaseStream.CanWrite) // Update Conda
                 {
                     sw.WriteLine("start /wait \"\" \"" + ProgramFolder + @"\m3.exe" + "\" /InstallationType=JustMe /RegisterPython=0 /S /D=" + CondaDirectory + "\\Miniconda3"); //install it into the VDLC's folder
-                    sw.WriteLine("@\"" + batPath + "\""); // TODO conda problems with spaces in path (https://stackoverflow.com/questions/42152589/anaconda-failed-to-create-process)
+                    sw.WriteLine(activateConda); // TODO conda problems with spaces in path (https://stackoverflow.com/questions/42152589/anaconda-failed-to-create-process)
                     sw.WriteLine("cd " + ProgramFolder);
                     sw.WriteLine("conda update conda"); // these two must be separate processes because of this line
                     sw.WriteLine("y");
@@ -140,9 +150,9 @@ namespace VisualGaitLab {
 
 
         // Install Environment Libraries
-        private void InstallDependencies(DependencyLoadingWindow depWindow, bool debugmode)
+        private void InstallDependencies(bool debugmode)
         {
-            string batPath = Path.Combine(CondaDirectory, @"Miniconda3\Scripts\activate.bat"); //activate Miniconda
+            string activateConda = FileSystemUtils.GetCondaActivatePath(CondaDirectory); //activate Miniconda
 
             ProcessStartInfo info = new ProcessStartInfo();
             info.FileName = "cmd.exe";
@@ -154,22 +164,13 @@ namespace VisualGaitLab {
             Process p2 = new Process();
             p2.EnableRaisingEvents = true;
             p2.StartInfo = info;
-            p2.Exited += (sender1, e1) => {
-                depWindow.ProgressLabel.Content = "Installing DeepLabCut...";
-                MoveVDLCFiles();
-                //InstallFFMPEG(debugmode);
-                Dispatcher.Invoke(() => {
-                    depWindow.Close();
-                    Visibility = Visibility.Visible;
-                });
-            };
             p2.Start();
 
             using (StreamWriter sw = p2.StandardInput)
             {
                 if (sw.BaseStream.CanWrite) //install every single Miniconda package separately (proved to be more reliable than using the .yaml environment file)
                 {
-                    sw.WriteLine("@\"" + batPath + "\"");
+                    sw.WriteLine(activateConda);
                     sw.WriteLine("cd " + ProgramFolder);
                     sw.WriteLine("conda env create -f dlc-windowsGPU.yaml");
                     sw.WriteLine("conda activate dlc-windowsGPU");
@@ -317,7 +318,7 @@ namespace VisualGaitLab {
             CopyFolder(dlcInstallationDir, dlcTargetDir);
         }
 
-        private void InstallFFMPEG(bool debugmode) //install ffmpeg - needed for some of VDLC's video manipulations
+        private void InstallFFMPEG(bool debugmode, DependencyLoadingWindow depWindow) //install ffmpeg - needed for some of VDLC's video manipulations
         {
             Process p = new Process();
             ProcessStartInfo info = new ProcessStartInfo();
@@ -328,9 +329,9 @@ namespace VisualGaitLab {
             info.Verb = "runas";
             p.EnableRaisingEvents = true;
             p.Exited += (sender1, e1) => {
-                this.Dispatcher.Invoke(() => {
-                    this.Close();
-                    EnableInteraction();
+                Dispatcher.Invoke(() => {
+                    depWindow.Close();
+                    Visibility = Visibility.Visible;
                 });
             };
             string binPath = ProgramFolder + "\\ffmpeg\\bin";
