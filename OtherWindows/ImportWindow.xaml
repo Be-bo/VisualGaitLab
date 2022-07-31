@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VisualGaitLab.OtherWindows" xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="Video Prep" Height="380" Width="800"
-        Icon="logo.png"
+        Icon="/Images/logo.png"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}"
@@ -27,7 +27,7 @@
                     <!--Selection & Canvas & Video Element-->
                     <Grid Name="ImportVideoGrid" MouseDown="Grid_MouseDown" MouseUp="Grid_MouseUp" MouseMove="Grid_MouseMove" Background="Transparent">
                         <MediaElement Name="ImportVideoElement" Opacity="0.3" MaxHeight="700" ScrubbingEnabled="True" HorizontalAlignment="Left" LoadedBehavior="Manual" UnloadedBehavior="Manual"/>
-                        <Image Name="ImportSelectWindowHint" Width="200" Height="200" Source="selectwindow.png"/>
+                        <Image Name="ImportSelectWindowHint" Width="200" Height="200" Source="/Images/selectwindow.png"/>
                         <Canvas Name="ImportSelectionBoxCanvas">
                             <Rectangle Name="ImportSelectionBox" Stroke="{StaticResource DefaultBlueBrush}" StrokeThickness="3"/>
                         </Canvas>

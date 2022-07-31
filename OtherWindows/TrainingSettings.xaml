@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VisualGaitLab.OtherWindows"
         mc:Ignorable="d"
         Title="Training Settings" Height="250" Width="320"
-        Icon="logo.png"
+        Icon="/Images/logo.png"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}">
 

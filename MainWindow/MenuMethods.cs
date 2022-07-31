@@ -94,7 +94,7 @@ namespace VisualGaitLab {
                     if (sw.BaseStream.CanWrite) {
                         sw.WriteLine(Drive);
                         sw.WriteLine("cd " + EnvDirectory);
-                        sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
+                        sw.WriteLine(FileSystemUtils.GetCondaActivatePath(CondaDirectory));
                         sw.WriteLine("conda activate " + EnvName);
                         sw.WriteLine("ipython vdlc_create_new_project.py");
                         
@@ -231,12 +231,6 @@ namespace VisualGaitLab {
                     //Load VDLC Config
                     ReadVGLConfig();
                 }
-                else {
-
-                }
-            }
-            else {
-
             }
         }
 

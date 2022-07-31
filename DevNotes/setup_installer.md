@@ -41,9 +41,12 @@ So Start should have the following dialogs by at the end: Welcome, License Agree
 10. Add banner to all dialogs' properties.
 
 ### Build
-11. Right click on the Setup project in Solution Explorer and click Rebuild.
+11. Right click on the VisualGaitLab Project in the Solution Explorer and select Properties located at the bottom.
+   - In the Application tab select Assembly Information
+   - Change File version to the version number
+12. Right click on the Setup project in Solution Explorer and click Rebuild.
 This will take a while so make sure everything else is fine before building.
-12. Go to the Debug folder in the project directory and use the .msi file as the installer. (the .exe file is unnecessary) 
+13. Go to the Debug folder in the project directory and use the .msi file as the installer.
 
 
 ## References and Tutorials

@@ -46,6 +46,7 @@ namespace VisualGaitLab.OtherWindows {
         string ProjectPath = "";
         string InitialFilePath = "";
         string ProgramFolder = "";
+        string CondaDirectory = "";
 
         double VideoDuration = 0; //in seconds
         int ConversionCounter = 1;
@@ -76,7 +77,7 @@ namespace VisualGaitLab.OtherWindows {
 
         // MARK: Setup Functions
 
-        public ImportWindow(string inputFileName, string configPath, bool isAnalysisVid, string envDir, string envNam, string driv, string progFolder) {
+        public ImportWindow(string inputFileName, string configPath, bool isAnalysisVid, string envDir, string envNam, string driv, string progFolder, string condaPath) {
             InitializeComponent();
             ProjectPath = FileSystemUtils.GetParentFolder(configPath);
             CachePath = FileSystemUtils.ExtendPath(ProjectPath, "cache");
@@ -87,6 +88,7 @@ namespace VisualGaitLab.OtherWindows {
             EnvName = envNam;
             Drive = driv;
             ProgramFolder = progFolder;
+            CondaDirectory = condaPath;
             StartCheckingForCompletion(1); //have to wait for InitializeComponent to finish (to show the loading wheel right away)
         }
 
@@ -813,7 +815,7 @@ namespace VisualGaitLab.OtherWindows {
                 if (sw.BaseStream.CanWrite) {
                     sw.WriteLine(Drive);
                     sw.WriteLine("cd " + EnvDirectory);
-                    sw.WriteLine(FileSystemUtils.CONDA_ACTIVATE_PATH);
+                    sw.WriteLine(FileSystemUtils.GetCondaActivatePath(CondaDirectory));
                     sw.WriteLine("conda activate " + EnvName);
                     sw.WriteLine("ipython vdlc_add_video.py");
 
@@ -874,7 +876,11 @@ namespace VisualGaitLab.OtherWindows {
 
                 for (int i = 0; i < listRows.Count; i++) {
                     string currentLine = listRows[i];
-                    if (currentLine.Contains("showdebugconsole: ") && currentLine.Contains("True")) retVal = true;
+                    if (currentLine.Contains("showdebugconsole: "))
+                    {
+                        if (currentLine.Contains("True")) retVal = true;
+                        break;
+                    }
                 }
             }
             return retVal;

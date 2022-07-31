@@ -7,7 +7,7 @@
         Title="AdjustBiasWindow" Height="224.231" Width="452.596"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}"
-        Icon="logo.png">
+        Icon="/Images/logo.png">
 
     <Grid>
         <Grid.RowDefinitions>

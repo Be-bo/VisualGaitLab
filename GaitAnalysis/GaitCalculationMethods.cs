@@ -156,8 +156,7 @@ namespace VisualGaitLab.GaitAnalysis {
             //calculating stride lengths, this method doesn't have to be called every frame (-> it's in static data section) but it's the basis for stride dynamic data
 
             if (switchPositions.Count < 3) {
-                MessageBox.Show("Video cannot be added because it's too short. Program will close.", "Video Too Short");
-                this.DialogResult = true;
+                setup_error = true; //set flag
                 return;
             }
             

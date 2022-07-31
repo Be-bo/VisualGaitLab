@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using VisualGaitLab.GaitAnalysis;
 using VisualGaitLab.OtherWindows;
 using VisualGaitLab.SupportingClasses;
 
@@ -24,7 +23,10 @@ namespace VisualGaitLab
         Project CurrentProject;
         string ProgramFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab";
         string WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Projects";
-        string EnvDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
+        string CondaDirectory = ""; // Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab";
+        string EnvDirectory = ""; // Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
+        string ScriptsFolder = Directory.GetCurrentDirectory() + "\\CustomScripts";
+        string ScriptsListFile = "scriptsList.txt";
         string EnvName = "dlc-windowsGPU";
         string Drive = "c:";
         PythonScripts AllScripts = new PythonScripts();
@@ -34,6 +36,9 @@ namespace VisualGaitLab
         ListBox DragSource = null;
         ListBox DragTarget = null;
         Stopwatch globalStopWatch = new Stopwatch();
+        List<CustomScript> PAScripts;
+        List<CustomScript> DraggedScripts;
+        bool PAScriptsPrepared = false;
 
 
 
@@ -53,16 +58,13 @@ namespace VisualGaitLab
                 return;
             }
 
-            /*
-            if (!Directory.Exists(EnvDirectory)) { //condition code that was stripped down, if the Miniconda env does not exist, we close the program
-                EnvDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\VisualGaitLab\\Miniconda3\\envs\\dlc-windowsGPU";
-                EnvName = "dlc-windowsGPU";
-                if (!Directory.Exists(EnvDirectory)) this.Close();
-            }*/
+            ReadCondaPath(); // Update Conda directory
 
             InitializeComponent();
-            CheckInstallation();
-            ShowDisclaimer();
+            bool dependeciesInstalled = CheckInstallation();
+            if (dependeciesInstalled) ShowDisclaimer();
+
+            EnvDirectory = CondaDirectory + "\\Miniconda3\\envs\\dlc-windowsGPU";
         }
 
         private static bool IsAdministrator() { //check if the Windows user is running the program as administrator
@@ -76,7 +78,31 @@ namespace VisualGaitLab
                 "We STRONGLY recommend that you first quickly run through the entire process before committing to a project (to make sure VGL runs well on your machine)." +
                 "\n\n" +
                 "Please check the OSF link: https://osf.io/2ydzn/ for documentation. \n\n" +
-                "version 2.4.0", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+                "version 2.5.1", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        // Read where miniconda was installed on
+        private void ReadCondaPath()
+        {
+            string settingsPath = FileSystemUtils.ExtendPath(ProgramFolder, "settings.txt");
+            if (File.Exists(settingsPath))
+            {
+                StreamReader sr = new StreamReader(settingsPath);
+                String[] rows = Regex.Split(sr.ReadToEnd(), "\r\n");
+                List<string> listRows = new List<string>(rows);
+                sr.Close();
+
+                for (int i = 0; i < listRows.Count; i++)
+                {
+                    string currentLine = listRows[i];
+                    if (currentLine.Contains("miniconda: "))
+                    {
+                        CondaDirectory = currentLine.Replace("miniconda: ", "");
+                        break;
+                    }
+                }
+            }
+        
         }
 
 
@@ -98,7 +124,7 @@ namespace VisualGaitLab
         }
 
         private void SyncUI() { //sync the UI with the current state of the project
-            this.Dispatcher.Invoke(() => { //run on the main thread in case the call came from a different thread
+            Dispatcher.Invoke(() => { //run on the main thread in case the call came from a different thread
                 LoadProject(CurrentProject.ConfigPath.Substring(0, CurrentProject.ConfigPath.LastIndexOf("\\"))); //load the project
                 if (CurrentProject != null) {
                     TrainButton.Visibility = Visibility.Visible;
@@ -147,14 +173,15 @@ namespace VisualGaitLab
                     if (CurrentProject.AnalysisVideos != null && CurrentProject.AnalysisVideos.Count > 0) AnalyzedListBox.ItemsSource = CurrentProject.AnalysisVideos; //if there are analysis videos add them to the analysis listbox
                     else AnalyzedListBox.ItemsSource = null;
 
-                    if (CurrentProject.IsGaitOnly) GaitTab.Visibility = Visibility.Visible; else GaitTab.Visibility = Visibility.Hidden; //if it's a gait focused project show the Gait tab
-                    PrepareGaitTab();
+                    //if it's a gait focused project show the Gait tab
+                    if (CurrentProject.IsGaitOnly) EnableGait();
+                    else BarGait();
                 }
             });
         }
 
         private void BarInteraction() { //show the progress ring and disable the primary window so the user can't click anything, also make the window opaque
-            this.Dispatcher.Invoke(() => {
+            Dispatcher.Invoke(() => {
                 PrimaryGrid.IsEnabled = false;
                 PrimaryGrid.Opacity = 0.3;
                 ProgressRing.IsActive = true;
@@ -162,155 +189,42 @@ namespace VisualGaitLab
         }
 
         private void EnableInteraction() { //cancel all the effects of the BarInteraction method
-            this.Dispatcher.Invoke(() => {
+            Dispatcher.Invoke(() => {
                 PrimaryGrid.IsEnabled = true;
                 PrimaryGrid.Opacity = 1;
                 ProgressRing.IsActive = false;
             });
         }
 
-        private void EnableAnalysisPart() { //enable analysis tab
+        private void EnableAnalysisPart() { //enable analysis tabs
             AnalyzeTab.IsEnabled = true;
+            PostAnalysisTab.IsEnabled = true;
         }
 
-        private void BarAnalysisPart() { //disable analysis tab
+        private void BarAnalysisPart() { //disable analysis tabs
             AnalyzeTab.IsEnabled = false;
+            //PostAnalysisTab.IsEnabled = false;
         }
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e) { //not in use currently
-
+        private void EnableGait()
+        {
+            GaitTab.Visibility = Visibility.Visible;
+            PrepareGaitTab();
         }
 
-
-
-
-
-
-
-
-
-
-
-        // MARK: Gait Methods
-
-        private void PrepareGaitTab() { //set up the last (gait) tab = grab the analyzed videos from the analysis tab and make them show up here + set up logic for drag and drop to the other list box (combined gait export feature)
-            GaitVideos = new List<AnalysisVideo>();
-            GaitCombineListBox.AllowDrop = true;
-            GaitCombinedVideos = new List<AnalysisVideo>();
-            CombineResultsButton.IsEnabled = false;
-            foreach (AnalysisVideo vid in CurrentProject.AnalysisVideos) { //the combo box will contain all analyzed videos from the "Analyze" tab
-                if (vid.IsAnalyzed) {
-                    string gaitStateFolder = vid.Path.Substring(0, vid.Path.LastIndexOf("\\")) + "\\gaitsavedstate";
-                    if (Directory.Exists(gaitStateFolder) && File.Exists(gaitStateFolder + "\\metrics.txt")) {
-                        vid.GaitAnalyzedImageName = "Images/check.png";
-                        vid.IsGaitAnalyzed = true;
-                    }
-                    else {
-                        vid.GaitAnalyzedImageName = "Images/cross.png";
-                        vid.IsGaitAnalyzed = false;
-                    }
-                    GaitVideos.Add(vid);
-                }
-            }
-
-            if (GaitVideos.Count > 0) { //if there are analyzed videos allow access to the "Gait" tab
-                GaitListBox.ItemsSource = null;
-                GaitListBox.ItemsSource = GaitVideos;
-                GaitTab.IsEnabled = true;
-            }
-            else GaitTab.IsEnabled = false; //if there are none disable it
+        private void BarGait()
+        {
+            GaitTab.Visibility = Visibility.Collapsed;
         }
 
-        private void GaitListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) { //change button description depending on whether gait has been analyzed on a particular video
-            AnalysisVideo selectedVid = (AnalysisVideo)GaitListBox.SelectedItem;
-            if (selectedVid != null) {
-                AnalyzeGaitButton.IsEnabled = true;
-                if (selectedVid.IsGaitAnalyzed) {
-                    AnalyzeGaitButton.Content = "View/Edit";
-                }
-                else {
-                    AnalyzeGaitButton.Content = "Analyze Gait";
-                }
-            }
-            else AnalyzeGaitButton.IsEnabled = false;
-        }
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 
-        private void AnalyzeGaitButton_Click(object sender, RoutedEventArgs e) {
-            AnalysisVideo vid = (AnalysisVideo)GaitListBox.SelectedItem; //get the selected video
-            if (vid != null) {
-                string gaitVideoPath = vid.Path; //extract necessary info from the video
-                string gaitVideoName = gaitVideoPath.Substring(gaitVideoPath.LastIndexOf("\\") + 1, gaitVideoPath.LastIndexOf(".") - gaitVideoPath.LastIndexOf("\\"));
-                string gaitTempPath = gaitVideoPath.Substring(0, gaitVideoPath.LastIndexOf("\\")) + "\\temp-" + gaitVideoName;
-                var files = Directory.EnumerateFiles(gaitTempPath);
-                var file = ""; //might crash
-                foreach(var currentImg in files) {
-                    if (currentImg.Contains(".png")) {
-                        file = currentImg;
-                        break;
-                    }
-                }
-                BarInteraction();
-
-                // Check if Gait data is saved from before
-                string stateFolder = gaitVideoPath.Substring(0, gaitVideoPath.LastIndexOf("\\")) + "\\gaitsavedstate";
-                if (Directory.Exists(stateFolder) && File.Exists(stateFolder + "\\inputParams.txt")) {
-                    GaitWindow gaitWindow = new GaitWindow(gaitVideoPath, gaitVideoName, gaitTempPath);
-                    if (gaitWindow.ShowDialog() == true) {
-                        SyncUI();
-                    }
-                    EnableInteraction();
-                }
-                else //input params not saved, ask the user for'em
-                {
-                    MeasureWindow window = new MeasureWindow(file, stateFolder); //spawn a window through which the user will give us the treadmill speed and a real world reference (for distance measurements)
-                    if (window.ShowDialog() == true) {
-                        double realWorldMultiplier = window.getSinglePixelSize();
-                        float treadmillSpeed = float.Parse(window.TreadmillSpeedTextBox.Text);
-                        bool isFreeRun = false;
-                        if ((bool)window.AnalysisTypeRadioFreeWalking.IsChecked) isFreeRun = true;
-
-                        GaitWindow gaitWindow = new GaitWindow(realWorldMultiplier, treadmillSpeed, gaitVideoPath, gaitVideoName, gaitTempPath, isFreeRun);
-                        if (gaitWindow.ShowDialog() == true) {
-                            SyncUI();
-                        }
-                        EnableInteraction();
-                    }
-                    else EnableInteraction();
-                }
+            if (PostAnalysisTab.IsSelected && !PAScriptsPrepared)
+            {
+                PreparePostAnalysisTab();
+                PAScriptsPrepared = true;
             }
         }
-
-        private void CombineResultsButton_Click(object sender, RoutedEventArgs e) {
-            ExportCombinedGait();
-        }
-
-        private void DragStarted(object sender, System.Windows.Input.MouseButtonEventArgs e) { //started dragging an item in the Gait Listbox
-            DragSource = (ListBox)sender;
-            object data = DragSource.SelectedItem;
-
-            if (data != null) {
-                DragDrop.DoDragDrop(DragSource, data, DragDropEffects.Move);
-            }
-        }
-
-        private void DragDropped(object sender, DragEventArgs e) { //dropped a dragged item above the Gait "combined export" Listbox
-            DragTarget = (ListBox)sender;
-            AnalysisVideo draggedData = (AnalysisVideo)DragSource.SelectedItem;
-            if (!GaitCombinedVideos.Contains(draggedData) && draggedData.IsGaitAnalyzed) {
-                GaitCombinedVideos.Add(draggedData);
-                GaitCombineListBox.ItemsSource = null;
-                GaitCombineListBox.ItemsSource = GaitCombinedVideos;
-                DragNDropLabel.Visibility = Visibility.Collapsed;
-                if (GaitCombinedVideos.Count > 1) CombineResultsButton.IsEnabled = true;
-            }
-        }
-
-        private void EmptyButton_Click(object sender, RoutedEventArgs e) {
-            ClearCombinedGait();
-        }
-
-
-
 
 
 
@@ -323,6 +237,16 @@ namespace VisualGaitLab
             else {
                 UpdateSettings(false);
             }
+        }
+
+        private void OsfClicked(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://osf.io/2ydzn/");
+        }
+
+        private void GithubClicked(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/Be-bo/VisualGaitLab");
         }
     }
 }

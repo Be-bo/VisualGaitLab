@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using VisualGaitLab.SupportingClasses;
 
@@ -321,6 +319,7 @@ namespace VisualGaitLab {
             StreamWriter sw = new StreamWriter(settingsPath);
             List<string> listRows = new List<string>(); //for later, now we only have one option
             sw.WriteLine("showdebugconsole: " + showDebugConsole.ToString());
+            sw.WriteLine("miniconda: " + CondaDirectory);
             sw.Close();
         }
     }

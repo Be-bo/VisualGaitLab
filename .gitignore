@@ -1,2 +1,10 @@
 obj/
 .vs/
+bin/Debug/CustomScripts/__pycache__/
+CustomScripts/out/
+CustomScripts/dependencies/__pycache__/
+CustomScripts/__pycache__/
+bin/
+CustomScripts/out2/
+CustomScripts/outB/
+CustomScripts/out_mouse/

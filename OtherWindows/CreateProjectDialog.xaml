@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="Create New Project" Height="400" Width="600"
         WindowStartupLocation="CenterScreen"
-        Icon="logo.png"
+        Icon="/Images/logo.png"
         Style="{StaticResource WindowStyle}">
 
     <Grid>
@@ -78,7 +78,7 @@
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <DockPanel Cursor="Hand">
-                        <Image Source="add.png" Height="20" Width="20" HorizontalAlignment="Left" />
+                        <Image Source="/Images/add.png" Height="20" Width="20" HorizontalAlignment="Left" />
                         <TextBlock Text="Add Bodypart" Foreground="#0d89ff" FontSize="15" Margin="2,2,0,0"/>
                     </DockPanel>
                 </ControlTemplate>

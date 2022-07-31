@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace VisualGaitLab.SupportingClasses {
     public class PythonScripts //pre-prepared scripts, we use them to interact with DeepLabCut (each script is saved as a string array and when needed, it is created and run through a CMD session)
@@ -23,7 +19,7 @@ namespace VisualGaitLab.SupportingClasses {
         public PythonScripts() {
             CreateProject = new List<string>();
             CreateProject.Add("import deeplabcut");
-            CreateProject.Add("deeplabcut.create_new_project('project_name_identifier', 'scorer_identifier', [], working_directory='working_directory_identifier',copy_videos=copy_videos_identifier)");
+            CreateProject.Add("deeplabcut.create_new_project('project_name_identifier', 'scorer_identifier', [], working_directory=r'working_directory_identifier',copy_videos=copy_videos_identifier)");
 
             ExtractFrames = new List<string>();
             ExtractFrames.Add("import deeplabcut");

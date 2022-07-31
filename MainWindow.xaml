@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls" 
+        xmlns:local="clr-namespace:VisualGaitLab"
         mc:Ignorable="d"
         Title="VisualGaitLab" Height="530" Width="700"
         Icon="logo.png"
@@ -11,6 +12,11 @@
         Closing="Window_Closing"
         Visibility="Hidden"
         Style="{StaticResource WindowStyle}">
+
+    <Window.Resources>
+        <local:AddOneConverter x:Key="AddOneConverter"/>
+    </Window.Resources>
+    
     <Grid>
 
         <Grid Name="PrimaryGrid">
@@ -30,6 +36,10 @@
                     </MenuItem>
                     <MenuItem Header="View" Foreground="{StaticResource DefaultBlueBrush}">
                         <MenuItem Header="_Debug Console" Click="DebugConsoleClicked" Foreground="Black"/>
+                    </MenuItem>
+                    <MenuItem Header="Help" Foreground="{StaticResource DefaultBlueBrush}">
+                        <MenuItem Header="_OSF Page" Click="OsfClicked" Foreground="Black"/>
+                        <MenuItem Header="_GitHub Page" Click="GithubClicked" Foreground="Black"/>
                     </MenuItem>
                 </Menu>
             </DockPanel>
@@ -198,7 +208,7 @@
 
 
                 <!-- Gait TAB -->
-                <TabItem Name="GaitTab" Visibility="Hidden" IsEnabled="False" Header="Gait" Style="{StaticResource TabItemStyle}">
+                <TabItem Name="GaitTab" Visibility="Collapsed" IsEnabled="False" Header="Gait" Style="{StaticResource TabItemStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -299,6 +309,120 @@
                             <Button Name="EmptyButton" Content="Empty" Margin="5" Click="EmptyButton_Click" Style="{StaticResource PositiveButton}"/>
                             <Button Name="CombineResultsButton"  IsEnabled="False" Content="Export" HorizontalAlignment="Right" Margin="5" Click="CombineResultsButton_Click" Style="{StaticResource PositiveButton}"/>
                         </StackPanel>
+                    </Grid>
+                </TabItem>
+
+
+
+                <!-- Post Analysis TAB -->
+                <TabItem Name="PostAnalysisTab" IsEnabled="True" Header="Post Analysis"  Style="{StaticResource TabItemStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Main Scripts Listbox -->
+                        <ListBox Name="ScriptListBox" Grid.Row="0" Grid.Column="0" Margin="5, 10, 5, 5" Style="{StaticResource ListBoxStyle}" SelectionMode="Extended" PreviewMouseLeftButtonDown="DragStarted">
+
+                            <!-- List Box Settings -->
+                            <ListBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="3"/>
+                                    <Setter Property="Background" Value="White"/>
+                                </Style>
+                                <ContextMenu x:Key="TrainingListBoxItemCM">
+                                    <MenuItem Header="Remove" Click="RemoveScriptClicked"/>
+                                </ContextMenu>
+                            </ListBox.Resources>
+
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="ContextMenu" Value="{StaticResource TrainingListBoxItemCM}"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+                            <!-- Item Template -->
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        
+                        <!-- Drag and Drop Scripts Listbox-->
+                        <ListBox Name="DragScriptsListBox" Grid.Row="0" Grid.Column="1" Margin="5, 10, 5, 5" AllowDrop="True" Drop="DragScriptsListBox_Drop" Style="{StaticResource ListBoxStyle}">
+
+                            <!-- List Box Settings -->
+                            <ListBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="3"/>
+                                    <Setter Property="Background" Value="White"/>
+                                </Style>
+                                <ContextMenu x:Key="TrainingListBoxItemCM">
+                                    <MenuItem Header="Remove" Click="RemoveFromScriptDropClicked"/>
+                                </ContextMenu>
+                            </ListBox.Resources>
+
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="ContextMenu" Value="{StaticResource TrainingListBoxItemCM}"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+                            <!-- Item Template -->
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Items -->
+                                        <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"/>
+                                        <Label Grid.Column="2" Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplatedParent.(ItemsControl.AlternationIndex), Converter={StaticResource AddOneConverter}}" Foreground="Gray" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <TextBlock Name="ScriptDragNDropLabel" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" TextWrapping="WrapWithOverflow" TextAlignment="Center" FontSize="25" Foreground="{StaticResource DefaultGreyBrush}">
+                            Drag and Drop Here To Run Multiple Scripts
+                        </TextBlock>
+
+
+
+                        <!-- Tab's Bottom Part-->
+                        <DockPanel Grid.Row="1" Grid.Column="0" Margin="5" Cursor="Hand">
+                            <Image Source="/Images/add.png" Height="20" Width="20" HorizontalAlignment="Left" />
+                            <Button Click="NewScriptClicked">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Label Content="Add Script" Height="26" Foreground="#0d89ff" FontSize="15"/>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DockPanel>
+
+                        <Grid Grid.Row="2" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Name="RefreshScriptsButton" Grid.Column="1" IsEnabled="True" Content="Refresh" HorizontalAlignment="Right" Margin="5" Click="RefreshScriptsButton_Click" Style="{StaticResource PositiveButton}"/>
+                            <Button Name="RunScriptButton" Grid.Column="2" IsEnabled="True" Content="Run Script(s)" HorizontalAlignment="Right" Margin="5" Click="RunScriptButton_Click" Style="{StaticResource PositiveButton}"/>
+                        </Grid>
+                        
                     </Grid>
                 </TabItem>
             </TabControl>

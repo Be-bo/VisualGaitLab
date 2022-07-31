@@ -7,7 +7,7 @@
         Title="Gait Analysis Settings" Height="450" Width="800"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}"
-        Icon="logo.png">
+        Icon="/Images/logo.png">
 
     <ScrollViewer>
         <StackPanel Margin="5">
@@ -20,7 +20,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Image Name="CanvasBackground" Source="example.png" Margin="5" Stretch="Fill"/>
+                <Image Name="CanvasBackground" Source="..\Images\example.png" Margin="5" Stretch="Fill"/>
                 <Canvas Name="MeasuringCanvas" Margin="5">
                     <Thumb Name="Thumbie1" Canvas.Left="30" Canvas.Top="30" DragDelta="Thumbie1_DragDelta" Style="{StaticResource ThumbStyle}"/>
                     <Thumb Name="Thumbie2" Canvas.Left="30" Canvas.Top="50" DragDelta="Thumbie2_DragDelta" Style="{StaticResource ThumbStyle}"/>

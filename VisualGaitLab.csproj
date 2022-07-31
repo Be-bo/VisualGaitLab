@@ -113,13 +113,14 @@
     <Compile Include="GaitAnalysis\GaitWindow.xaml.cs">
       <DependentUpon>GaitWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindow\AnalysisMethods.cs" />
+    <Compile Include="MainWindow\AnalysisTabMethods.cs" />
     <Compile Include="MainWindow\ConfigMethods.cs" />
     <Compile Include="MainWindow\DependencyInstallationMethods.cs" />
-    <Compile Include="MainWindow\GaitCombinedExport.cs" />
+    <Compile Include="MainWindow\GaitTabMethods.cs" />
     <Compile Include="MainWindow\MenuMethods.cs" />
+    <Compile Include="MainWindow\PostAnalysisTabMethods.cs" />
     <Compile Include="MainWindow\SupportingMethods.cs" />
-    <Compile Include="MainWindow\TrainingMethods.cs" />
+    <Compile Include="MainWindow\TrainingTabMethods.cs" />
     <Compile Include="OtherWindows\AddBodyPartWindow.xaml.cs">
       <DependentUpon>AddBodyPartWindow.xaml</DependentUpon>
     </Compile>
@@ -156,10 +157,21 @@
     <Compile Include="OtherWindows\MeasureWindow.xaml.cs">
       <DependentUpon>MeasureWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OtherWindows\PickFolderWindow.xaml.cs">
+      <DependentUpon>PickFolderWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OtherWindows\SelectVideoWindow.xaml.cs">
+      <DependentUpon>SelectVideoWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OtherWindows\TrainingSettings.xaml.cs">
       <DependentUpon>TrainingSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SupportingClasses\Parameter.cs" />
+    <Compile Include="OtherWindows\SelectParamWindow.xaml.cs">
+      <DependentUpon>SelectParamWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SupportingClasses\AnalysisVideo.cs" />
+    <Compile Include="SupportingClasses\CustomScript.cs" />
     <Compile Include="SupportingClasses\FileSystemUtils.cs" />
     <Compile Include="SupportingClasses\GaitBodyParts.cs" />
     <Compile Include="SupportingClasses\MathUtils.cs" />
@@ -231,7 +243,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="OtherWindows\PickFolderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OtherWindows\SelectVideoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OtherWindows\TrainingSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OtherWindows\SelectParamWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -264,22 +288,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="GaitAnalysis\logo.png" />
+    <Resource Include="Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="OtherWindows\add.png" />
-    <Resource Include="OtherWindows\dir.png" />
-    <Resource Include="OtherWindows\example.png" />
-    <Resource Include="OtherWindows\help.png" />
-    <Resource Include="OtherWindows\hint.png" />
-    <Resource Include="OtherWindows\logo.png" />
-    <Resource Include="OtherWindows\mouse.png" />
+    <Resource Include="Images\dot.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="OtherWindows\dot.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="OtherWindows\selectwindow.png" />
+    <Resource Include="Images\selectwindow.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\add.png" />
@@ -301,6 +316,41 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CustomScripts\dependencies\compassPlot.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\dependencies\rosePlot.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordAnimal.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordAnimal_info.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordClip.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordClip_info.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordGroup.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordGroup_info.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordJoinClips.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\interlimbCoordJoinClips_info.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CustomScripts\scriptsList.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
