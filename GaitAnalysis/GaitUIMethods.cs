@@ -1,6 +1,7 @@
 ﻿using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media.Imaging;
 

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows;
+using VisualGaitLab.SupportingClasses;
 
 namespace VisualGaitLab.GaitAnalysis {
     public partial class GaitWindow : Window {
@@ -28,8 +29,12 @@ namespace VisualGaitLab.GaitAnalysis {
                         TreadmillSpeed = tempList[1];
                         IsFreeRun = tempList[2] == 1;
                     }
+
                     if (tempList.Count > 3) bias = tempList[3];
                     else bias = 0.25;   // Old versions of VGL have this default bias
+
+                    if (tempList.Count > 4) FPS = (int) tempList[4];
+                    else FPS = AnalysisVideo.CalculateFPS(GaitVideoPath);
                 }
             }
 
@@ -99,7 +104,8 @@ namespace VisualGaitLab.GaitAnalysis {
             tempList.Add(TreadmillSpeed.ToString());
             tempList.Add(IsFreeRun ? "1" : "0");
             tempList.Add(bias.ToString());
-            System.IO.File.WriteAllLines(stateFolder + "\\inputParams.txt", tempList);
+            tempList.Add(FPS.ToString());
+            File.WriteAllLines(stateFolder + "\\inputParams.txt", tempList);
 
             // Save inStance lists and metrics
             SaveInStanceData(stateFolder);

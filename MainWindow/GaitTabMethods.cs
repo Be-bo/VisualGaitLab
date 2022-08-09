@@ -99,15 +99,16 @@ namespace VisualGaitLab
                 }
                 else //input params not saved, ask the user for'em
                 {
-                    MeasureWindow window = new MeasureWindow(file, stateFolder); //spawn a window through which the user will give us the treadmill speed and a real world reference (for distance measurements)
+                    MeasureWindow window = new MeasureWindow(file, stateFolder, vid.CalculateFPS()); //spawn a window through which the user will give us the treadmill speed and a real world reference (for distance measurements)
                     if (window.ShowDialog() == true)
                     {
                         double realWorldMultiplier = window.getSinglePixelSize();
                         float treadmillSpeed = float.Parse(window.TreadmillSpeedTextBox.Text);
+                        int framerate = int.Parse(window.FPSTextBox.Text);
                         bool isFreeRun = false;
                         if ((bool)window.AnalysisTypeRadioFreeWalking.IsChecked) isFreeRun = true;
 
-                        GaitWindow gaitWindow = new GaitWindow(realWorldMultiplier, treadmillSpeed, gaitVideoPath, gaitVideoName, gaitTempPath, isFreeRun);
+                        GaitWindow gaitWindow = new GaitWindow(realWorldMultiplier, treadmillSpeed, framerate, gaitVideoPath, gaitVideoName, gaitTempPath, isFreeRun);
                         try
                         { // In case there's an error during setup and window is already closed. (eg. short/invalid video)
                             if (gaitWindow.ShowDialog() == true)
@@ -161,8 +162,6 @@ namespace VisualGaitLab
         {
             ClearCombinedGait();
         }
-
-
 
 
 

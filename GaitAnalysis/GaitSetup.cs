@@ -141,8 +141,6 @@ namespace VisualGaitLab.GaitAnalysis {
 
             GaitNumberOfFrames = HindLeftInStance.Count; //a few more values we need to initialize but needed to parse the .csv for first
             XMAX = GaitNumberOfFrames;
-            FPS = (int)(GaitNumberOfFrames / GaitVideoLength);
-
 
             if (GaitFirstSetup)
             { // First time setup

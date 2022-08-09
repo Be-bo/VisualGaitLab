@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using VisualGaitLab.OtherWindows;
+using VisualGaitLab.SupportingClasses;
 
 namespace VisualGaitLab.GaitAnalysis {
     /// <summary>
@@ -21,11 +22,12 @@ namespace VisualGaitLab.GaitAnalysis {
             CommonConstr(gaitVideoPath, gaitVideoName, gaitTempPath);
         }
 
-        public GaitWindow(double realWorldMultiplier, float treadmillSpeed, string gaitVideoPath, string gaitVideoName, string gaitTempPath, bool isFreeRun) 
+        public GaitWindow(double realWorldMultiplier, float treadmillSpeed, int framerate, string gaitVideoPath, string gaitVideoName, string gaitTempPath, bool isFreeRun) 
         {
             InitializeComponent();
             RealWorldMultiplier = realWorldMultiplier;
             TreadmillSpeed = treadmillSpeed;
+            FPS = framerate;
             IsFreeRun = isFreeRun;
             CommonConstr(gaitVideoPath, gaitVideoName, gaitTempPath);
         }
@@ -196,11 +198,13 @@ namespace VisualGaitLab.GaitAnalysis {
             }
             BarInteraction();
 
-            MeasureWindow window = new MeasureWindow(file, stateFolder); //spawn the same settings window as before
+            FPS = AnalysisVideo.CalculateFPS(GaitVideoPath);
+            MeasureWindow window = new MeasureWindow(file, stateFolder, FPS); //spawn the same settings window as before
             if (window.ShowDialog() == true)
             {
                 RealWorldMultiplier = window.getSinglePixelSize();
                 TreadmillSpeed = float.Parse(window.TreadmillSpeedTextBox.Text);
+                FPS = int.Parse(window.FPSTextBox.Text);
                 if ((bool)window.AnalysisTypeRadioFreeWalking.IsChecked) IsFreeRun = true;
                 else IsFreeRun = false;
 

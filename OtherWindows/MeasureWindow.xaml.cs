@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using VisualGaitLab.SupportingClasses;
 using static VisualGaitLab.SupportingClasses.MathUtils;
 
 
@@ -26,11 +27,14 @@ namespace VisualGaitLab.OtherWindows {
         private static Vector2 thumbie2_loc;
         private static string distance_txt;
         private static string speed_txt;
+        private static string fps_txt;
 
 
-        public MeasureWindow(string imagePath, string stateFolder) { //set up canvas with a screenshot from the current video
+        public MeasureWindow(string imagePath, string stateFolder, int calculatedFPS)
+        { //set up canvas with a screenshot from the current video
             InitializeComponent();
             StateFolder = stateFolder;
+            fps_txt = calculatedFPS.ToString();
 
             // Set up image
             if (imagePath != ImagePath)
@@ -61,6 +65,7 @@ namespace VisualGaitLab.OtherWindows {
                     thumbie2_loc = new Vector2(float.Parse(tempList[2]), float.Parse(tempList[3]));
                     distance_txt = tempList[4];
                     speed_txt = tempList[5];
+                    if (tempList.Count > 6) fps_txt = tempList[6];
                 }
             }
 
@@ -81,6 +86,7 @@ namespace VisualGaitLab.OtherWindows {
             tempList.Add(thumbie2_loc.Y.ToString());
             tempList.Add(distance_txt);
             tempList.Add(speed_txt);
+            tempList.Add(fps_txt);
 
             System.IO.File.WriteAllLines(StateFolder + "\\gaitSettings.txt", tempList);
         }
@@ -114,6 +120,9 @@ namespace VisualGaitLab.OtherWindows {
             if (speed_txt == null) speed_txt = TreadmillSpeedTextBox.Text;
             else TreadmillSpeedTextBox.Text = speed_txt;
 
+            if (fps_txt == null) fps_txt = FPSTextBox.Text;
+            else FPSTextBox.Text = fps_txt;
+
             if (speed_txt != "0")
             {
                 AnalysisTypeRadioTreadmill.IsChecked = true;
@@ -129,6 +138,7 @@ namespace VisualGaitLab.OtherWindows {
         private void ContinueButton_Click(object sender, RoutedEventArgs e) {
             distance_txt = DistanceTextBox.Text;
             speed_txt = TreadmillSpeedTextBox.Text;
+            fps_txt = FPSTextBox.Text;
             SaveSettings();
             DialogResult = true;
         }
@@ -137,15 +147,9 @@ namespace VisualGaitLab.OtherWindows {
             DialogResult = false;
         }
 
-        private void DistanceTextBox_TextChanged(object sender, TextChangedEventArgs e) {
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e) {
             CheckInput();
         }
-
-
-        private void TreadmillSpeedTextBox_TextChanged(object sender, TextChangedEventArgs e) {
-            CheckInput();
-        }
-
 
         private void CheckInput() {
             if (DistanceTextBox != null && ContinueButton != null && TreadmillSpeedTextBox != null) {
