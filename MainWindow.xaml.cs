@@ -78,7 +78,7 @@ namespace VisualGaitLab
                 "We STRONGLY recommend that you first quickly run through the entire process before committing to a project (to make sure VGL runs well on your machine)." +
                 "\n\n" +
                 "Please check the OSF link: https://osf.io/2ydzn/ for documentation. \n\n" +
-                "version 2.5.2", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
+                "version 2.6", "Important Info", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         // Read where miniconda was installed on
