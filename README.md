@@ -2,6 +2,8 @@
   <img src="https://github.com/Be-bo/VisualGaitLab/blob/master/logo.png" width="100" height="100">
 </p>
 
+**_Note: This repository is currently not maintained. Apologies for any inconveniences._**
+
 This repository is a Visual Studio Project & Solution containing the code base for VisualGaitLab software.
 
 ---
